@@ -35,7 +35,24 @@ export function BeadGrid ({
         row.map((cellId, x) => {
           const color = colorById.get(cellId)
           const codeText = color?.code ?? ''
-          const shouldShowText = showBeadCodes && !!codeText && cellSize >= 14
+          const MIN_SIZE_FOR_TEXT = 8 // px - match minimum cell size in settings
+          
+          let displayContent: string | null = null
+          if (showBeadCodes && color) {
+            if (cellSize >= MIN_SIZE_FOR_TEXT && codeText) {
+              // Large enough for text
+              displayContent = codeText
+            }
+          }
+          
+          // Calculate font size based on cell size
+          // For small cells (8-12px): use smaller font, for larger cells: scale proportionally
+          const fontSize = displayContent
+            ? cellSize < 12
+              ? Math.max(6, Math.floor(cellSize * 0.5)) // Smaller font for very small cells
+              : Math.max(8, Math.floor(cellSize * 0.45)) // Normal scaling for larger cells
+            : 0
+          
           return (
             <div
               key={`${x}-${y}`}
@@ -45,7 +62,7 @@ export function BeadGrid ({
                 height: `${cellSize}px`,
                 backgroundColor: color?.hex || 'transparent',
                 color: getContrastTextColor(color?.hex),
-                fontSize: `${Math.max(8, Math.floor(cellSize * 0.45))}px`,
+                fontSize: `${fontSize}px`,
                 fontWeight: 800,
                 lineHeight: 1,
                 textShadow: color?.hex ? '0 1px 1px rgba(0,0,0,0.35)' : 'none',
@@ -54,7 +71,7 @@ export function BeadGrid ({
               onClick={() => onCellClick(x, y)}
               title={color ? `${color.name} (${color.code})` : 'Empty'}
             >
-              {shouldShowText ? codeText : null}
+              {displayContent}
             </div>
           )
         })

@@ -6,6 +6,7 @@ import { BeadColor, MARD_CATEGORIES, PALETTES } from '@/lib/beadData'
 import { jsPDF } from 'jspdf'
 import { useImageProcessing } from '@/hooks/use-image-processing'
 import { useHistory } from '@/hooks/use-history'
+import { getContrastTextColor } from '@/utils/color-utils'
 import { Toolbar } from './pixel-bead-generator/toolbar'
 import { SettingsPanel } from './pixel-bead-generator/settings-panel'
 import { PaletteSidebar } from './pixel-bead-generator/palette-sidebar'
@@ -156,15 +157,35 @@ export function PixelBeadGenerator () {
       doc.text(`Generated for ${selectedPalette} Beads | Grid size: ${gridWidth}x${matrix.length}`, margin, 26)
 
       // Draw Pattern
+      const MIN_CELL_SIZE_FOR_TEXT = 2 // mm - reduced to allow text in smaller cells
       matrix.forEach((row, y) => {
         row.forEach((cellId, x) => {
           const color = colorById.get(cellId)
+          const cellX = margin + x * pdfCellSize
+          const cellY = 35 + y * pdfCellSize
+          
           if (color) {
             doc.setFillColor(color.hex)
-            doc.rect(margin + x * pdfCellSize, 35 + y * pdfCellSize, pdfCellSize, pdfCellSize, 'F')
+            doc.rect(cellX, cellY, pdfCellSize, pdfCellSize, 'F')
+            
+            // Draw text if cell is large enough
+            const textColor = getContrastTextColor(color.hex)
+            const isWhite = textColor === '#FFFFFF'
+            if (pdfCellSize >= MIN_CELL_SIZE_FOR_TEXT && color.code) {
+              // Cell is large enough for text
+              doc.setTextColor(isWhite ? 255 : 0)
+              // Adjust font size based on cell size - smaller cells get proportionally smaller font
+              const fontSize = pdfCellSize < 3
+                ? Math.max(4, pdfCellSize * 0.35) // Smaller font for very small cells
+                : Math.max(6, pdfCellSize * 0.4) // Normal scaling for larger cells
+              doc.setFontSize(fontSize)
+              const textX = cellX + pdfCellSize / 2
+              const textY = cellY + pdfCellSize / 2 + pdfCellSize * 0.15
+              doc.text(color.code, textX, textY, { align: 'center', baseline: 'middle' })
+            }
           }
           doc.setDrawColor(230)
-          doc.rect(margin + x * pdfCellSize, 35 + y * pdfCellSize, pdfCellSize, pdfCellSize, 'S')
+          doc.rect(cellX, cellY, pdfCellSize, pdfCellSize, 'S')
         })
       })
 
@@ -183,20 +204,38 @@ export function PixelBeadGenerator () {
       Object.entries(counts).forEach(([id, count]) => {
         const color = colorById.get(id)
         if (color) {
-          if (yPos > 270) {
+          if (yPos > 260) {
             doc.addPage()
             yPos = 20
           }
+          // Color swatch
           doc.setFillColor(color.hex)
           doc.rect(margin, yPos, 10, 10, 'F')
           doc.rect(margin, yPos, 10, 10, 'S')
 
+          // Text information
           doc.setFontSize(10)
           doc.setTextColor(0)
-          doc.text(`${color.name} (${color.code})`, margin + 15, yPos + 6)
-          doc.text(`${count} beads`, pageWidth - margin - 20, yPos + 6, { align: 'right' })
+          
+          const textX = margin + 15
+          const lineHeight = 4
+          
+          // Line 1: Name and Code
+          const codeText = color.code ? ` (${color.code})` : ''
+          doc.text(`${color.name}${codeText}`, textX, yPos + 3)
+          
+          // Line 2: Hex
+          const hexText = `Hex: ${color.hex.toUpperCase()}`
+          doc.setFontSize(9)
+          doc.setTextColor(80)
+          doc.text(hexText, textX, yPos + 7)
+          
+          // Count on the right
+          doc.setFontSize(10)
+          doc.setTextColor(0)
+          doc.text(`${count} beads`, pageWidth - margin - 20, yPos + 5, { align: 'right' })
 
-          yPos += 12
+          yPos += 14
         }
       })
 

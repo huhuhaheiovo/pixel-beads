@@ -17,6 +17,10 @@ export interface BeadColor {
    * Raw product code from source files (often equals `code`).
    */
   productCode?: string
+  /**
+   * @deprecated Legend symbol feature has been removed. This field is kept for backwards compatibility only.
+   */
+  legendSymbol?: string
 }
 
 export const PERLER_PALETTE: BeadColor[] = PERLER_PALETTE_FULL.map(c => ({

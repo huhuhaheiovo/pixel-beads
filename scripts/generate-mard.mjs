@@ -27,6 +27,9 @@ function seriesFromCode(code) {
   return m ? m[0] : "";
 }
 
+// Note: assignLegendSymbol function removed - symbols are now assigned
+// in main() using a Map to ensure uniqueness
+
 function extractFirstJsonObject(text) {
   // First object ends at the first "}\n," sequence (as in the file)
   const idx = text.indexOf("},");
@@ -105,11 +108,111 @@ function main() {
   const groups = parseGroups(secondObjText, allKeys);
 
   // Build palette array
+  // Collect ALL codes that need symbols (not just short ones)
+  const allCodesSorted = allKeys.slice().sort((a, b) => a.localeCompare(b, "en"));
+  
+  // Assign unique symbols to each code
+  // Using comprehensive Unicode symbol set to ensure uniqueness (489 unique symbols)
+  const symbolMap = new Map();
+  const symbols = [
+    // Geometric Shapes - Squares (U+25A0-25A9)
+    "■", "□", "▢", "▣", "▤", "▥", "▦", "▧", "▨", "▩",
+    // Rectangles (U+25AA-25AF)
+    "▪", "▫", "▬", "▭", "▮", "▯",
+    // Circles (U+25CB-25D3)
+    "○", "◉", "◐", "◑", "◒", "◓", "◔", "◕", "◖", "◗",
+    // Quarter circles (U+25D8-25E1)
+    "◘", "◙", "◚", "◛", "◜", "◝", "◞", "◟", "◠", "◡",
+    // Triangle corners (U+25E2-25E5)
+    "◢", "◣", "◤", "◥",
+    // More circles and shapes (U+25E6-25EF)
+    "◦", "◯", "◰", "◱", "◲", "◳", "◴", "◵", "◶", "◷",
+    // More shapes (U+25F0-25FF)
+    "◸", "◹", "◺", "◻", "◼", "◽", "◾", "◿",
+    
+    // Triangles (U+25B0-25C7)
+    "▲", "△", "▴", "▵", "▶", "▷", "▸", "▹", "►", "▻",
+    "▼", "▽", "▾", "▿", "◀", "◁", "◂", "◃", "◄", "◅",
+    
+    // Diamonds (U+25C6-25C9)
+    "◆", "◇", "◈", "◊",
+    
+    // Stars (U+2605-2606, U+2721-2730) - removed duplicates
+    "★", "☆", "✦", "✧", "✩", "✪", "✫", "✬", "✭", "✮", "✯", "✰",
+    "✱", "✲", "✳", "✴", "✵", "✶", "✷", "✸", "✹", "✺", "✻", "✼", "✽", "✾", "✿", "❀",
+    // Note: Some stars appear in both U+2605 and U+2721 ranges, duplicates removed by Set
+    
+    // Arrows - Basic (U+2190-219F)
+    "←", "↑", "→", "↓", "↔", "↕", "↖", "↗", "↘", "↙",
+    "↚", "↛", "↜", "↝", "↞", "↟", "↠", "↡",
+    
+    // Arrows - Double (U+21D0-21DF)
+    "⇐", "⇑", "⇒", "⇓", "⇔", "⇕", "⇖", "⇗", "⇘", "⇙",
+    "⇚", "⇛", "⇜", "⇝", "⇞", "⇟", "⇠", "⇡", "⇢", "⇣",
+    
+    // Arrows - Heavy (U+2794-27BF)
+    "➔", "➙", "➚", "➛", "➜", "➝", "➞", "➟", "➠", "➡",
+    "➢", "➣", "➤", "➥", "➦", "➧", "➨", "➩", "➪", "➫",
+    "➬", "➭", "➮", "➯", "➰", "➱", "➲", "➳", "➴", "➵",
+    "➶", "➷", "➸", "➹", "➺", "➻", "➼", "➽", "➾", "➿",
+    
+    // Mathematical Operators (U+2295-22A5)
+    "⊕", "⊖", "⊗", "⊘", "⊙", "⊚", "⊛", "⊜", "⊝", "⊞", "⊟",
+    "⊠", "⊡", "⊢", "⊣", "⊤", "⊥", "⊦", "⊧", "⊨", "⊩", "⊪",
+    
+    // Box Drawing and Block Elements (U+2580-259F)
+    "▀", "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█",
+    "▉", "▊", "▋", "▌", "▍", "▎", "▏",
+    "▐", "░", "▒", "▓", "▔", "▕", "▖", "▗", "▘", "▙",
+    "▚", "▛", "▜", "▝", "▞", "▟",
+    
+    // Miscellaneous Symbols (U+2600-26FF) - removed duplicate stars
+    "☀", "☁", "☂", "☃", "☄", "☇", "☈", "☉",
+    "☊", "☋", "☌", "☍", "☎", "☏", "☐", "☑", "☒", "☓",
+    "☔", "☕", "☖", "☗", "☘", "☙", "☚", "☛", "☜", "☝",
+    "☞", "☟", "☠", "☡", "☢", "☣", "☤", "☥", "☦", "☧",
+    "☨", "☩", "☪", "☫", "☬", "☭", "☮", "☯", "☰", "☱",
+    "☲", "☳", "☴", "☵", "☶", "☷", "☸", "☹", "☺", "☻",
+    "☼", "☽", "☾", "☿", "♀", "♁", "♂", "♃", "♄", "♅",
+    "♆", "♇", "♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏",
+    "♐", "♑", "♒", "♓", "♔", "♕", "♖", "♗", "♘", "♙",
+    "♚", "♛", "♜", "♝", "♞", "♟", "♠", "♡", "♢", "♣",
+    "♤", "♥", "♦", "♧", "♨", "♩", "♪", "♫", "♬", "♭",
+    "♮", "♯", "♰", "♱", "♲", "♳", "♴", "♵", "♶", "♷",
+    "♸", "♹", "♺", "♻", "♼", "♽", "♾", "♿",
+    
+    // Dingbats (U+2700-27BF)
+    "✀", "✁", "✂", "✃", "✄", "✅", "✆", "✇", "✈", "✉",
+    "✊", "✋", "✌", "✍", "✎", "✏", "✐", "✑", "✒", "✓",
+    "✔", "✕", "✖", "✗", "✘", "✙", "✚", "✛", "✜", "✝",
+    "✞", "✟", "✠", "✡", "✢", "✣", "✤", "✥",
+    // Note: ✦ and ✧ already included in stars section above
+    // Note: Stars already included above, skipping duplicates
+    "❁", "❂", "❃", "❄", "❅", "❆",
+    "❇", "❈", "❉", "❊", "❋", "❌", "❍", "❎", "❏", "❐",
+    "❑", "❒", "❓", "❔", "❕", "❖", "❗", "❘", "❙", "❚",
+    "❛", "❜", "❝", "❞", "❟", "❠", "❡", "❢", "❣", "❤",
+    "❥", "❦", "❧", "❨", "❩", "❪", "❫", "❬", "❭", "❮",
+    "❯", "❰", "❱", "❲", "❳", "❴", "❵", "❶", "❷", "❸",
+    "❹", "❺", "❻", "❼", "❽", "❾", "❿", "➀", "➁", "➂",
+    "➃", "➄", "➅", "➆", "➇", "➈", "➉", "➊", "➋", "➌",
+    "➍", "➎", "➏", "➐", "➑", "➒", "➓"
+  ];
+  
+  // Remove duplicates to ensure uniqueness
+  const uniqueSymbols = [...new Set(symbols)];
+  
+  // Assign symbols sequentially to ensure uniqueness for ALL codes
+  allCodesSorted.forEach((code, index) => {
+    symbolMap.set(code, uniqueSymbols[index % uniqueSymbols.length]);
+  });
+  
   const palette = allKeys
     .slice()
     .sort((a, b) => a.localeCompare(b, "en"))
     .map((code) => {
       const hex = rgbHexNormalize(colorsMap[code]);
+      const series = seriesFromCode(code);
       return {
         id: `MARD:${code}`,
         name: code,
@@ -117,7 +220,8 @@ function main() {
         brand: "MARD",
         code,
         productCode: code,
-        series: seriesFromCode(code),
+        series,
+        legendSymbol: symbolMap.get(code) || undefined,
       };
     });
 
@@ -132,7 +236,7 @@ function main() {
   out.push(` */`);
   out.push("");
   out.push(
-    `export type MardBeadColor = { id: string; name: string; hex: string; brand: "MARD"; code: string; productCode: string; series: string };`
+    `export type MardBeadColor = { id: string; name: string; hex: string; brand: "MARD"; code: string; productCode: string; series: string; legendSymbol?: string };`
   );
   out.push(
     `export type MardGroup = { name: string; keys: string[] };`
@@ -141,6 +245,9 @@ function main() {
 
   out.push(`export const MARD_PALETTE_FULL: MardBeadColor[] = [`);
   for (const c of palette) {
+    const legendSymbolPart = c.legendSymbol
+      ? `, legendSymbol: ${JSON.stringify(c.legendSymbol)}`
+      : "";
     out.push(
       `  { id: ${JSON.stringify(c.id)}, name: ${JSON.stringify(
         c.name
@@ -148,7 +255,7 @@ function main() {
         c.code
       )}, productCode: ${JSON.stringify(
         c.productCode
-      )}, series: ${JSON.stringify(c.series)} },`
+      )}, series: ${JSON.stringify(c.series)}${legendSymbolPart} },`
     );
   }
   out.push(`];`);
