@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useMemo, useEffect, useCallback } from 'react'
-import { Upload, Download } from 'lucide-react'
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react'
+import { Upload, Download, Image as ImageIcon } from 'lucide-react'
 import { BeadColor, MARD_CATEGORIES, PALETTES } from '@/lib/beadData'
 import { jsPDF } from 'jspdf'
+import { toPng } from 'html-to-image'
 import { useImageProcessing } from '@/hooks/use-image-processing'
 import { useHistory } from '@/hooks/use-history'
 import { getContrastTextColor } from '@/utils/color-utils'
@@ -12,19 +13,23 @@ import { SettingsPanel } from './pixel-bead-generator/settings-panel'
 import { PaletteSidebar } from './pixel-bead-generator/palette-sidebar'
 import { BeadGrid } from './pixel-bead-generator/bead-grid'
 import { UploadArea } from './pixel-bead-generator/upload-area'
+import { useTranslations } from 'next-intl'
 
 type Tool = 'brush' | 'eraser' | 'picker'
 type MardCategory = '72' | '96' | '120' | '144' | '168' | 'all'
 
-export function PixelBeadGenerator () {
+export function PixelBeadGenerator() {
+  const t = useTranslations('Generator')
   const [gridWidth, setGridWidth] = useState(50)
-  const [selectedPalette, setSelectedPalette] = useState<string>('Perler')
+  const [selectedPalette, setSelectedPalette] = useState<string>('MARD')
   const [selectedMardCategory, setSelectedMardCategory] = useState<MardCategory>('all')
   const [activeTool, setActiveTool] = useState<Tool>('brush')
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null)
   const [showGrid, setShowGrid] = useState(true)
   const [showBeadCodes, setShowBeadCodes] = useState(true)
   const [cellSize, setCellSize] = useState(18)
+  const [isExportingImage, setIsExportingImage] = useState(false)
+  const gridRef = useRef<HTMLDivElement>(null)
 
   const { image, setImage, isProcessing, processImage } = useImageProcessing()
   const {
@@ -40,6 +45,7 @@ export function PixelBeadGenerator () {
   } = useHistory()
 
   const [matrix, setMatrix] = useState<string[][]>([])
+  const exportRef = useRef<HTMLDivElement>(null)
 
   const activePalette: BeadColor[] = useMemo(() => {
     const base = PALETTES[selectedPalette] ?? []
@@ -53,6 +59,26 @@ export function PixelBeadGenerator () {
   const colorById = useMemo(() => {
     return new Map(activePalette.map(c => [c.id, c]))
   }, [activePalette])
+
+  const beadStats = useMemo(() => {
+    if (!matrix.length) return []
+    const counts: Record<string, number> = {}
+    matrix.flat().forEach(id => {
+      if (id) counts[id] = (counts[id] || 0) + 1
+    })
+
+    return activePalette
+      .filter(c => counts[c.id])
+      .map(c => ({
+        ...c,
+        count: counts[c.id]
+      }))
+      .sort((a, b) => b.count - a.count)
+  }, [matrix, activePalette])
+
+  const totalBeads = useMemo(() => {
+    return beadStats.reduce((acc, s) => acc + s.count, 0)
+  }, [beadStats])
 
   // Sync matrix with history
   useEffect(() => {
@@ -163,11 +189,11 @@ export function PixelBeadGenerator () {
           const color = colorById.get(cellId)
           const cellX = margin + x * pdfCellSize
           const cellY = 35 + y * pdfCellSize
-          
+
           if (color) {
             doc.setFillColor(color.hex)
             doc.rect(cellX, cellY, pdfCellSize, pdfCellSize, 'F')
-            
+
             // Draw text if cell is large enough
             const textColor = getContrastTextColor(color.hex)
             const isWhite = textColor === '#FFFFFF'
@@ -216,20 +242,20 @@ export function PixelBeadGenerator () {
           // Text information
           doc.setFontSize(10)
           doc.setTextColor(0)
-          
+
           const textX = margin + 15
           const lineHeight = 4
-          
+
           // Line 1: Name and Code
           const codeText = color.code ? ` (${color.code})` : ''
           doc.text(`${color.name}${codeText}`, textX, yPos + 3)
-          
+
           // Line 2: Hex
           const hexText = `Hex: ${color.hex.toUpperCase()}`
           doc.setFontSize(9)
           doc.setTextColor(80)
           doc.text(hexText, textX, yPos + 7)
-          
+
           // Count on the right
           doc.setFontSize(10)
           doc.setTextColor(0)
@@ -245,8 +271,33 @@ export function PixelBeadGenerator () {
     }
   }, [matrix, gridWidth, selectedPalette, colorById])
 
+  const exportToImage = useCallback(async () => {
+    if (!exportRef.current || !matrix.length) return
+
+    setIsExportingImage(true)
+    try {
+      const dataUrl = await toPng(exportRef.current, {
+        cacheBust: true,
+        backgroundColor: '#ffffff',
+        pixelRatio: 3, // HD quality
+        style: {
+          transform: 'scale(1)',
+          transformOrigin: 'top left'
+        }
+      })
+      const link = document.createElement('a')
+      link.download = `pixel-bead-pattern-${Date.now()}.png`
+      link.href = dataUrl
+      link.click()
+    } catch (error) {
+      console.error('Failed to export image:', error)
+    } finally {
+      setIsExportingImage(false)
+    }
+  }, [matrix.length])
+
   return (
-    <div className="flex flex-col lg:flex-row h-screen bg-[#F4F4F5] text-[#18181B] font-sans overflow-hidden">
+    <div className="flex flex-col lg:flex-row h-[calc(100vh-64px)] bg-[#F4F4F5] text-[#18181B] font-sans overflow-hidden">
       {/* Sidebar - Tools */}
       <aside className="w-full lg:w-72 bg-white border-b lg:border-r border-[#E4E4E7] flex flex-col p-6 space-y-8 overflow-y-auto">
         <Toolbar
@@ -286,13 +337,25 @@ export function PixelBeadGenerator () {
             disabled={!image || matrix.length === 0}
             className="flex items-center justify-center gap-2 w-full py-4 bg-[#18181B] text-white text-[10px] font-bold uppercase tracking-widest hover:bg-black transition-all disabled:opacity-50"
           >
-            <Download size={14} /> Export PDF
+            <Download size={14} /> {t('exportPdf')}
+          </button>
+          <button
+            onClick={exportToImage}
+            disabled={!image || matrix.length === 0 || isExportingImage}
+            className="flex items-center justify-center gap-2 w-full py-4 bg-white border-2 border-[#18181B] text-[#18181B] text-[10px] font-bold uppercase tracking-widest hover:bg-[#F4F4F5] transition-all disabled:opacity-50"
+          >
+            {isExportingImage ? (
+              <div className="w-3 h-3 border-2 border-[#18181B] border-t-transparent animate-spin" />
+            ) : (
+              <ImageIcon size={14} />
+            )}
+            {isExportingImage ? t('exporting') : t('exportImage')}
           </button>
           <label
             htmlFor="upload"
             className="flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed border-[#E4E4E7] text-[#71717A] text-[10px] font-bold uppercase tracking-widest cursor-pointer hover:border-[#18181B] hover:text-[#18181B] transition-all"
           >
-            <Upload size={14} /> Replace Image
+            <Upload size={14} /> {t('replaceImage')}
           </label>
         </div>
       </aside>
@@ -302,7 +365,10 @@ export function PixelBeadGenerator () {
         {!image ? (
           <UploadArea onUpload={handleImageUpload} />
         ) : (
-          <div className="relative shadow-[0_0_50px_rgba(0,0,0,0.1)] p-1 bg-white inline-block">
+          <div
+            ref={gridRef}
+            className="relative shadow-[0_0_50px_rgba(0,0,0,0.1)] p-1 bg-white inline-block"
+          >
             {matrix.length > 0 && (
               <BeadGrid
                 matrix={matrix}
@@ -318,7 +384,7 @@ export function PixelBeadGenerator () {
               <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50">
                 <div className="flex flex-col items-center gap-4">
                   <div className="w-8 h-8 border-4 border-[#18181B] border-t-transparent animate-spin" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest">Processing</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest">{t('processing')}</span>
                 </div>
               </div>
             )}
@@ -333,6 +399,58 @@ export function PixelBeadGenerator () {
         selectedColorId={selectedColorId}
         onColorSelect={setSelectedColorId}
       />
+
+      {/* Off-screen Export Container */}
+      <div style={{ position: 'absolute', left: '-9999px', top: 0, pointerEvents: 'none' }}>
+        <div
+          ref={exportRef}
+          className="bg-white p-12 flex flex-row gap-12 items-start"
+          style={{ width: 'fit-content' }}
+        >
+          <div className="bg-white p-1 shadow-[0_0_10px_rgba(0,0,0,0.1)]">
+            <BeadGrid
+              matrix={matrix}
+              gridWidth={gridWidth}
+              cellSize={cellSize}
+              showGrid={showGrid}
+              showBeadCodes={showBeadCodes}
+              colorById={colorById}
+              onCellClick={() => { }}
+            />
+          </div>
+
+          <div className="w-80 flex flex-col pt-1">
+            <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-[#18181B] border-b-2 border-[#18181B] pb-4 mb-6">
+              {t('statsTitle')}
+            </h2>
+            <div className="space-y-3">
+              {beadStats.map(color => (
+                <div key={color.id} className="flex items-center justify-between py-1">
+                  <div className="flex items-center gap-4">
+                    <div
+                      className="w-10 h-10 border border-[#E4E4E7] shadow-sm"
+                      style={{ backgroundColor: color.hex }}
+                    />
+                    <div>
+                      <div className="text-[12px] font-black text-[#18181B] uppercase tracking-wider">{color.code}</div>
+                      <div className="text-[10px] font-bold text-[#71717A] uppercase">{color.name}</div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[14px] font-black text-[#18181B]">{color.count}</div>
+                    <div className="text-[8px] font-bold text-[#A1A1AA] uppercase tracking-tighter">beads</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 pt-6 border-t-2 border-[#18181B] flex justify-between items-baseline">
+              <span className="text-[12px] font-black uppercase tracking-widest text-[#18181B]">{t('total')}:</span>
+              <span className="text-[18px] font-black text-[#18181B]">{totalBeads} beads</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import { MARD_CATEGORIES, PALETTE_LABELS, PALETTES } from '@/lib/beadData'
+import { useTranslations } from 'next-intl'
 
 type MardCategory = '72' | '96' | '120' | '144' | '168' | 'all'
 
@@ -13,7 +14,7 @@ interface SettingsPanelProps {
   onMardCategoryChange: (category: MardCategory) => void
 }
 
-export function SettingsPanel ({
+export function SettingsPanel({
   gridWidth,
   onGridWidthChange,
   cellSize,
@@ -23,14 +24,16 @@ export function SettingsPanel ({
   selectedMardCategory,
   onMardCategoryChange
 }: SettingsPanelProps) {
+  const t = useTranslations('Generator')
+
   return (
     <div className="space-y-4">
-      <label className="text-xs font-bold uppercase tracking-widest text-[#A1A1AA]">Settings</label>
+      <label className="text-xs font-bold uppercase tracking-widest text-[#A1A1AA]">{t('settings')}</label>
       <div className="space-y-4 pt-2">
         <div className="space-y-2">
           <div className="flex justify-between text-[10px] font-bold uppercase text-[#71717A]">
-            <span>Width</span>
-            <span>{gridWidth} Units</span>
+            <span>{t('width')}</span>
+            <span>{gridWidth} {t('units')}</span>
           </div>
           <input
             type="range"
@@ -44,7 +47,7 @@ export function SettingsPanel ({
 
         <div className="space-y-2">
           <div className="flex justify-between text-[10px] font-bold uppercase text-[#71717A]">
-            <span>Cell Size</span>
+            <span>{t('cellSize')}</span>
             <span>{cellSize}px</span>
           </div>
           <input
@@ -58,7 +61,7 @@ export function SettingsPanel ({
         </div>
 
         <div className="space-y-2">
-          <span className="text-[10px] font-bold uppercase text-[#71717A]">Bead Brand</span>
+          <span className="text-[10px] font-bold uppercase text-[#71717A]">{t('beadBrand')}</span>
           <select
             value={selectedPalette}
             onChange={(e) => onPaletteChange(e.target.value)}
@@ -74,18 +77,18 @@ export function SettingsPanel ({
 
         {selectedPalette === 'MARD' && (
           <div className="space-y-2">
-            <span className="text-[10px] font-bold uppercase text-[#71717A]">MARD Category</span>
+            <span className="text-[10px] font-bold uppercase text-[#71717A]">{t('mardCategory')}</span>
             <select
               value={selectedMardCategory}
               onChange={(e) => onMardCategoryChange(e.target.value as MardCategory)}
               className="w-full p-3 bg-[#F4F4F5] border-none text-sm focus:ring-1 focus:ring-[#18181B]"
             >
-              <option value="72">72 MARD Colors</option>
-              <option value="96">96 MARD Colors</option>
-              <option value="120">120 MARD Colors</option>
-              <option value="144">144 MARD Colors</option>
-              <option value="168">168 MARD Colors</option>
-              <option value="all">All MARD Colors (291)</option>
+              <option value="72">72 {t('colors')}</option>
+              <option value="96">96 {t('colors')}</option>
+              <option value="120">120 {t('colors')}</option>
+              <option value="144">144 {t('colors')}</option>
+              <option value="168">168 {t('colors')}</option>
+              <option value="all">{t('allColors')} (291)</option>
             </select>
           </div>
         )}

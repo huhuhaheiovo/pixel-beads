@@ -1,0 +1,123 @@
+{
+    "Header": {
+        "home": "首页",
+        "generator": "生成器",
+        "showcase": "作品展示"
+    },
+    "HomePage": {
+        "badge": "免费在线工具",
+        "titlePrefix": "专业级",
+        "titleAccent": "拼豆",
+        "titleSuffix": "图纸生成器",
+        "description": "只需几秒钟，即可将您的照片转换为精美的像素拼豆图纸。支持自定义网格、精准色彩匹配，以及高清 PDF/图片导出。",
+        "ctaStart": "开始创作",
+        "ctaLearn": "了解更多",
+        "stats": {
+            "brands": "主流品牌支持",
+            "export": "高清导出",
+            "free": "永久免费",
+            "speed": "极速处理"
+        },
+        "features": {
+            "title": "掌控您的艺术创作",
+            "upload": {
+                "title": "智能图片上传",
+                "desc": "支持拖拽上传。我们的算法能轻松处理各种复杂的照片。"
+            },
+            "grid": {
+                "title": "自定义网格尺寸",
+                "desc": "从精巧的杯垫到巨幅壁画，按需精准调节尺寸。"
+            },
+            "palette": {
+                "title": "实时色表同步",
+                "desc": "支持 Perler、Artkal 和 Mard，提供实时购物清单。"
+            }
+        },
+        "howItWorks": {
+            "step1Title": "上传图片",
+            "step1Desc": "从您的设备中选择照片。高对比度的图片效果最佳。",
+            "step2Title": "选择色卡",
+            "step2Desc": "选择您偏好的品牌，我们将自动匹配颜色。",
+            "step3Title": "精修编辑",
+            "step3Desc": "使用画笔工具完美处理像素，打磨每一个细节。",
+            "step4Title": "高清导出",
+            "step4Desc": "下载高清导出图和制作指南，即可开始制作。"
+        },
+        "finalCta": {
+            "title": "准备好开启拼豆艺术了吗？",
+            "button": "免费打开生成器",
+            "footer": "无需注册 • 即刻导出 • 100% 免费"
+        }
+    },
+    "Generator": {
+        "exportPdf": "导出 PDF",
+        "exportImage": "导出图片",
+        "exporting": "导出中...",
+        "replaceImage": "更换图片",
+        "processing": "处理中",
+        "statsTitle": "拼豆数量统计",
+        "total": "总计",
+        "empty": "空白",
+        "uploadPrompt": "上传图片开始创作",
+        "title": "拼豆图纸生成器",
+        "description": "将您喜爱的照片转换为自定义拼豆图纸。是制作礼物和家居装饰的完美选择。",
+        "getStarted": "开始使用",
+        "tools": "工具",
+        "brush": "画笔",
+        "eraser": "橡皮擦",
+        "eyedropper": "吸色器",
+        "toggleGrid": "显示/隐藏网格",
+        "toggleBeadCodes": "显示/隐藏色号",
+        "undo": "撤销",
+        "redo": "重做",
+        "settings": "设置",
+        "width": "宽度",
+        "units": "单位",
+        "cellSize": "网格大小",
+        "beadBrand": "拼豆品牌",
+        "mardCategory": "MARD 分类",
+        "colors": "色号",
+        "allColors": "所有 MARD 颜色"
+    },
+    "Showcase": {
+        "title": "作品展览馆",
+        "subtitle": "探索社区创作的精美图纸。寻找灵感，开启您的下一个创作项目。",
+        "cta": "去制作",
+        "viewCollection": "查看合集",
+        "exploreThemes": "探索主题",
+        "halloween": {
+            "title": "万圣节拼豆图纸",
+            "description": "搞怪又有趣的万圣节装饰图纸。从南瓜到幽灵，应有尽有！",
+            "items": {
+                "item1": "发光杰克灯",
+                "item2": "诡秘飞蝠",
+                "item3": "巫师礼帽",
+                "item4": "骷髅之舞",
+                "item5": "呆萌幽灵三人组",
+                "item6": "黑猫魅影"
+            }
+        },
+        "christmas": {
+            "title": "圣诞节拼豆图纸",
+            "description": "温馨喜庆的节日图纸。非常适合制作装扮挂件和礼物！",
+            "items": {
+                "item1": "经典圣诞树",
+                "item2": "欢乐圣诞老人",
+                "item3": "节日驯鹿",
+                "item4": "晶莹雪花",
+                "item5": "姜饼小人",
+                "item6": "红白拐杖糖"
+            }
+        }
+    },
+    "CoolDesigns": {
+        "title": "酷炫拼豆设计与创意",
+        "subtitle": "探索最富创意和流行的拼豆图案。从复古游戏图标到现代像素艺术，应有尽有。",
+        "h2_trending": "热门酷炫设计",
+        "h2_categories": "热门分类",
+        "cat_gaming": "复古游戏",
+        "cat_animals": "几何动物",
+        "cat_icons": "极简图标",
+        "cta_create": "创作你的酷炫设计"
+    }
+}

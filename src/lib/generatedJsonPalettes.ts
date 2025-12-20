@@ -222,6 +222,6 @@ export const JSON_PALETTE_LABELS: Record<string, string> = {
   "Hama-Midi": "Hama Midi",
   "Nabbi": "Nabbi",
   "Ikea-Pyssla": "Ikea Pyssla",
-  "Perler-Names": "Perler (Names)",
+  "Perler-Names": "Perler",
 };
 

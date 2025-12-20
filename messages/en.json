@@ -1,0 +1,123 @@
+{
+    "Header": {
+        "home": "Home",
+        "generator": "Generator",
+        "showcase": "Showcase"
+    },
+    "HomePage": {
+        "badge": "Free Online Tool",
+        "titlePrefix": "Professional",
+        "titleAccent": "Perler Bead",
+        "titleSuffix": "Pattern Generator",
+        "description": "Convert your photos into stunning pixel bead art patterns in seconds. Customizable grids, accurate color matching, and HD PDF/Image exports.",
+        "ctaStart": "Start Generating",
+        "ctaLearn": "Learn More",
+        "stats": {
+            "brands": "Bead Brands",
+            "export": "HD Export",
+            "free": "Free Forever",
+            "speed": "Fast Process"
+        },
+        "features": {
+            "title": "Master Your Bead Art",
+            "upload": {
+                "title": "Smart Image Upload",
+                "desc": "Simply drag and drop any image. Our algorithm handles complex photos with ease."
+            },
+            "grid": {
+                "title": "Custom Grid Sizes",
+                "desc": "From tiny coasters to massive wall art, adjust the dimensions exactly as you need."
+            },
+            "palette": {
+                "title": "Live Palette Sync",
+                "desc": "Support for Perler, Artkal, and Mard beads with real-time shopping lists."
+            }
+        },
+        "howItWorks": {
+            "step1Title": "Upload Image",
+            "step1Desc": "Pick any photo from your device. High-contrast images work best for bead art.",
+            "step2Title": "Pick Palette",
+            "step2Desc": "Choose your preferred bead brand. We match colors automatically.",
+            "step3Title": "Refine & Edit",
+            "step3Desc": "Use our brush tools to perfect individual pixels and fine-tune details.",
+            "step4Title": "Export PDF/HD PNG",
+            "step4Desc": "Download high-quality instructions and a shopping list for your project."
+        },
+        "finalCta": {
+            "title": "Ready to Build Modern Bead Art?",
+            "button": "Open Generator Free",
+            "footer": "No account required • Instant Export • 100% Free"
+        }
+    },
+    "Generator": {
+        "exportPdf": "Export PDF",
+        "exportImage": "Export Image",
+        "exporting": "Exporting...",
+        "replaceImage": "Replace Image",
+        "processing": "Processing",
+        "statsTitle": "Bead Count Statistics",
+        "total": "Total",
+        "empty": "Empty",
+        "uploadPrompt": "Upload Image to Start",
+        "title": "Pixel Bead Generator",
+        "description": "Convert your favorite photos into custom perler bead patterns. Perfect for gifts and home decor.",
+        "getStarted": "Get Started",
+        "tools": "Tools",
+        "brush": "Brush",
+        "eraser": "Eraser",
+        "eyedropper": "Eyedropper",
+        "toggleGrid": "Toggle Grid",
+        "toggleBeadCodes": "Toggle Bead Codes",
+        "undo": "Undo",
+        "redo": "Redo",
+        "settings": "Settings",
+        "width": "Width",
+        "units": "Units",
+        "cellSize": "Cell Size",
+        "beadBrand": "Bead Brand",
+        "mardCategory": "MARD Category",
+        "colors": "Colors",
+        "allColors": "All MARD Colors"
+    },
+    "Showcase": {
+        "title": "Community Gallery",
+        "subtitle": "Discover beautiful patterns created by our community. Get inspired and start your next project.",
+        "cta": "Create Yours",
+        "viewCollection": "View Collection",
+        "exploreThemes": "Explore Themes",
+        "halloween": {
+            "title": "Halloween Perler Bead Patterns",
+            "description": "Spooky and fun patterns for your Halloween decorations. From pumpkins to ghosts!",
+            "items": {
+                "item1": "Glowing Jack-o'-Lantern",
+                "item2": "Spooky Flying Bat",
+                "item3": "Wicked Witch Hat",
+                "item4": "Dancing Skeleton",
+                "item5": "Cute Ghost Trio",
+                "item6": "Black Cat Shadow"
+            }
+        },
+        "christmas": {
+            "title": "Christmas Perler Bead Patterns",
+            "description": "Festive and cozy patterns for the holiday season. Perfect for ornaments and gifts!",
+            "items": {
+                "item1": "Classic Christmas Tree",
+                "item2": "Cheerful Santa Claus",
+                "item3": "Holiday Reindeer",
+                "item4": "Delicate Snowflake",
+                "item5": "Gingerbread Man",
+                "item6": "Red & White Candy Cane"
+            }
+        }
+    },
+    "CoolDesigns": {
+        "title": "Cool Perler Bead Designs & Ideas",
+        "subtitle": "Discover the most creative and trending perler bead patterns. From retro gaming icons to modern pixel art.",
+        "h2_trending": "Trending Cool Designs",
+        "h2_categories": "Popular Categories",
+        "cat_gaming": "Retro Gaming",
+        "cat_animals": "Geometric Animals",
+        "cat_icons": "Minimalist Icons",
+        "cta_create": "Create Your Own Cool Design"
+    }
+}

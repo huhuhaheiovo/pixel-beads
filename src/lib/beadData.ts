@@ -70,10 +70,10 @@ export const PALETTES: Record<string, BeadColor[]> = {
 }
 
 export const PALETTE_LABELS: Record<string, string> = {
-  Perler: 'Perler (Pxx)',
-  'Artkal-S': 'Artkal S (Sxx)',
-  MARD: 'MARD (C/H/D/M...)',
+  Perler: 'Perler',
+  'Artkal-S': 'Artkal',
+  MARD: 'MARD',
   // Legacy single-color minimal palette
-  Hama: 'Hama (Legacy)',
+  Hama: 'Hama',
   ...JSON_PALETTE_LABELS
 }
