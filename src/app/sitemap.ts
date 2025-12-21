@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 import { routing } from '@/i18n/routing'
 
-const BASE_URL = 'https://www.pixelbeads.art'
+const BASE_URL = 'https://www.pixel-beads.com'
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const routes = [
