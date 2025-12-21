@@ -15,10 +15,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         title: `${t('christmas.title')} | Festive Bead Ideas`,
         description: t('christmas.description'),
         alternates: {
-            canonical: `/${locale}/showcase/christmas`,
+            canonical: `/${locale}/showcase/christmas-perler-bead-patterns`,
             languages: {
-                en: '/en/showcase/christmas',
-                zh: '/zh/showcase/christmas',
+                en: '/en/showcase/christmas-perler-bead-patterns',
+                zh: '/zh/showcase/christmas-perler-bead-patterns',
             },
         },
     };
@@ -40,34 +40,34 @@ export default async function ChristmasShowcase() {
     return (
         <main className="min-h-screen bg-slate-50">
             {/* Hero Section */}
-            <section className="relative pt-24 pb-20 overflow-hidden bg-red-600 border-b-8 border-green-600 text-white">
+            <section className="relative pt-24 pb-20 overflow-hidden bg-gradient-to-b from-blue-50 to-white border-b border-blue-100">
                 <div className="container mx-auto px-4 text-center relative z-10">
-                    <Link href="/showcase" className="inline-flex items-center gap-2 text-red-100 hover:text-white transition-colors mb-8 font-bold uppercase tracking-widest text-xs">
+                    <Link href="/showcase" className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors mb-8 font-bold uppercase tracking-widest text-xs">
                         <ArrowLeft size={16} /> Back to Gallery
                     </Link>
 
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-700/50 border border-green-400/30 mb-8 animate-fade-in shadow-lg backdrop-blur-sm">
-                        <Bell size={14} className="text-yellow-300 animate-bounce" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-green-100">Holiday Collection</span>
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-50 border border-red-100 mb-8 animate-fade-in">
+                        <Bell size={14} className="text-red-500 animate-bounce" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-red-600">Holiday Collection</span>
                     </div>
 
-                    <h1 className="text-5xl md:text-7xl font-black tracking-tighter uppercase mb-6 relative inline-block drop-shadow-[0_4px_0_rgba(185,28,28,1)]">
+                    <h1 className="text-5xl md:text-7xl font-black tracking-tighter uppercase mb-6 relative inline-block text-slate-900">
                         {t('christmas.title')}
-                        <Star className="absolute -top-8 -right-12 text-yellow-400 fill-yellow-400 animate-spin-slow" size={48} />
+                        <Star className="absolute -top-6 -right-10 text-yellow-400 fill-yellow-400 animate-spin-slow" size={40} />
                     </h1>
 
-                    <p className="text-xl text-red-100 max-w-2xl mx-auto mb-12 font-medium leading-relaxed drop-shadow-sm">
+                    <p className="text-xl text-slate-500 max-w-2xl mx-auto mb-12 font-medium leading-relaxed">
                         {t('christmas.description')}
                     </p>
                 </div>
 
-                {/* Festive Decorations */}
+                {/* Winter Decorations */}
                 <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
-                    <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-green-600/30 rounded-full blur-[100px] translate-x-1/3 -translate-y-1/3"></div>
-                    <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-yellow-400/20 rounded-full blur-[120px] -translate-x-1/4 translate-y-1/4"></div>
-                    <Snowflake className="absolute top-10 left-10 text-white opacity-20 animate-pulse" size={64} />
-                    <Snowflake className="absolute bottom-20 right-20 text-white opacity-20 animate-pulse" size={48} style={{ animationDelay: '1s' }} />
-                    <Trees className="absolute bottom-0 left-[-20px] text-green-800 opacity-20" size={200} />
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-100/40 rounded-full blur-[100px] translate-x-1/3 -translate-y-1/3"></div>
+                    <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-green-100/40 rounded-full blur-[120px] -translate-x-1/4 translate-y-1/4"></div>
+                    <Snowflake className="absolute top-10 left-10 text-blue-200 opacity-60 animate-pulse" size={48} />
+                    <Snowflake className="absolute bottom-20 right-20 text-blue-200 opacity-60 animate-pulse" size={32} style={{ animationDelay: '1s' }} />
+                    <Trees className="absolute bottom-[-20px] left-[-20px] text-green-800/5" size={180} />
                 </div>
             </section>
 
@@ -75,18 +75,18 @@ export default async function ChristmasShowcase() {
             <section className="container mx-auto px-4 py-16">
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {images.map((image, i) => (
-                        <div key={i} className="group aspect-square bg-white rounded-[2rem] overflow-hidden relative border-4 border-transparent hover:border-green-500 transition-all shadow-lg hover:shadow-green-500/20">
+                        <div key={i} className="group aspect-square bg-white rounded-[2rem] overflow-hidden relative border-4 border-transparent hover:border-red-100 transition-all shadow-sm hover:shadow-xl">
                             <Image
                                 src={image.path}
                                 alt={image.name}
                                 fill
                                 className="object-cover group-hover:scale-110 transition-transform duration-700"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-green-900/90 via-green-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-8 text-center">
-                                <h4 className="text-white font-black uppercase tracking-tight text-lg mb-4 line-clamp-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 drop-shadow-md">{image.name}</h4>
+                            <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-8 text-center backdrop-blur-[2px]">
+                                <h4 className="text-slate-900 font-black uppercase tracking-tight text-lg mb-4 line-clamp-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">{image.name}</h4>
                                 <Link
                                     href="/generator"
-                                    className="px-6 py-3 bg-red-600 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500 shadow-[4px_4px_0px_#991b1b] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none hover:bg-red-700"
+                                    className="px-6 py-3 bg-red-600 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500 shadow-lg hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-md hover:bg-red-700"
                                 >
                                     Start Crafting
                                 </Link>
@@ -97,9 +97,9 @@ export default async function ChristmasShowcase() {
 
                 {/* Empty State */}
                 {images.length === 0 && (
-                    <div className="text-center py-20 bg-white rounded-3xl border-4 border-dashed border-red-200">
-                        <Gift className="mx-auto text-red-300 mb-4" size={48} />
-                        <p className="text-red-400 font-medium">No holiday patterns yet...</p>
+                    <div className="text-center py-20 bg-white rounded-3xl border-4 border-dashed border-slate-200">
+                        <Gift className="mx-auto text-slate-300 mb-4" size={48} />
+                        <p className="text-slate-400 font-medium">No holiday patterns yet...</p>
                     </div>
                 )}
             </section>

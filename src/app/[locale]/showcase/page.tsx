@@ -36,7 +36,7 @@ export default async function ShowcasePage() {
             bg: 'bg-orange-500',
             borderColor: 'hover:border-orange-500',
             shadow: 'hover:shadow-orange-500/20',
-            link: '/showcase/halloween'
+            link: '/showcase/halloween-perler-bead-patterns'
         },
         {
             id: 'christmas',
@@ -46,7 +46,7 @@ export default async function ShowcasePage() {
             bg: 'bg-green-500',
             borderColor: 'hover:border-green-600',
             shadow: 'hover:shadow-green-600/20',
-            link: '/showcase/christmas'
+            link: '/showcase/christmas-perler-bead-patterns'
         }
     ];
 

@@ -15,10 +15,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         title: `${t('halloween.title')} | Spooky Bead Ideas`,
         description: t('halloween.description'),
         alternates: {
-            canonical: `/ ${locale} /showcase/halloween`,
+            canonical: `/${locale}/showcase/halloween-perler-bead-patterns`,
             languages: {
-                en: '/en/showcase/halloween',
-                zh: '/zh/showcase/halloween',
+                en: '/en/showcase/halloween-perler-bead-patterns',
+                zh: '/zh/showcase/halloween-perler-bead-patterns',
             },
         },
     };
