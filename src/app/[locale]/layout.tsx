@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
     return {
         metadataBase: new URL('https://pixelbeads.art'),
-        title: t('titlePrefix') + ' ' + t('titleAccent') + ' ' + t('titleSuffix') + ' | Create Custom Bead Art',
+        title: t('titlePrefix') + ' ' + t('titleAccent') + ' ' + t('titleSuffix'),
         description: t('description'),
         alternates: {
             canonical: `/${locale}`,

@@ -1,9 +1,33 @@
 import { Link } from '@/i18n/routing'
 import { ArrowRight, ImageIcon, LayoutGrid, Download, Zap, Hammer } from 'lucide-react'
 import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
+import Image from 'next/image';
+import fs from 'fs';
+import path from 'path';
 
-export default function Home() {
-    const t = useTranslations('HomePage');
+export default async function Home() {
+    const t = await getTranslations('HomePage');
+
+    // Sample images from all theme directories
+    const themeDirs = ['pallettes', 'halloween', 'christmas'];
+    const sampledImages: { name: string; path: string }[] = [];
+
+    themeDirs.forEach(dir => {
+        const fullPath = path.join(process.cwd(), 'public', dir);
+        if (fs.existsSync(fullPath)) {
+            const files = fs.readdirSync(fullPath)
+                .filter(file => file.match(/\.(png|jpe?g|gif|webp)$/i))
+                .slice(0, 2); // Take 2 from each dir
+
+            files.forEach(file => {
+                sampledImages.push({
+                    name: file.replace(/-/g, ' ').replace(/\.[^/.]+$/, ''),
+                    path: `/${dir}/${file}`
+                });
+            });
+        }
+    });
 
     return (
         <main className="min-h-screen">
@@ -20,7 +44,7 @@ export default function Home() {
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
                                 {t('titleAccent')}
                             </span> <br />
-                            {t('titleSuffix')}
+                            {/*{t('titleSuffix')}*/}
                         </h1>
                         <p className="text-lg md:text-xl text-[#71717A] mb-12 max-w-2xl mx-auto leading-relaxed">
                             {t('description')}
@@ -44,6 +68,47 @@ export default function Home() {
 
                 {/* Background Decoration */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-50/50 rounded-full blur-3xl -z-10"></div>
+            </section>
+
+            {/* Showcase Section */}
+            <section className="py-24 bg-white border-t border-[#E4E4E7]">
+                <div className="container mx-auto px-4">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase mb-4">{t('showcaseTitle')}</h2>
+                        <p className="text-lg text-[#71717A] max-w-2xl mx-auto mb-8">{t('showcaseSubtitle')}</p>
+                        <div className="w-20 h-1.5 bg-[#18181B] mx-auto"></div>
+                    </div>
+
+                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-16">
+                        {sampledImages.map((image, i) => (
+                            <div key={i} className="group aspect-square bg-[#F4F4F5] rounded-2xl overflow-hidden relative border border-[#E4E4E7]">
+                                <Image
+                                    src={image.path}
+                                    alt={image.name}
+                                    fill
+                                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                />
+                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                                    <Link
+                                        href="/generator"
+                                        className="px-4 py-2 bg-white text-[#18181B] rounded-lg font-bold text-[8px] uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-transform"
+                                    >
+                                        Try This
+                                    </Link>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="text-center">
+                        <Link
+                            href="/showcase"
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-white border-2 border-[#18181B] text-[#18181B] rounded-xl font-bold uppercase tracking-widest hover:bg-[#18181B] hover:text-white transition-all shadow-sm group"
+                        >
+                            View Entire Gallery <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                    </div>
+                </div>
             </section>
 
             {/* Stats/Proof Section */}
@@ -102,6 +167,8 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+
 
             {/* How it Works */}
             <section id="how-it-works" className="py-24 bg-[#FAFAFA]">

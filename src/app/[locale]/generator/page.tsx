@@ -7,7 +7,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const t = await getTranslations({ locale, namespace: 'Header' });
 
     return {
-        title: `${t('generator')} | Perler Bead Pattern Generator`,
+        title: `Free Perler Bead Pattern Generator – Easy Pattern Download`,
+        description:"Convert your photos into stunning pixel bead art patterns in seconds. Customizable grids, accurate color matching, and HD PDF/Image exports.",
         alternates: {
             canonical: `/${locale}/generator`,
             languages: {

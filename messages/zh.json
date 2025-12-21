@@ -6,9 +6,9 @@
     },
     "HomePage": {
         "badge": "免费在线工具",
-        "titlePrefix": "专业级",
-        "titleAccent": "拼豆",
-        "titleSuffix": "图纸生成器",
+        "titlePrefix": "免费",
+        "titleAccent": "拼豆艺术",
+        "titleSuffix": "生成器与作品集",
         "description": "只需几秒钟，即可将您的照片转换为精美的像素拼豆图纸。支持自定义网格、精准色彩匹配，以及高清 PDF/图片导出。",
         "ctaStart": "开始创作",
         "ctaLearn": "了解更多",
@@ -47,7 +47,9 @@
             "title": "准备好开启拼豆艺术了吗？",
             "button": "免费打开生成器",
             "footer": "无需注册 • 即刻导出 • 100% 免费"
-        }
+        },
+        "showcaseTitle": "精选拼豆艺术",
+        "showcaseSubtitle": "探索社区创作的最受欢迎的设计。只需点击一下，即可开始您的下一个项目。"
     },
     "Generator": {
         "exportPdf": "导出 PDF",
@@ -80,7 +82,7 @@
         "allColors": "所有 MARD 颜色"
     },
     "Showcase": {
-        "title": "作品展览馆",
+        "title": "拼豆作品合集",
         "subtitle": "探索社区创作的精美图纸。寻找灵感，开启您的下一个创作项目。",
         "cta": "去制作",
         "viewCollection": "查看合集",
@@ -108,7 +110,8 @@
                 "item5": "姜饼小人",
                 "item6": "红白拐杖糖"
             }
-        }
+        },
+        "featuredWorks": "精选作品"
     },
     "CoolDesigns": {
         "title": "酷炫拼豆设计与创意",

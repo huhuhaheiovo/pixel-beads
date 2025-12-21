@@ -3,13 +3,16 @@ import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { ArrowLeft, Ghost } from 'lucide-react';
+import Image from 'next/image';
+import fs from 'fs';
+import path from 'path';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'Showcase' });
 
     return {
-        title: `${t('halloween.title')} | Free Perler Bead Patterns`,
+        title: `${t('halloween.title')} | Spooky Bead Ideas`,
         description: t('halloween.description'),
         alternates: {
             canonical: `/${locale}/showcase/halloween`,
@@ -21,17 +24,18 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     };
 }
 
-export default function HalloweenShowcase() {
-    const t = useTranslations('Showcase');
+export default async function HalloweenShowcase() {
+    const t = await getTranslations('Showcase');
 
-    const items = [
-        t('halloween.items.item1'),
-        t('halloween.items.item2'),
-        t('halloween.items.item3'),
-        t('halloween.items.item4'),
-        t('halloween.items.item5'),
-        t('halloween.items.item6')
-    ];
+    // Read images from public/halloween
+    const halloweenDir = path.join(process.cwd(), 'public', 'halloween');
+    const files = fs.readdirSync(halloweenDir);
+    const images = files
+        .filter(file => file.match(/\.(png|jpe?g|gif|webp)$/i))
+        .map(file => ({
+            name: file.replace(/-/g, ' ').replace(/\.[^/.]+$/, ''),
+            path: `/halloween/${file}`
+        }));
 
     return (
         <main className="min-h-screen bg-white pb-24">
@@ -53,25 +57,20 @@ export default function HalloweenShowcase() {
 
             {/* Grid */}
             <section className="container mx-auto px-4 py-24">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {items.map((item, i) => (
-                        <div key={i} className="group bg-white border-2 border-[#F4F4F5] rounded-3xl overflow-hidden hover:border-orange-500 transition-all shadow-sm hover:shadow-xl">
-                            <div className="aspect-[4/3] bg-orange-100 flex items-center justify-center relative overflow-hidden">
-                                <span className="text-orange-500/10 font-black text-8xl absolute transform -rotate-12">BOO!</span>
-                                <div className="p-12 relative z-10">
-                                    <div className="w-full aspect-square bg-orange-500 rounded-full opacity-20 blur-2xl absolute inset-0"></div>
-                                    <div className="grid grid-cols-4 gap-1 opacity-40">
-                                        {Array.from({ length: 16 }).map((_, j) => (
-                                            <div key={j} className="w-4 h-4 rounded-full bg-orange-600" style={{ opacity: Math.random() }}></div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="p-8">
-                                <h3 className="text-xl font-black uppercase tracking-tighter mb-6">{item}</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                    {images.map((image, i) => (
+                        <div key={i} className="group bg-white border-2 border-[#F4F4F5] rounded-3xl overflow-hidden hover:border-orange-500 transition-all shadow-sm hover:shadow-xl relative aspect-square">
+                            <Image
+                                src={image.path}
+                                alt={image.name}
+                                fill
+                                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-6 text-center backdrop-blur-sm">
+                                <h4 className="text-white font-bold uppercase tracking-tighter text-sm mb-4 line-clamp-2">{image.name}</h4>
                                 <Link
                                     href="/generator"
-                                    className="inline-flex items-center justify-center w-full py-4 bg-[#18181B] text-white text-[10px] font-bold uppercase tracking-[0.2em] rounded-xl hover:bg-orange-600 transition-all"
+                                    className="px-6 py-2 bg-white text-[#18181B] rounded-lg font-bold text-[10px] uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-transform"
                                 >
                                     {t('cta')}
                                 </Link>

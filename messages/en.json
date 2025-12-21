@@ -5,10 +5,10 @@
         "showcase": "Showcase"
     },
     "HomePage": {
-        "badge": "Free Online Tool",
-        "titlePrefix": "Professional",
-        "titleAccent": "Perler Bead",
-        "titleSuffix": "Pattern Generator",
+        "badge": "Free Online Perler Bead Diy",
+        "titlePrefix": "",
+        "titleAccent": "Perler Bead Art",
+        "titleSuffix": "Generation & DIY Pattern Creator",
         "description": "Convert your photos into stunning pixel bead art patterns in seconds. Customizable grids, accurate color matching, and HD PDF/Image exports.",
         "ctaStart": "Start Generating",
         "ctaLearn": "Learn More",
@@ -19,7 +19,7 @@
             "speed": "Fast Process"
         },
         "features": {
-            "title": "Master Your Bead Art",
+            "title": "Master Your Perler Bead Art",
             "upload": {
                 "title": "Smart Image Upload",
                 "desc": "Simply drag and drop any image. Our algorithm handles complex photos with ease."
@@ -47,7 +47,9 @@
             "title": "Ready to Build Modern Bead Art?",
             "button": "Open Generator Free",
             "footer": "No account required • Instant Export • 100% Free"
-        }
+        },
+        "showcaseTitle": "Easy Featured Perler Bead Art",
+        "showcaseSubtitle": "Explore some of the most popular designs created by our community. Start your next project with just a click."
     },
     "Generator": {
         "exportPdf": "Export PDF",
@@ -80,7 +82,7 @@
         "allColors": "All MARD Colors"
     },
     "Showcase": {
-        "title": "Community Gallery",
+        "title": "Bead Pattern Gallery",
         "subtitle": "Discover beautiful patterns created by our community. Get inspired and start your next project.",
         "cta": "Create Yours",
         "viewCollection": "View Collection",
@@ -108,7 +110,8 @@
                 "item5": "Gingerbread Man",
                 "item6": "Red & White Candy Cane"
             }
-        }
+        },
+        "featuredWorks": "Featured Works"
     },
     "CoolDesigns": {
         "title": "Cool Perler Bead Designs & Ideas",

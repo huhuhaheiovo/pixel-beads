@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const t = await getTranslations({ locale, namespace: 'CoolDesigns' });
 
     return {
-        title: `${t('title')} | Pixel Bead Patterns`,
+        title: `${t('title')} | Inspiration & Templates`,
         description: t('subtitle'),
         keywords: ['cool perler bead designs', 'perler bead patterns', 'pixel art ideas', 'bead art inspiration'],
         alternates: {

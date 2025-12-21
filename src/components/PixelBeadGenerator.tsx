@@ -20,14 +20,14 @@ type MardCategory = '72' | '96' | '120' | '144' | '168' | 'all'
 
 export function PixelBeadGenerator() {
   const t = useTranslations('Generator')
-  const [gridWidth, setGridWidth] = useState(50)
+  const [gridWidth, setGridWidth] = useState(65)
   const [selectedPalette, setSelectedPalette] = useState<string>('MARD')
   const [selectedMardCategory, setSelectedMardCategory] = useState<MardCategory>('all')
   const [activeTool, setActiveTool] = useState<Tool>('brush')
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null)
   const [showGrid, setShowGrid] = useState(true)
-  const [showBeadCodes, setShowBeadCodes] = useState(true)
-  const [cellSize, setCellSize] = useState(18)
+  const [showBeadCodes, setShowBeadCodes] = useState(false)
+  const [cellSize, setCellSize] = useState(8)
   const [isExportingImage, setIsExportingImage] = useState(false)
   const gridRef = useRef<HTMLDivElement>(null)
 
