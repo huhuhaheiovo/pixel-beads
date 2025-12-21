@@ -102,14 +102,13 @@ export default async function Home() {
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-20 animate-fade-in">
                         {sampledImages.map((image, i) => (
-                            <div key={i} className="group aspect-square bg-[#F4F4F5] rounded-[2.5rem] overflow-hidden relative border-4 border-transparent hover:border-yellow-400 transition-all shadow-xl hover:shadow-yellow-400/20">
-                                <Image
+                            <div key={i} className="group aspect-square bg-slate-50 rounded-[2rem] overflow-hidden relative border-4 border-transparent hover:border-yellow-400 transition-all shadow-sm hover:shadow-xl">
+                                <img
                                     src={image.path}
                                     alt={image.name}
-                                    fill
-                                    className="object-cover group-hover:scale-110 transition-transform duration-700"
+                                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-8 text-center">
                                     <Link
                                         href="/generator"
                                         className="px-6 py-3 bg-white text-[#18181B] rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transform translate-y-8 group-hover:translate-y-0 transition-transform shadow-lg"

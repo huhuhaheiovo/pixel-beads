@@ -3,7 +3,6 @@ import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { Trees, ArrowLeft, Snowflake, Gift, Star, Bell } from 'lucide-react';
-import Image from 'next/image';
 import fs from 'fs';
 import path from 'path';
 
@@ -76,11 +75,10 @@ export default async function ChristmasShowcase() {
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {images.map((image, i) => (
                         <div key={i} className="group aspect-square bg-white rounded-[2rem] overflow-hidden relative border-4 border-transparent hover:border-red-100 transition-all shadow-sm hover:shadow-xl">
-                            <Image
+                            <img
                                 src={image.path}
                                 alt={image.name}
-                                fill
-                                className="object-cover group-hover:scale-110 transition-transform duration-700"
+                                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-8 text-center backdrop-blur-[2px]">
                                 <h4 className="text-slate-900 font-black uppercase tracking-tight text-lg mb-4 line-clamp-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">{image.name}</h4>

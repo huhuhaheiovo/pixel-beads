@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Header } from '@/components/Header'
 import '../globals.css'
@@ -57,6 +58,19 @@ export default async function LocaleLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
+                <Script
+                    src="https://www.googletagmanager.com/gtag/js?id=G-PHKBP63X2W"
+                    strategy="afterInteractive"
+                />
+                <Script id="google-analytics" strategy="afterInteractive">
+                    {`
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+
+                        gtag('config', 'G-PHKBP63X2W');
+                    `}
+                </Script>
                 <NextIntlClientProvider messages={messages}>
                     <Header />
                     {children}

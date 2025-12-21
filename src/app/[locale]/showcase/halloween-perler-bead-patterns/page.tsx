@@ -3,7 +3,6 @@ import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { Ghost, ArrowLeft, Skull, Moon, CloudFog } from 'lucide-react';
-import Image from 'next/image';
 import fs from 'fs';
 import path from 'path';
 
@@ -75,11 +74,10 @@ export default async function HalloweenShowcase() {
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {images.map((image, i) => (
                         <div key={i} className="group aspect-square bg-[#27272A] rounded-[2rem] overflow-hidden relative border-4 border-transparent hover:border-orange-500 transition-all shadow-lg hover:shadow-orange-500/20">
-                            <Image
+                            <img
                                 src={image.path}
                                 alt={image.name}
-                                fill
-                                className="object-cover group-hover:scale-110 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-90 group-hover:opacity-100"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-8 text-center">
                                 <h4 className="text-orange-400 font-black uppercase tracking-tight text-lg mb-4 line-clamp-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 drop-shadow-md">{image.name}</h4>
