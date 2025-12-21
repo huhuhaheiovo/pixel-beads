@@ -8,8 +8,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '',
         '/generator',
         '/showcase',
-        '/showcase/halloween',
-        '/showcase/christmas',
+        '/showcase/halloween-perler-bead-patterns',
+        '/showcase/christmas-perler-bead-patterns',
         '/cool-perler-bead-designs',
     ]
 
