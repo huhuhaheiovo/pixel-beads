@@ -83,7 +83,7 @@ export default async function ChristmasShowcase() {
                             <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-8 text-center backdrop-blur-[2px]">
                                 <h4 className="text-slate-900 font-black uppercase tracking-tight text-lg mb-4 line-clamp-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">{image.name}</h4>
                                 <Link
-                                    href="/generator"
+                                    href="/perler-bead-pattern-generator"
                                     className="px-6 py-3 bg-red-600 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500 shadow-lg hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-md hover:bg-red-700"
                                 >
                                     Start Crafting

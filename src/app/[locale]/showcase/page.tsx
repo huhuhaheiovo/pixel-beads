@@ -133,7 +133,7 @@ export default async function ShowcasePage() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-8 text-center">
                                 <h4 className="text-white font-black uppercase tracking-tight text-lg mb-4 line-clamp-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">{image.name}</h4>
                                 <Link
-                                    href="/generator"
+                                    href="/perler-bead-pattern-generator"
                                     className="px-6 py-3 bg-white text-[#18181B] rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500 shadow-xl hover:bg-blue-50"
                                 >
                                     {t('cta')}

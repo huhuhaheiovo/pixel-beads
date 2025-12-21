@@ -46,7 +46,7 @@ export default function CoolDesignsPage() {
                         {t('subtitle')}
                     </p>
                     <Link
-                        href="/generator"
+                        href="/perler-bead-pattern-generator"
                         className="inline-flex items-center gap-3 px-10 py-5 bg-[#18181B] text-white rounded-2xl font-black uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-black/10"
                     >
                         {t('cta_create')} <ArrowRight size={20} />
@@ -104,7 +104,7 @@ export default function CoolDesignsPage() {
                     <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase mb-8">Ready to start?</h2>
                     <p className="text-[#71717A] mb-12 max-w-xl mx-auto">Upload any image and we'll turn it into a high-quality perler bead pattern automatically.</p>
                     <Link
-                        href="/generator"
+                        href="/perler-bead-pattern-generator"
                         className="inline-flex items-center gap-3 px-12 py-5 bg-[#18181B] text-white rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-colors"
                     >
                         Go to Generator

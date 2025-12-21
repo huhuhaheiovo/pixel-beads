@@ -8,7 +8,7 @@ export function Header() {
     const t = useTranslations('Header')
     const pathname = usePathname()
     const locale = useLocale()
-    const isGenerator = pathname === '/generator'
+    const isGenerator = pathname === '/perler-bead-pattern-generator'
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-[#E4E4E7] bg-white/80 backdrop-blur-md">
@@ -39,7 +39,7 @@ export function Header() {
                         {t('showcase')}
                     </Link>
                     <Link
-                        href="/generator"
+                        href="/perler-bead-pattern-generator"
                         className={`flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${isGenerator ? 'bg-[#18181B] text-white' : 'border border-[#E4E4E7] text-[#18181B] hover:border-[#18181B]'}`}
                     >
                         <Hammer size={12} />

@@ -82,7 +82,7 @@ export default async function HalloweenShowcase() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-8 text-center">
                                 <h4 className="text-orange-400 font-black uppercase tracking-tight text-lg mb-4 line-clamp-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 drop-shadow-md">{image.name}</h4>
                                 <Link
-                                    href="/generator"
+                                    href="/perler-bead-pattern-generator"
                                     className="px-6 py-3 bg-orange-500 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500 shadow-[4px_4px_0px_#7c2d12] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none hover:bg-orange-600"
                                 >
                                     Create This

@@ -6,7 +6,7 @@ const BASE_URL = 'https://www.pixel-beads.com'
 export default function sitemap(): MetadataRoute.Sitemap {
     const routes = [
         '',
-        '/generator',
+        '/perler-bead-pattern-generator',
         '/showcase',
         '/showcase/halloween-perler-bead-patterns',
         '/showcase/christmas-perler-bead-patterns',

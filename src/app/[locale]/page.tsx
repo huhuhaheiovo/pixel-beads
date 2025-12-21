@@ -58,7 +58,7 @@ export default async function Home() {
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                             <Link
-                                href="/generator"
+                                href="/perler-bead-pattern-generator"
                                 className="group w-full sm:w-auto px-12 py-6 bg-[#EF4444] text-white rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all transform hover:scale-105 shadow-[0_10px_20px_-10px_rgba(239,68,68,0.5)] flex items-center justify-center gap-3"
                             >
                                 {t('ctaStart')} <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
@@ -110,7 +110,7 @@ export default async function Home() {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-8 text-center">
                                     <Link
-                                        href="/generator"
+                                        href="/perler-bead-pattern-generator"
                                         className="px-6 py-3 bg-white text-[#18181B] rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transform translate-y-8 group-hover:translate-y-0 transition-transform shadow-lg"
                                     >
                                         Try Creative Design
@@ -222,7 +222,7 @@ export default async function Home() {
                             <div className="relative group">
                                 <div className="absolute inset-0 bg-yellow-400 rounded-[4rem] rotate-3 -z-10 opacity-20 group-hover:rotate-6 transition-transform"></div>
                                 <Link
-                                    href="/generator"
+                                    href="/perler-bead-pattern-generator"
                                     className="block bg-white p-6 rounded-[4rem] shadow-2xl border-4 border-[#18181B] transition-all hover:scale-[1.02]"
                                 >
                                     <div className="aspect-square bg-yellow-50 rounded-[3rem] flex items-center justify-center p-12 overflow-hidden relative border-4 border-dashed border-yellow-200">
@@ -254,7 +254,7 @@ export default async function Home() {
                         {t('finalCta.title')}
                     </h2>
                     <Link
-                        href="/generator"
+                        href="/perler-bead-pattern-generator"
                         className="inline-flex px-16 py-8 bg-white text-[#18181B] rounded-3xl font-black uppercase tracking-[0.3em] hover:bg-yellow-400 transition-all transform hover:scale-110 shadow-[0_20px_40px_-10px_rgba(255,255,255,0.3)]"
                     >
                         {t('finalCta.button')}

@@ -91,7 +91,7 @@ export default async function LocaleLayout({
                                 <Link href="/" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">Home</Link>
                                 <Link href="/showcase" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">Showcase</Link>
                                 <Link href="/cool-perler-bead-designs" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">Cool Designs</Link>
-                                <Link href="/generator" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">Generator</Link>
+                                <Link href="/perler-bead-pattern-generator" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">Generator</Link>
                             </nav>
                             <p className="text-[10px] font-bold uppercase tracking-widest text-[#A1A1AA]">© 2025 • PixelBeads</p>
                         </div>
