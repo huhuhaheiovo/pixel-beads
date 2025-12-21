@@ -9,7 +9,7 @@
         "titlePrefix": "",
         "titleAccent": "Perler Bead Art",
         "titleSuffix": "Generation & DIY Pattern Creator",
-        "description": "Convert your photos into stunning pixel bead art patterns in seconds. Customizable grids, accurate color matching, and HD PDF/Image exports.",
+        "description": "Transform your photos or pixel art into Perler Bead patterns in seconds! Our free DIY Pattern Creator helps you design, edit, and export custom bead charts. Start your next creative project today",
         "ctaStart": "Start Generating",
         "ctaLearn": "Learn More",
         "stats": {
@@ -19,7 +19,7 @@
             "speed": "Fast Process"
         },
         "features": {
-            "title": "Master Your Perler Bead Art",
+            "title": "The Easiest Way to Design Perler Bead Art",
             "upload": {
                 "title": "Smart Image Upload",
                 "desc": "Simply drag and drop any image. Our algorithm handles complex photos with ease."
@@ -88,7 +88,7 @@
         "viewCollection": "View Collection",
         "exploreThemes": "Explore Themes",
         "halloween": {
-            "title": "Halloween Perler Bead Patterns",
+            "title": "Halloween Perler Bead Patterns – Free Printable Designs & Ideas",
             "description": "Spooky and fun patterns for your Halloween decorations. From pumpkins to ghosts!",
             "items": {
                 "item1": "Glowing Jack-o'-Lantern",
