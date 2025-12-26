@@ -14,6 +14,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     return {
         title: t('metaTitle'),
         description: t('metaDescription'),
+        alternates: {
+            canonical: `https://www.pixel-beads.com/${locale}`,
+            languages: {
+                en: '/en',
+                zh: '/zh',
+                'x-default': 'https://www.pixel-beads.com/',
+            },
+        },
     };
 }
 

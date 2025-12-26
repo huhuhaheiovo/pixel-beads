@@ -26,13 +26,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         metadataBase: new URL('https://www.pixel-beads.com'),
         title: t('titlePrefix') + ' ' + t('titleAccent') + ' ' + t('titleSuffix'),
         description: t('description'),
-        alternates: {
-            canonical: `/${locale}`,
-            languages: {
-                en: '/en',
-                zh: '/zh',
-            },
-        },
     };
 }
 
