@@ -5,13 +5,15 @@
         "showcase": "Showcase"
     },
     "HomePage": {
-        "badge": "Free Online Perler Bead Diy",
-        "titlePrefix": "",
-        "titleAccent": "Perler Bead Art",
-        "titleSuffix": "Generation & DIY Pattern Creator",
-        "description": "Transform your photos or pixel art into Perler Bead patterns in seconds! Our free DIY Pattern Creator helps you design, edit, and export custom bead charts. Start your next creative project today",
-        "ctaStart": "Start Generating",
-        "ctaLearn": "Learn More",
+        "badge": "Free 100% Online Perler Bead DIY Tool",
+        "titlePrefix": "Create Unique",
+        "titleAccent": "Perler Bead Ideas",
+        "titleSuffix": "& Free Pattern Generator",
+        "metaTitle": "Perler Bead Ideas & Free Pattern Generator - PixelBeads",
+        "metaDescription": "Explore endless perler bead ideas or create your own with our free pattern generator. Convert photos to custom designs, match colors, and export PDF guides.",
+        "description": "Discover endless perler bead ideas and transform your photos into custom patterns in seconds! Our free DIY Pattern Creator helps you design, edit, and export custom bead charts.",
+        "ctaStart": "Start Creating Ideas",
+        "ctaLearn": "How It Works",
         "stats": {
             "brands": "Bead Brands",
             "export": "HD Export",

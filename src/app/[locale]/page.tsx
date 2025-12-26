@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { Link } from '@/i18n/routing'
 import { ArrowRight, ImageIcon, LayoutGrid, Download, Zap, Hammer, Heart, Star, Sparkles } from 'lucide-react'
 import { useTranslations } from 'next-intl';
@@ -6,8 +7,62 @@ import Image from 'next/image';
 import fs from 'fs';
 import path from 'path';
 
-export default async function Home() {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'HomePage' });
+
+    return {
+        title: t('metaTitle'),
+        description: t('metaDescription'),
+    };
+}
+
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
     const t = await getTranslations('HomePage');
+
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "SoftwareApplication",
+                "name": "PixelBeads Pattern Generator",
+                "applicationCategory": "DesignApplication",
+                "operatingSystem": "Web",
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                }
+            },
+            {
+                "@type": "HowTo",
+                "name": t('howItWorks.step1Title'),
+                "step": [
+                    {
+                        "@type": "HowToStep",
+                        "name": t('howItWorks.step1Title'),
+                        "text": t('howItWorks.step1Desc')
+                    },
+                    {
+                        "@type": "HowToStep",
+                        "name": t('howItWorks.step2Title'),
+                        "text": t('howItWorks.step2Desc')
+                    },
+                    {
+                        "@type": "HowToStep",
+                        "name": t('howItWorks.step3Title'),
+                        "text": t('howItWorks.step3Desc')
+                    },
+                    {
+                        "@type": "HowToStep",
+                        "name": t('howItWorks.step4Title'),
+                        "text": t('howItWorks.step4Desc')
+                    }
+                ]
+            }
+        ]
+    };
 
     // Sample images from all theme directories
     const themeDirs = ['pallettes', 'halloween', 'christmas'];
@@ -31,6 +86,10 @@ export default async function Home() {
 
     return (
         <main className="min-h-screen">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             {/* Hero Section */}
             <section className="relative pt-20 pb-16 lg:pt-32 lg:pb-32 overflow-hidden bg-white">
                 <div className="container mx-auto px-4 relative z-10">
