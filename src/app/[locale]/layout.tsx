@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const t = await getTranslations({ locale, namespace: 'HomePage' });
 
     return {
-        metadataBase: new URL('https://pixelbeads.art'),
+        metadataBase: new URL('https://www.pixel-beads.com'),
         title: t('titlePrefix') + ' ' + t('titleAccent') + ' ' + t('titleSuffix'),
         description: t('description'),
         alternates: {
