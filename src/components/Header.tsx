@@ -3,6 +3,17 @@
 import { Link, usePathname } from '@/i18n/routing';
 import { useTranslations, useLocale } from 'next-intl';
 import { Hammer, Globe } from 'lucide-react'
+import React from 'react';
+import { cn } from '@/lib/utils';
+import {
+    NavigationMenu,
+    NavigationMenuContent,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+    NavigationMenuTrigger,
+    navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu"
 
 export function Header() {
     const t = useTranslations('Header')
@@ -25,19 +36,78 @@ export function Header() {
                     <span className="font-black text-sm uppercase tracking-tighter">PixelBeads</span>
                 </Link>
 
-                <nav className="flex items-center gap-4 md:gap-6">
-                    <Link
-                        href="/"
-                        className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${pathname === '/' ? 'text-[#18181B]' : 'text-[#71717A] hover:text-[#18181B]'}`}
-                    >
-                        {t('home')}
-                    </Link>
-                    <Link
-                        href="/showcase"
-                        className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${pathname.startsWith('/showcase') ? 'text-[#18181B]' : 'text-[#71717A] hover:text-[#18181B]'}`}
-                    >
-                        {t('showcase')}
-                    </Link>
+                <div className="flex items-center gap-4">
+                    <NavigationMenu>
+                        <NavigationMenuList>
+                            <NavigationMenuItem>
+                                <NavigationMenuLink asChild>
+                                    <Link
+                                        href="/"
+                                        className={navigationMenuTriggerStyle()}
+                                    >
+                                        <span className={`text-[10px] font-bold uppercase tracking-widest ${pathname === '/' ? 'text-[#18181B]' : 'text-[#71717A]'}`}>
+                                            {t('home')}
+                                        </span>
+                                    </Link>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+
+                            <NavigationMenuItem>
+                                <NavigationMenuTrigger className="text-[10px] font-bold uppercase tracking-widest text-[#71717A]">
+                                    Tools
+                                </NavigationMenuTrigger>
+                                <NavigationMenuContent>
+                                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-white">
+                                        <ListItem href="/pixel-art-maker" title="Pixel Art Maker">
+                                            Powerful online editor for creating sprites and patterns.
+                                        </ListItem>
+                                        <ListItem href="/image-to-pixel" title="Image to Pixel">
+                                            Convert any photo into a pixel art masterpiece.
+                                        </ListItem>
+                                        <ListItem href="/minecraft-pixel-art" title="Minecraft Guide">
+                                            Learn how to build massive pixel art murals in-game.
+                                        </ListItem>
+                                        <ListItem href="/perler-bead-pattern-generator" title="Fuse Pattern Tool">
+                                            Generate patterns specifically for Perler/Hama beads.
+                                        </ListItem>
+                                        <ListItem href="/wplace" title="r/place Tool">
+                                            Plan strategy and templates for pixel wars.
+                                        </ListItem>
+                                    </ul>
+                                </NavigationMenuContent>
+                            </NavigationMenuItem>
+
+                            <NavigationMenuItem>
+                                <NavigationMenuTrigger className="text-[10px] font-bold uppercase tracking-widest text-[#71717A]">
+                                    Guides
+                                </NavigationMenuTrigger>
+                                <NavigationMenuContent>
+                                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 bg-white">
+                                        <ListItem href="/fuse-beads" title="Fuse Beads Guide">
+                                            Ultimate guide to Perler, Artkal, and ironing tips.
+                                        </ListItem>
+                                        <ListItem href="/hama-beads" title="Hama Beads">
+                                            Everything about the original Danish melting beads.
+                                        </ListItem>
+                                    </ul>
+                                </NavigationMenuContent>
+                            </NavigationMenuItem>
+
+                            <NavigationMenuItem>
+                                <NavigationMenuLink asChild>
+                                    <Link
+                                        href="/showcase"
+                                        className={navigationMenuTriggerStyle()}
+                                    >
+                                        <span className={`text-[10px] font-bold uppercase tracking-widest ${pathname.startsWith('/showcase') ? 'text-[#18181B]' : 'text-[#71717A]'}`}>
+                                            {t('showcase')}
+                                        </span>
+                                    </Link>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                        </NavigationMenuList>
+                    </NavigationMenu>
+
                     <Link
                         href="/perler-bead-pattern-generator"
                         className={`flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${isGenerator ? 'bg-[#18181B] text-white' : 'border border-[#E4E4E7] text-[#18181B] hover:border-[#18181B]'}`}
@@ -63,8 +133,34 @@ export function Header() {
                             ZH
                         </Link>
                     </div>
-                </nav>
+                </div>
             </div>
         </header>
     )
 }
+
+const ListItem = React.forwardRef<
+    React.ElementRef<"a">,
+    React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, href, ...props }, ref) => {
+    return (
+        <li>
+            <NavigationMenuLink asChild>
+                <Link
+                    href={href as string}
+                    className={cn(
+                        "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground hover:bg-slate-100",
+                        className
+                    )}
+                    {...props}
+                >
+                    <div className="text-sm font-bold leading-none text-[#18181B]">{title}</div>
+                    <p className="line-clamp-2 text-xs leading-snug text-muted-foreground text-[#71717A] mt-1 font-medium">
+                        {children}
+                    </p>
+                </Link>
+            </NavigationMenuLink>
+        </li>
+    )
+})
+ListItem.displayName = "ListItem"
