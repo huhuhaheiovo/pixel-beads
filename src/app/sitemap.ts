@@ -11,6 +11,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/showcase/halloween-perler-bead-patterns',
         '/showcase/christmas-perler-bead-patterns',
         '/cool-perler-bead-designs',
+        '/fuse-beads',
+        '/hama-beads',
+        '/image-to-pixel',
+        '/minecraft-pixel-art',
+        '/pixel-art-maker',
+        '/wplace',
     ]
 
     const sitemapEntries: MetadataRoute.Sitemap = []
