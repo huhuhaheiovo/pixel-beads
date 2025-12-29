@@ -4,6 +4,6 @@ import { routing } from './i18n/routing';
 export default createMiddleware(routing);
 
 export const config = {
-    // Match only internationalized pathnames
-    matcher: ['/', '/(zh|en)/:path*']
+    // 只匹配带语言前缀的路径
+    matcher: ['/(zh|en)/:path*'],
 };
