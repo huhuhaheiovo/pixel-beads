@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { BeadColor } from '@/lib/beadData'
 import { getContrastTextColor } from '@/utils/color-utils'
 
@@ -11,7 +12,7 @@ interface BeadGridProps {
   onCellClick: (x: number, y: number) => void
 }
 
-export function BeadGrid ({
+function BeadGridComponent ({
   matrix,
   gridWidth,
   cellSize,
@@ -20,9 +21,12 @@ export function BeadGrid ({
   colorById,
   onCellClick
 }: BeadGridProps) {
+
   return (
     <div
       className="grid"
+      role="grid"
+      aria-label="Bead pattern grid"
       style={{
         gridTemplateColumns: `repeat(${gridWidth}, ${cellSize}px)`,
         gridAutoRows: `${cellSize}px`,
@@ -53,10 +57,17 @@ export function BeadGrid ({
               : Math.max(8, Math.floor(cellSize * 0.45)) // Normal scaling for larger cells
             : 0
           
+          const cellLabel = color 
+            ? `${color.name}${color.code ? ` (${color.code})` : ''} at position ${x + 1}, ${y + 1}`
+            : `Empty cell at position ${x + 1}, ${y + 1}`
+          
           return (
             <div
               key={`${x}-${y}`}
-              className="cursor-crosshair transition-all hover:scale-110 hover:z-10 flex items-center justify-center overflow-hidden"
+              role="gridcell"
+              tabIndex={0}
+              aria-label={cellLabel}
+              className="cursor-crosshair transition-all hover:scale-110 hover:z-10 flex items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:ring-offset-1"
               style={{
                 width: `${cellSize}px`,
                 height: `${cellSize}px`,
@@ -69,7 +80,13 @@ export function BeadGrid ({
                 userSelect: 'none'
               }}
               onClick={() => onCellClick(x, y)}
-              title={color ? `${color.name} (${color.code})` : 'Empty'}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  onCellClick(x, y)
+                }
+              }}
+              title={color ? `${color.name}${color.code ? ` (${color.code})` : ''}` : 'Empty'}
             >
               {displayContent}
             </div>
@@ -79,4 +96,6 @@ export function BeadGrid ({
     </div>
   )
 }
+
+export const BeadGrid = memo(BeadGridComponent)
 

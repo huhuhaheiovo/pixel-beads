@@ -18,20 +18,34 @@ import { Progress } from './ui/progress'
 
 type Tool = 'brush' | 'eraser' | 'picker'
 type MardCategory = '72' | '96' | '120' | '144' | '168' | 'all'
+type Difficulty = 'easy' | 'medium' | 'hard' | 'custom'
+
+interface DifficultyConfig {
+  gridWidth: number
+  cellSize: number
+}
+
+const DIFFICULTY_CONFIGS: Record<Difficulty, DifficultyConfig> = {
+  easy: { gridWidth: 30, cellSize: 15 },
+  medium: { gridWidth: 50, cellSize: 10 },
+  hard: { gridWidth: 80, cellSize: 8 },
+  custom: { gridWidth: 65, cellSize: 8 }
+}
 
 export function PixelBeadGenerator() {
   const t = useTranslations('Generator')
-  const [gridWidth, setGridWidth] = useState(65)
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('medium')
+  const [gridWidth, setGridWidth] = useState(50)
   const [selectedPalette, setSelectedPalette] = useState<string>('MARD')
   const [selectedMardCategory, setSelectedMardCategory] = useState<MardCategory>('all')
   const [activeTool, setActiveTool] = useState<Tool>('brush')
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null)
   const [showGrid, setShowGrid] = useState(true)
   const [showBeadCodes, setShowBeadCodes] = useState(false)
-  const [cellSize, setCellSize] = useState(8)
+  const [cellSize, setCellSize] = useState(10)
   const [isExportingImage, setIsExportingImage] = useState(false)
   const [exportProgress, setExportProgress] = useState(0)
-  const [exportShowCodes, setExportShowCodes] = useState(true)
+  const [exportShowCodes, setExportShowCodes] = useState(false)
   const [exportShowStats, setExportShowStats] = useState(true)
   const gridRef = useRef<HTMLDivElement>(null)
 
@@ -97,6 +111,21 @@ export function PixelBeadGenerator() {
       setMatrix(history[historyIndex])
     }
   }, [history, historyIndex])
+
+  // Auto-detect difficulty based on current gridWidth and cellSize
+  useEffect(() => {
+    const currentConfig = { gridWidth, cellSize }
+    const matchedDifficulty = (['easy', 'medium', 'hard'] as Exclude<Difficulty, 'custom'>[]).find(
+      diff => DIFFICULTY_CONFIGS[diff].gridWidth === currentConfig.gridWidth &&
+              DIFFICULTY_CONFIGS[diff].cellSize === currentConfig.cellSize
+    )
+
+    if (matchedDifficulty && matchedDifficulty !== selectedDifficulty) {
+      setSelectedDifficulty(matchedDifficulty)
+    } else if (!matchedDifficulty && selectedDifficulty !== 'custom') {
+      setSelectedDifficulty('custom')
+    }
+  }, [gridWidth, cellSize, selectedDifficulty])
 
   const handleImageUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -322,28 +351,59 @@ export function PixelBeadGenerator() {
     }
   }, [matrix.length])
 
+  const handleToggleGrid = useCallback(() => {
+    setShowGrid(prev => !prev)
+  }, [])
+
+  const handleToggleBeadCodes = useCallback(() => {
+    setShowBeadCodes(prev => !prev)
+  }, [])
+
+  const handleDifficultyChange = useCallback((difficulty: Difficulty) => {
+    setSelectedDifficulty(difficulty)
+    const config = DIFFICULTY_CONFIGS[difficulty]
+    setGridWidth(config.gridWidth)
+    setCellSize(config.cellSize)
+  }, [])
+
+  const handleGridWidthChange = useCallback((width: number) => {
+    setGridWidth(width)
+    setSelectedDifficulty('custom')
+  }, [])
+
+  const handleCellSizeChange = useCallback((size: number) => {
+    setCellSize(size)
+    setSelectedDifficulty('custom')
+  }, [])
+
   return (
     <div className='flex flex-col lg:flex-row h-screen lg:h-[calc(100vh-64px)] bg-[#F4F4F5] text-[#18181B] font-sans selection:bg-[#18181B] selection:text-white'>
       {/* Sidebar - Tools */}
-      <aside className='w-full lg:w-72 bg-white border-b lg:border-r border-[#E4E4E7] flex flex-col p-4 lg:p-6 space-y-6 lg:space-y-8 lg:overflow-y-auto shrink-0 z-10'>
-        <Toolbar
-          activeTool={activeTool}
-          onToolChange={setActiveTool}
-          showGrid={showGrid}
-          onToggleGrid={() => setShowGrid(!showGrid)}
-          showBeadCodes={showBeadCodes}
-          onToggleBeadCodes={() => setShowBeadCodes(!showBeadCodes)}
-          canUndo={canUndo}
-          onUndo={handleUndo}
-          canRedo={canRedo}
-          onRedo={handleRedo}
-        />
+      <aside
+        className='w-full lg:w-72 bg-white border-b lg:border-r border-[#E4E4E7] flex flex-col lg:h-full shrink-0 z-10'
+        aria-label="Toolbar and settings"
+      >
+        <div className='flex-1 flex flex-col overflow-y-auto lg:hide-scrollbar p-4 lg:p-6 space-y-6 lg:space-y-8'>
+          <Toolbar
+            activeTool={activeTool}
+            onToolChange={setActiveTool}
+            showGrid={showGrid}
+            onToggleGrid={handleToggleGrid}
+            showBeadCodes={showBeadCodes}
+            onToggleBeadCodes={handleToggleBeadCodes}
+            canUndo={canUndo}
+            onUndo={handleUndo}
+            canRedo={canRedo}
+            onRedo={handleRedo}
+          />
 
         <SettingsPanel
+          selectedDifficulty={selectedDifficulty}
+          onDifficultyChange={handleDifficultyChange}
           gridWidth={gridWidth}
-          onGridWidthChange={setGridWidth}
+          onGridWidthChange={handleGridWidthChange}
           cellSize={cellSize}
-          onCellSizeChange={setCellSize}
+          onCellSizeChange={handleCellSizeChange}
           selectedPalette={selectedPalette}
           onPaletteChange={setSelectedPalette}
           selectedMardCategory={selectedMardCategory}
@@ -353,8 +413,9 @@ export function PixelBeadGenerator() {
           exportShowStats={exportShowStats}
           onExportShowStatsChange={setExportShowStats}
         />
+        </div>
 
-        <div className='mt-auto space-y-4'>
+        <div className='flex-shrink-0 space-y-4 p-4 lg:p-6 border-t border-[#E4E4E7] bg-white'>
           <input
             type='file'
             id='upload'
@@ -365,33 +426,39 @@ export function PixelBeadGenerator() {
           <button
             onClick={exportToPDF}
             disabled={!image || matrix.length === 0}
-            className='flex items-center justify-center gap-2 w-full py-4 bg-[#18181B] text-white text-[10px] font-bold uppercase tracking-widest hover:bg-black transition-all disabled:opacity-50'
+            aria-label={t('exportPdf')}
+            className='flex items-center justify-center gap-2 w-full py-4 bg-[#18181B] text-white text-[10px] font-bold uppercase tracking-widest hover:bg-black transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:ring-offset-2'
           >
-            <Download size={14} /> {t('exportPdf')}
+            <Download size={14} aria-hidden="true" /> {t('exportPdf')}
           </button>
           <button
             onClick={exportToImage}
             disabled={!image || matrix.length === 0 || isExportingImage}
-            className='flex items-center justify-center gap-2 w-full py-4 bg-white border-2 border-[#18181B] text-[#18181B] text-[10px] font-bold uppercase tracking-widest hover:bg-[#F4F4F5] transition-all disabled:opacity-50'
+            aria-label={isExportingImage ? t('exporting') : t('exportImage')}
+            aria-busy={isExportingImage}
+            className='flex items-center justify-center gap-2 w-full py-4 bg-white border-2 border-[#18181B] text-[#18181B] text-[10px] font-bold uppercase tracking-widest hover:bg-[#F4F4F5] transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:ring-offset-2'
           >
             {isExportingImage ? (
-              <div className='w-3 h-3 border-2 border-[#18181B] border-t-transparent animate-spin' />
+              <div className='w-3 h-3 border-2 border-[#18181B] border-t-transparent animate-spin' aria-hidden="true" />
             ) : (
-              <ImageIcon size={14} />
+              <ImageIcon size={14} aria-hidden="true" />
             )}
             {isExportingImage ? t('exporting') : t('exportImage')}
           </button>
           <label
             htmlFor='upload'
-            className='flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed border-[#E4E4E7] text-[#71717A] text-[10px] font-bold uppercase tracking-widest cursor-pointer hover:border-[#18181B] hover:text-[#18181B] transition-all'
+            className='flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed border-[#E4E4E7] text-[#71717A] text-[10px] font-bold uppercase tracking-widest cursor-pointer hover:border-[#18181B] hover:text-[#18181B] transition-all focus-within:outline-none focus-within:ring-2 focus-within:ring-[#18181B] focus-within:ring-offset-2'
           >
-            <Upload size={14} /> {t('replaceImage')}
+            <Upload size={14} aria-hidden="true" /> {t('replaceImage')}
           </label>
         </div>
       </aside>
 
       {/* Main Workspace */}
-      <main className='flex-1 relative overflow-auto bg-[#FAFAFA] flex items-center justify-center p-4 lg:p-12 xl:p-20 min-h-[400px] lg:min-h-0'>
+      <main
+        className='flex-1 relative overflow-auto bg-[#FAFAFA] flex items-center justify-center p-4 lg:p-12 xl:p-20 min-h-[400px] lg:min-h-0'
+        aria-label="Main workspace"
+      >
         {!image ? (
           <UploadArea onUpload={handleImageUpload} />
         ) : (
@@ -413,11 +480,16 @@ export function PixelBeadGenerator() {
               </div>
             )}
             {(isProcessing || isExportingImage) && (
-              <div className='absolute inset-0 bg-white/90 backdrop-blur-md flex items-center justify-center z-50 transition-opacity'>
+              <div
+                className='absolute inset-0 bg-white/90 backdrop-blur-md flex items-center justify-center z-50 transition-opacity'
+                role="status"
+                aria-live="polite"
+                aria-busy="true"
+              >
                 <div className='flex flex-col items-center gap-6 w-72 p-8 bg-white shadow-2xl rounded-2xl'>
                   {isProcessing ? (
                     <>
-                      <div className='relative w-12 h-12'>
+                      <div className='relative w-12 h-12' aria-hidden="true">
                         <div className='absolute inset-0 border-4 border-[#F4F4F5] rounded-full' />
                         <div className='absolute inset-0 border-4 border-t-[#18181B] rounded-full animate-spin' />
                       </div>
@@ -428,9 +500,11 @@ export function PixelBeadGenerator() {
                       <div className='w-full space-y-4'>
                         <div className='flex justify-between items-end'>
                           <span className='text-[10px] font-black uppercase tracking-[0.2em] text-[#18181B]'>{t('exporting')}</span>
-                          <span className='text-sm font-black text-[#18181B]'>{exportProgress}%</span>
+                          <span className='text-sm font-black text-[#18181B]' aria-label={`${exportProgress} percent complete`}>
+                            {exportProgress}%
+                          </span>
                         </div>
-                        <Progress value={exportProgress} className='h-2 bg-[#F4F4F5]' />
+                        <Progress value={exportProgress} className='h-2 bg-[#F4F4F5]' aria-label="Export progress" />
                       </div>
                     </>
                   )}

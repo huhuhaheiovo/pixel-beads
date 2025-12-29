@@ -2,8 +2,11 @@ import { MARD_CATEGORIES, PALETTE_LABELS, PALETTES } from '@/lib/beadData'
 import { useTranslations } from 'next-intl'
 
 type MardCategory = '72' | '96' | '120' | '144' | '168' | 'all'
+type Difficulty = 'easy' | 'medium' | 'hard' | 'custom'
 
 interface SettingsPanelProps {
+  selectedDifficulty: Difficulty
+  onDifficultyChange: (difficulty: Difficulty) => void
   gridWidth: number
   onGridWidthChange: (width: number) => void
   cellSize: number
@@ -19,6 +22,8 @@ interface SettingsPanelProps {
 }
 
 export function SettingsPanel({
+  selectedDifficulty,
+  onDifficultyChange,
   gridWidth,
   onGridWidthChange,
   cellSize,
@@ -66,6 +71,42 @@ export function SettingsPanel({
             onChange={(e) => onCellSizeChange(parseInt(e.target.value, 10))}
             className="w-full h-1 bg-[#E4E4E7] appearance-none cursor-pointer accent-[#18181B]"
           />
+        </div>
+
+        <div className="space-y-2">
+          <span className="text-[10px] font-bold uppercase text-[#71717A]">{t('difficulty')}</span>
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              onClick={() => onDifficultyChange('easy')}
+              className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
+                selectedDifficulty === 'easy'
+                  ? 'bg-[#18181B] text-white shadow-lg'
+                  : 'bg-[#F4F4F5] text-[#71717A] hover:bg-[#E4E4E7] hover:text-[#18181B]'
+              }`}
+            >
+              {t('difficultyEasy')}
+            </button>
+            <button
+              onClick={() => onDifficultyChange('medium')}
+              className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
+                selectedDifficulty === 'medium'
+                  ? 'bg-[#18181B] text-white shadow-lg'
+                  : 'bg-[#F4F4F5] text-[#71717A] hover:bg-[#E4E4E7] hover:text-[#18181B]'
+              }`}
+            >
+              {t('difficultyMedium')}
+            </button>
+            <button
+              onClick={() => onDifficultyChange('hard')}
+              className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
+                selectedDifficulty === 'hard'
+                  ? 'bg-[#18181B] text-white shadow-lg'
+                  : 'bg-[#F4F4F5] text-[#71717A] hover:bg-[#E4E4E7] hover:text-[#18181B]'
+              }`}
+            >
+              {t('difficultyHard')}
+            </button>
+          </div>
         </div>
 
         <div className="space-y-2">
