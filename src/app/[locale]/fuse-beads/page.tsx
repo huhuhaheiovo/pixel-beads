@@ -11,9 +11,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         title: "Ultimate Guide to Fuse Beads | Patterns, Tips & Types",
         description: "Everything you need to know about Fuse Beads. Discover the best brands, sizes (Midi, Mini), ironing tips, and free patterns for your next pixel art project.",
         alternates: {
-            canonical: `https://www.pixel-beads.com/${locale}/fuse-beads`,
+            canonical: locale === 'en' ? 'https://www.pixel-beads.com/fuse-beads' : `https://www.pixel-beads.com/${locale}/fuse-beads`,
             languages: {
-                en: '/en/fuse-beads',
+                en: '/fuse-beads',
                 zh: '/zh/fuse-beads',
                 'x-default': 'https://www.pixel-beads.com/fuse-beads',
             },

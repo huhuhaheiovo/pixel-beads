@@ -11,9 +11,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         title: "Hama Beads Guide | The Original Melting Bead Craft",
         description: "Explore the world of Hama Beads. Learn about Mini, Midi, and Maxi sizes, discover 3D project ideas, and see how they compare to Perler beads.",
         alternates: {
-            canonical: `https://www.pixel-beads.com/${locale}/hama-beads`,
+            canonical: locale === 'en' ? 'https://www.pixel-beads.com/hama-beads' : `https://www.pixel-beads.com/${locale}/hama-beads`,
             languages: {
-                en: '/en/hama-beads',
+                en: '/hama-beads',
                 zh: '/zh/hama-beads',
                 'x-default': 'https://www.pixel-beads.com/hama-beads',
             },

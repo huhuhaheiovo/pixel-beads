@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
-import {Image as ImageIcon, Zap, Download, Sparkles, Sliders, Monitor, Palette} from 'lucide-react';
+import { Image as ImageIcon, Zap, Download, Sparkles, Sliders, Monitor, Palette } from 'lucide-react';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params;
@@ -11,9 +11,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         title: "Image to Pixel Converter | Turn Photos into Pixel Art Free",
         description: "Convert any image to pixel art instantly. Our free online tool helps you create fuse bead patterns, Minecraft art, and cross-stitch charts from your photos.",
         alternates: {
-            canonical: `https://www.pixel-beads.com/${locale}/image-to-pixel`,
+            canonical: locale === 'en' ? 'https://www.pixel-beads.com/image-to-pixel' : `https://www.pixel-beads.com/${locale}/image-to-pixel`,
             languages: {
-                en: '/en/image-to-pixel',
+                en: '/image-to-pixel',
                 zh: '/zh/image-to-pixel',
                 'x-default': 'https://www.pixel-beads.com/image-to-pixel',
             },

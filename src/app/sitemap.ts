@@ -23,8 +23,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     routing.locales.forEach((locale) => {
         routes.forEach((route) => {
+            const isDefaultLocale = locale === routing.defaultLocale;
+            const urlPath = isDefaultLocale ? route : `/${locale}${route}`;
+
             sitemapEntries.push({
-                url: `${BASE_URL}/${locale}${route}`,
+                url: `${BASE_URL}${urlPath === '' ? '' : urlPath}`,
                 lastModified: new Date(),
                 changeFrequency: 'weekly',
                 priority: route === '' ? 1 : 0.8,

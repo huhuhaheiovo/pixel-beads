@@ -14,10 +14,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         title: `${t('halloween.title')} | Spooky Bead Ideas`,
         description: t('halloween.description'),
         alternates: {
-            canonical: `/${locale}/showcase/halloween-perler-bead-patterns`,
+            canonical: locale === 'en' ? 'https://www.pixel-beads.com/showcase/halloween-perler-bead-patterns' : `https://www.pixel-beads.com/${locale}/showcase/halloween-perler-bead-patterns`,
             languages: {
-                en: '/en/showcase/halloween-perler-bead-patterns',
+                en: '/showcase/halloween-perler-bead-patterns',
                 zh: '/zh/showcase/halloween-perler-bead-patterns',
+                'x-default': 'https://www.pixel-beads.com/showcase/halloween-perler-bead-patterns',
             },
         },
     };

@@ -14,10 +14,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         title: `${t('christmas.title')} | Festive Bead Ideas`,
         description: t('christmas.description'),
         alternates: {
-            canonical: `/${locale}/showcase/christmas-perler-bead-patterns`,
+            canonical: locale === 'en' ? 'https://www.pixel-beads.com/showcase/christmas-perler-bead-patterns' : `https://www.pixel-beads.com/${locale}/showcase/christmas-perler-bead-patterns`,
             languages: {
-                en: '/en/showcase/christmas-perler-bead-patterns',
+                en: '/showcase/christmas-perler-bead-patterns',
                 zh: '/zh/showcase/christmas-perler-bead-patterns',
+                'x-default': 'https://www.pixel-beads.com/showcase/christmas-perler-bead-patterns',
             },
         },
     };

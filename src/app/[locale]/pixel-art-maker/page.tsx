@@ -11,9 +11,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         title: "Pixel Art Maker | Free Online Pixel Art Drawing Tool",
         description: "The best free online pixel art maker. Draw pixel art, create game sprites, and design bead patterns. No login required. Export to PNG or PDF.",
         alternates: {
-            canonical: `https://www.pixel-beads.com/${locale}/pixel-art-maker`,
+            canonical: locale === 'en' ? 'https://www.pixel-beads.com/pixel-art-maker' : `https://www.pixel-beads.com/${locale}/pixel-art-maker`,
             languages: {
-                en: '/en/pixel-art-maker',
+                en: '/pixel-art-maker',
                 zh: '/zh/pixel-art-maker',
                 'x-default': 'https://www.pixel-beads.com/pixel-art-maker',
             },

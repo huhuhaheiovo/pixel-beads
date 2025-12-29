@@ -11,9 +11,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         title: "Pixel Wars & r/place Canvas Tool | Plan Your Tile Strategy",
         description: "Dominate the canvas in the next r/place event or pixel war. Create templates, organize your community, and convert images into perfect pixel schematics.",
         alternates: {
-            canonical: `https://www.pixel-beads.com/${locale}/wplace`,
+            canonical: locale === 'en' ? 'https://www.pixel-beads.com/wplace' : `https://www.pixel-beads.com/${locale}/wplace`,
             languages: {
-                en: '/en/wplace',
+                en: '/wplace',
                 zh: '/zh/wplace',
                 'x-default': 'https://www.pixel-beads.com/wplace',
             },

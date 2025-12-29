@@ -13,10 +13,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         description: t('subtitle'),
         keywords: ['cool perler bead designs', 'perler bead patterns', 'pixel art ideas', 'bead art inspiration'],
         alternates: {
-            canonical: `/${locale}/cool-perler-bead-designs`,
+            canonical: locale === 'en' ? 'https://www.pixel-beads.com/cool-perler-bead-designs' : `https://www.pixel-beads.com/${locale}/cool-perler-bead-designs`,
             languages: {
-                en: '/en/cool-perler-bead-designs',
+                en: '/cool-perler-bead-designs',
                 zh: '/zh/cool-perler-bead-designs',
+                'x-default': 'https://www.pixel-beads.com/cool-perler-bead-designs',
             },
         },
     };

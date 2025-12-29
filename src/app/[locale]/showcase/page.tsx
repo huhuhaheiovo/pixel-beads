@@ -14,10 +14,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         title: `${t('title')} | Bead Pattern Collection`,
         description: t('subtitle'),
         alternates: {
-            canonical: `/${locale}/showcase`,
+            canonical: locale === 'en' ? 'https://www.pixel-beads.com/showcase' : `https://www.pixel-beads.com/${locale}/showcase`,
             languages: {
-                en: '/en/showcase',
+                en: '/showcase',
                 zh: '/zh/showcase',
+                'x-default': 'https://www.pixel-beads.com/showcase',
             },
         },
     };

@@ -8,12 +8,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
     return {
         title: `Free Perler Bead Pattern Generator – Easy Pattern Download`,
-        description:"Convert your photos into stunning pixel bead art patterns in seconds. Customizable grids, accurate color matching, and HD PDF/Image exports.",
+        description: "Convert your photos into stunning pixel bead art patterns in seconds. Customizable grids, accurate color matching, and HD PDF/Image exports.",
         alternates: {
-            canonical: `/${locale}/generator`,
+            canonical: locale === 'en' ? 'https://www.pixel-beads.com/perler-bead-pattern-generator' : `https://www.pixel-beads.com/${locale}/perler-bead-pattern-generator`,
             languages: {
-                en: '/en/generator',
-                zh: '/zh/generator',
+                en: '/perler-bead-pattern-generator',
+                zh: '/zh/perler-bead-pattern-generator',
+                'x-default': 'https://www.pixel-beads.com/perler-bead-pattern-generator',
             },
         },
     };

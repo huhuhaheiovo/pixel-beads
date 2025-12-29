@@ -11,9 +11,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         title: "Minecraft Pixel Art Guide | Templates & Block Converter",
         description: "Master the art of Minecraft building. Learn how to convert images to blocks, use schematics, and create massive pixel art murals in your world.",
         alternates: {
-            canonical: `https://www.pixel-beads.com/${locale}/minecraft-pixel-art`,
+            canonical: locale === 'en' ? 'https://www.pixel-beads.com/minecraft-pixel-art' : `https://www.pixel-beads.com/${locale}/minecraft-pixel-art`,
             languages: {
-                en: '/en/minecraft-pixel-art',
+                en: '/minecraft-pixel-art',
                 zh: '/zh/minecraft-pixel-art',
                 'x-default': 'https://www.pixel-beads.com/minecraft-pixel-art',
             },
