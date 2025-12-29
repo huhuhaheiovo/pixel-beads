@@ -2,7 +2,7 @@ import { MARD_CATEGORIES, PALETTE_LABELS, PALETTES } from '@/lib/beadData'
 import { useTranslations } from 'next-intl'
 
 type MardCategory = '72' | '96' | '120' | '144' | '168' | 'all'
-type Difficulty = 'easy' | 'medium' | 'hard' | 'custom'
+export type Difficulty = 'easy' | 'medium' | 'hard' | 'custom'
 
 interface SettingsPanelProps {
   selectedDifficulty: Difficulty

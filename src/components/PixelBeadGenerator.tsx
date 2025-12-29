@@ -9,7 +9,7 @@ import { useImageProcessing } from '@/hooks/use-image-processing'
 import { useHistory } from '@/hooks/use-history'
 import { getContrastTextColor } from '@/utils/color-utils'
 import { Toolbar } from './pixel-bead-generator/toolbar'
-import { SettingsPanel } from './pixel-bead-generator/settings-panel'
+import { SettingsPanel, type Difficulty } from './pixel-bead-generator/settings-panel'
 import { PaletteSidebar } from './pixel-bead-generator/palette-sidebar'
 import { BeadGrid } from './pixel-bead-generator/bead-grid'
 import { UploadArea } from './pixel-bead-generator/upload-area'
@@ -18,7 +18,6 @@ import { Progress } from './ui/progress'
 
 type Tool = 'brush' | 'eraser' | 'picker'
 type MardCategory = '72' | '96' | '120' | '144' | '168' | 'all'
-type Difficulty = 'easy' | 'medium' | 'hard' | 'custom'
 
 interface DifficultyConfig {
   gridWidth: number
