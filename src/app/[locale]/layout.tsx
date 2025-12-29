@@ -55,6 +55,12 @@ export default async function LocaleLayout({
                     src="https://www.googletagmanager.com/gtag/js?id=G-PHKBP63X2W"
                     strategy="afterInteractive"
                 />
+                <Script
+                    async
+                    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2409588554709380"
+                    crossOrigin="anonymous"
+                    strategy="afterInteractive"
+                />
                 <Script id="google-analytics" strategy="afterInteractive">
                     {`
                         window.dataLayer = window.dataLayer || [];

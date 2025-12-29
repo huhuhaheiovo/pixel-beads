@@ -10,6 +10,6 @@ export const config = {
     // - /_next (Next.js internals)
     // - /_static (inside /public)
     // - /_vercel (Vercel internals)
-    // - all root files inside /public (e.g. /favicon.ico)
-    matcher: ['/((?!api|_next|_static|_vercel|[\\w-]+\\.\\w+).*)']
+    // - Static files (containing a dot, e.g. .png, .jpg, .svg, .ico)
+    matcher: ['/((?!api|_next|_static|_vercel|.*\\..*).*)']
 };
