@@ -11,5 +11,9 @@ export const config = {
     // - /_static (inside /public)
     // - /_vercel (Vercel internals)
     // - Static files (containing a dot, e.g. .png, .jpg, .svg, .ico)
-    matcher: ['/((?!api|_next|_static|_vercel|.*\\..*).*)']
+    matcher: [
+        '/',
+        '/(zh|en)/:path*',
+        '/((?!api|_next|_static|_vercel|.*\\..*).*)'
+    ]
 };

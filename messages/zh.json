@@ -2,7 +2,23 @@
     "Header": {
         "home": "首页",
         "generator": "生成器",
-        "showcase": "作品展示"
+        "showcase": "作品展示",
+        "tools": "工具",
+        "guides": "指南",
+        "pixelArtMaker": "像素画编辑器",
+        "pixelArtMakerDesc": "功能强大的在线像素画编辑器，支持创作角色和图案。",
+        "imageToPixel": "照片转像素",
+        "imageToPixelDesc": "将任何照片瞬间转换为像素艺术杰作。",
+        "minecraftGuide": "我的世界指南",
+        "minecraftGuideDesc": "了解如何在游戏中构建巨型像素画。",
+        "fusePatternTool": "拼豆图纸工具",
+        "fusePatternToolDesc": "为 Perler/Hama 拼豆专门生成的图纸工具。",
+        "rplaceTool": "r/place 工具",
+        "rplaceToolDesc": "为像素大战策划策略和模板。",
+        "fuseBeadsGuide": "拼豆完全指南",
+        "fuseBeadsGuideDesc": "关于 Perler、Artkal 及熨烫技巧的终极指南。",
+        "hamaBeads": "Hama 拼豆",
+        "hamaBeadsDesc": "关于丹麦原创拼豆的一切信息。"
     },
     "HomePage": {
         "badge": "免费在线工具",
@@ -64,7 +80,7 @@
         "empty": "空白",
         "uploadPrompt": "上传图片开始创作",
         "title": "拼豆图纸生成器",
-        "description": "将您喜爱的照片转换为自定义拼豆图纸。是制作礼物和家居装饰的完美选择。",
+        "description": "将您喜爱的照片转换为自定义拼豆图纸。是制作冰箱贴，生日礼物和家居装饰的完美选择。",
         "getStarted": "开始使用",
         "tools": "工具",
         "brush": "画笔",
@@ -81,7 +97,10 @@
         "beadBrand": "拼豆品牌",
         "mardCategory": "MARD 分类",
         "colors": "色号",
-        "allColors": "所有 MARD 颜色"
+        "allColors": "所有 MARD 颜色",
+        "exportSettings": "导出设置",
+        "exportShowCodes": "在图片上显示珠子编号",
+        "exportShowStats": "显示珠子统计数据"
     },
     "Showcase": {
         "title": "拼豆作品合集",

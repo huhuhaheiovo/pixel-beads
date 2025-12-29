@@ -12,6 +12,10 @@ interface SettingsPanelProps {
   onPaletteChange: (palette: string) => void
   selectedMardCategory: MardCategory
   onMardCategoryChange: (category: MardCategory) => void
+  exportShowCodes: boolean
+  onExportShowCodesChange: (show: boolean) => void
+  exportShowStats: boolean
+  onExportShowStatsChange: (show: boolean) => void
 }
 
 export function SettingsPanel({
@@ -22,7 +26,11 @@ export function SettingsPanel({
   selectedPalette,
   onPaletteChange,
   selectedMardCategory,
-  onMardCategoryChange
+  onMardCategoryChange,
+  exportShowCodes,
+  onExportShowCodesChange,
+  exportShowStats,
+  onExportShowStatsChange
 }: SettingsPanelProps) {
   const t = useTranslations('Generator')
 
@@ -92,6 +100,34 @@ export function SettingsPanel({
             </select>
           </div>
         )}
+
+        <div className='pt-6 space-y-4 border-t border-[#E4E4E7]'>
+          <label className='text-xs font-bold uppercase tracking-widest text-[#A1A1AA]'>{t('exportSettings')}</label>
+          <div className='space-y-3'>
+            <label className='flex items-center gap-3 cursor-pointer group'>
+              <input
+                type='checkbox'
+                checked={exportShowCodes}
+                onChange={(e) => onExportShowCodesChange(e.target.checked)}
+                className='w-4 h-4 rounded border-[#E4E4E7] text-[#18181B] focus:ring-[#18181B]'
+              />
+              <span className='text-[10px] font-bold uppercase text-[#71717A] group-hover:text-[#18181B] transition-colors'>
+                {t('exportShowCodes')}
+              </span>
+            </label>
+            <label className='flex items-center gap-3 cursor-pointer group'>
+              <input
+                type='checkbox'
+                checked={exportShowStats}
+                onChange={(e) => onExportShowStatsChange(e.target.checked)}
+                className='w-4 h-4 rounded border-[#E4E4E7] text-[#18181B] focus:ring-[#18181B]'
+              />
+              <span className='text-[10px] font-bold uppercase text-[#71717A] group-hover:text-[#18181B] transition-colors'>
+                {t('exportShowStats')}
+              </span>
+            </label>
+          </div>
+        </div>
       </div>
     </div>
   )

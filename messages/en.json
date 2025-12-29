@@ -2,7 +2,23 @@
     "Header": {
         "home": "Home",
         "generator": "Generator",
-        "showcase": "Showcase"
+        "showcase": "Showcase",
+        "tools": "Tools",
+        "guides": "Guides",
+        "pixelArtMaker": "Pixel Art Maker",
+        "pixelArtMakerDesc": "Powerful online editor for creating sprites and patterns.",
+        "imageToPixel": "Image to Pixel",
+        "imageToPixelDesc": "Convert any photo into a pixel art masterpiece.",
+        "minecraftGuide": "Minecraft Guide",
+        "minecraftGuideDesc": "Learn how to build massive pixel art murals in-game.",
+        "fusePatternTool": "Fuse Pattern Tool",
+        "fusePatternToolDesc": "Generate patterns specifically for Perler/Hama beads.",
+        "rplaceTool": "r/place Tool",
+        "rplaceToolDesc": "Plan strategy and templates for pixel wars.",
+        "fuseBeadsGuide": "Fuse Beads Guide",
+        "fuseBeadsGuideDesc": "Ultimate guide to Perler, Artkal, and ironing tips.",
+        "hamaBeads": "Hama Beads",
+        "hamaBeadsDesc": "Everything about the original Danish melting beads."
     },
     "HomePage": {
         "badge": "Free 100% Online Perler Bead DIY Tool",
@@ -81,7 +97,10 @@
         "beadBrand": "Bead Brand",
         "mardCategory": "MARD Category",
         "colors": "Colors",
-        "allColors": "All MARD Colors"
+        "allColors": "All MARD Colors",
+        "exportSettings": "Export Settings",
+        "exportShowCodes": "Show Bead Codes",
+        "exportShowStats": "Show Bead Statistics"
     },
     "Showcase": {
         "title": "Bead Pattern Gallery",
