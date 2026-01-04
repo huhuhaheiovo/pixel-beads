@@ -45,6 +45,7 @@ export default async function LocaleLayout({
 
     // Obtaining messages for client components
     const messages = await getMessages();
+    const t = await getTranslations({ locale, namespace: 'Footer' });
 
     return (
         <html lang={locale}>
@@ -87,10 +88,13 @@ export default async function LocaleLayout({
                                 <span className="font-black text-xs uppercase tracking-tighter italic">PixelBeads.Art</span>
                             </div>
                             <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4">
-                                <Link href="/" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">Home</Link>
-                                <Link href="/showcase" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">Showcase</Link>
-                                <Link href="/cool-perler-bead-designs" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">Cool Designs</Link>
-                                <Link href="/perler-bead-pattern-generator" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">Generator</Link>
+                                <Link href="/" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">{t('home')}</Link>
+                                <Link href="/showcase" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">{t('showcase')}</Link>
+                                <Link href="/cool-perler-bead-designs" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">{t('coolDesigns')}</Link>
+                                <Link href="/perler-bead-pattern-generator" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">{t('generator')}</Link>
+                                <Link href="/blog" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">{t('blog')}</Link>
+                                <Link href="/privacy-policy" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">{t('privacyPolicy')}</Link>
+                                <Link href="/terms-of-service" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">{t('termsOfService')}</Link>
                             </nav>
                             <p className="text-[10px] font-bold uppercase tracking-widest text-[#A1A1AA]">© 2025 • PixelBeads</p>
                         </div>

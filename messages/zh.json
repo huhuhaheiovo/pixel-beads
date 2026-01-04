@@ -147,5 +147,52 @@
         "cat_animals": "几何动物",
         "cat_icons": "极简图标",
         "cta_create": "创作你的酷炫设计"
+    },
+    "PrivacyPolicy": {
+        "title": "隐私政策",
+        "lastUpdated": "最后更新日期：2026年1月3日",
+        "intro": "在 PixelBeads，我们非常重视您的隐私。本隐私政策解释了您在访问我们的网站时，我们如何收集、使用和保护您的信息。",
+        "section1Title": "1. 我们收集的信息",
+        "section1Content": "我们不需要用户注册账号。但是，为了进行分析，我们可能会收集最少的数据，例如浏览器类型、引用页面和时间戳。当您上传图片时，图片会在您的浏览器中本地处理或在我们的服务器上临时处理以生成图案，不会永久存储。",
+        "section2Title": "2. 信息的使用",
+        "section2Content": "我们收集的信息用于改进我们的服务、分析使用趋势并确保我们网站的安全。",
+        "section3Title": "3. Cookie 和广告",
+        "section3Content": "我们使用 Google AdSense 展示广告。Google 可能会根据您之前访问我们网站或其他网站的情况使用 Cookie 来展示广告。您可以访问 Google 广告设置来选择退出个性化广告。",
+        "section4Title": "4. 数据安全",
+        "section4Content": "我们实施了多种安全措施来保障您个人信息的安全。然而，互联网上的任何传输方法都不能保证 100% 的安全。",
+        "section5Title": "5. 第三方链接",
+        "section5Content": "我们的网站可能包含指向第三方网站的链接。我们不对这些网站的隐私惯例或内容负责。",
+        "section6Title": "6. 本政策的修订",
+        "section6Content": "我们可能会不时更新我们的隐私政策。我们通过在本页面发布新的隐私政策来通知您任何变更。",
+        "section7Title": "7. 联系我们",
+        "section7Content": "如果您对本隐私政策有任何疑问，请联系我们。"
+    },
+    "TermsOfService": {
+        "title": "服务条款",
+        "lastUpdated": "最后更新日期：2026年1月3日",
+        "intro": "欢迎使用 PixelBeads。访问或使用我们的网站，即表示您同意遵守并受本服务条款的约束。",
+        "section1Title": "1. 服务的使用",
+        "section1Content": "PixelBeads 提供了一个从图片创建拼豆图纸的工具。除非另有授权，否则您仅可将本服务用于个人和非商业目的。",
+        "section2Title": "2. 用户行为",
+        "section2Content": "您同意不将本服务用于任何非法目的，或上传任何具有侮辱性、有害或侵犯他人知识产权的内容。",
+        "section3Title": "3. 知识产权",
+        "section3Content": "PixelBeads 上的内容和工具受知识产权法保护。未经我们的许可，您不得复制、分发或创作衍生作品。",
+        "section4Title": "4. 免责声明",
+        "section4Content": "本服务按“原样”提供，不提供任何形式的保证。我们不保证服务不会中断或没有错误。",
+        "section5Title": "5. 责任限制",
+        "section5Content": "在任何情况下，PixelBeads 均不对因您使用或无法使用本服务而产生的任何损害承担责任。",
+        "section6Title": "6. 条款的修订",
+        "section6Content": "我们保留随时修改本服务条款的权利。您继续使用本服务即表示接受新条款。",
+        "section7Title": "7. 适用法律",
+        "section7Content": "本条款应受我们运营所在司法管辖区的法律管辖并按其解释。"
+    },
+    "Footer": {
+        "home": "首页",
+        "showcase": "作品展示",
+        "coolDesigns": "酷炫设计",
+        "generator": "生成器",
+        "blog": "博客",
+        "privacyPolicy": "隐私政策",
+        "termsOfService": "服务条款"
     }
 }
