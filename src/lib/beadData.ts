@@ -77,3 +77,18 @@ export const PALETTE_LABELS: Record<string, string> = {
   Hama: 'Hama',
   ...JSON_PALETTE_LABELS
 }
+
+export const MASTER_BEAD_MAP = new Map<string, string>()
+
+Object.values(PALETTES).flat().forEach((bead) => {
+  MASTER_BEAD_MAP.set(bead.id, bead.hex)
+})
+
+export function resolveBeadColor(beadId: string): string {
+  if (beadId === '#00000000' || beadId === 'transparent') return 'transparent'
+  // If the ID is a hex color, return it as is
+  if (beadId.startsWith('#')) return beadId
+
+  return MASTER_BEAD_MAP.get(beadId) || beadId
+}
+

@@ -18,7 +18,8 @@
         "fuseBeadsGuide": "Fuse Beads Guide",
         "fuseBeadsGuideDesc": "Ultimate guide to Perler, Artkal, and ironing tips.",
         "hamaBeads": "Hama Beads",
-        "hamaBeadsDesc": "Everything about the original Danish melting beads."
+        "hamaBeadsDesc": "Everything about the original Danish melting beads.",
+        "patterns": "Patterns"
     },
     "HomePage": {
         "badge": "Free 100% Online Perler Bead DIY Tool",
@@ -104,7 +105,9 @@
         "allColors": "All MARD Colors",
         "exportSettings": "Export Settings",
         "exportShowCodes": "Show Bead Codes",
-        "exportShowStats": "Show Bead Statistics"
+        "exportShowStats": "Show Bead Statistics",
+        "savedToLibrary": "Saved to Library",
+        "failedToSave": "Failed to save"
     },
     "Showcase": {
         "title": "Bead Pattern Gallery",
@@ -194,5 +197,18 @@
         "blog": "Blog",
         "privacyPolicy": "Privacy Policy",
         "termsOfService": "Terms of Service"
+    },
+    "Patterns": {
+        "title": "Pattern Library",
+        "description": "Browse and download pixel bead patterns.",
+        "viewDetails": "View Details",
+        "mockTitle": "Mario Mushroom",
+        "mockDesc": "Classic 8-bit mushroom",
+        "materials": "Bill of Materials",
+        "totalBeads": "Total Beads",
+        "exportPdf": "Export PDF",
+        "exportImage": "Export Image",
+        "backToLibrary": "Back to Library",
+        "zoom": "Zoom"
     }
 }

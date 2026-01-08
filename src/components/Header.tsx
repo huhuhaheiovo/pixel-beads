@@ -111,6 +111,23 @@ export function Header() {
                             </NavigationMenuList>
                         </NavigationMenu>
 
+                        <NavigationMenu>
+                            <NavigationMenuList>
+                                <NavigationMenuItem>
+                                    <NavigationMenuLink asChild>
+                                        <Link
+                                            href='/patterns'
+                                            className={navigationMenuTriggerStyle()}
+                                        >
+                                            <span className={`text-[10px] font-bold uppercase tracking-widest ${pathname.startsWith('/patterns') ? 'text-[#18181B]' : 'text-[#71717A]'}`}>
+                                                {t('patterns')}
+                                            </span>
+                                        </Link>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem>
+                            </NavigationMenuList>
+                        </NavigationMenu>
+
                         <Link
                             href='/perler-bead-pattern-generator'
                             className={`flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${isGenerator ? 'bg-[#18181B] text-white' : 'border border-[#E4E4E7] text-[#18181B] hover:border-[#18181B]'}`}

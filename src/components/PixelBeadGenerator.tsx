@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react'
-import { Upload, Download, Image as ImageIcon } from 'lucide-react'
+import { Upload, Download, Image as ImageIcon, Save } from 'lucide-react'
 import { BeadColor, MARD_CATEGORIES, PALETTES } from '@/lib/beadData'
 import { jsPDF } from 'jspdf'
 import { toPng } from 'html-to-image'
@@ -15,6 +15,9 @@ import { BeadGrid } from './pixel-bead-generator/bead-grid'
 import { UploadArea } from './pixel-bead-generator/upload-area'
 import { useTranslations } from 'next-intl'
 import { Progress } from './ui/progress'
+import { savePatternAction } from '@/app/actions/patterns'
+import { generateColorMap } from '@/lib/color-map'
+import { toast } from 'sonner'
 
 type Tool = 'brush' | 'eraser' | 'picker'
 type MardCategory = '72' | '96' | '120' | '144' | '168' | 'all'
@@ -46,6 +49,8 @@ export function PixelBeadGenerator() {
   const [exportProgress, setExportProgress] = useState(0)
   const [exportShowCodes, setExportShowCodes] = useState(false)
   const [exportShowStats, setExportShowStats] = useState(true)
+  const [isSaving, setIsSaving] = useState(false)
+
   const gridRef = useRef<HTMLDivElement>(null)
 
   const { image, setImage, isProcessing, processImage } = useImageProcessing()
@@ -76,6 +81,8 @@ export function PixelBeadGenerator() {
   const colorById = useMemo(() => {
     return new Map(activePalette.map(c => [c.id, c]))
   }, [activePalette])
+
+  const colorMap = useMemo(() => generateColorMap(matrix), [matrix])
 
   const beadStats = useMemo(() => {
     if (!matrix.length) return []
@@ -116,7 +123,7 @@ export function PixelBeadGenerator() {
     const currentConfig = { gridWidth, cellSize }
     const matchedDifficulty = (['easy', 'medium', 'hard'] as Exclude<Difficulty, 'custom'>[]).find(
       diff => DIFFICULTY_CONFIGS[diff].gridWidth === currentConfig.gridWidth &&
-              DIFFICULTY_CONFIGS[diff].cellSize === currentConfig.cellSize
+        DIFFICULTY_CONFIGS[diff].cellSize === currentConfig.cellSize
     )
 
     if (matchedDifficulty && matchedDifficulty !== selectedDifficulty) {
@@ -191,6 +198,38 @@ export function PixelBeadGenerator() {
   const handleRedo = useCallback(() => {
     redo()
   }, [redo])
+
+  const handleSaveToLibrary = useCallback(async () => {
+    if (!matrix.length) return
+    setIsSaving(true)
+    try {
+      const patternDesc = `Generated for ${selectedPalette} Beads | Grid size: ${gridWidth}x${matrix.length}`
+
+      const success = await savePatternAction({
+        id: crypto.randomUUID(),
+        title: `Pattern ${new Date().toLocaleDateString()}`,
+        description: patternDesc,
+        width: gridWidth,
+        height: matrix.length,
+        pixels: matrix,
+        paletteId: selectedPalette,
+        isPublic: true,
+        authorId: 'user', // TODO: real auth
+        createdAt: new Date().toISOString()
+      })
+
+      if (success) {
+        toast.success(t('savedToLibrary'))
+      } else {
+        toast.error(t('failedToSave'))
+      }
+    } catch (error) {
+      console.error('Failed to save:', error)
+      toast.error(t('failedToSave'))
+    } finally {
+      setIsSaving(false)
+    }
+  }, [matrix, gridWidth, selectedPalette, t])
 
   const exportToPDF = useCallback(() => {
     if (!matrix.length) return
@@ -439,25 +478,39 @@ export function PixelBeadGenerator() {
             onRedo={handleRedo}
           />
 
-        <SettingsPanel
-          selectedDifficulty={selectedDifficulty}
-          onDifficultyChange={handleDifficultyChange}
-          gridWidth={gridWidth}
-          onGridWidthChange={handleGridWidthChange}
-          cellSize={cellSize}
-          onCellSizeChange={handleCellSizeChange}
-          selectedPalette={selectedPalette}
-          onPaletteChange={setSelectedPalette}
-          selectedMardCategory={selectedMardCategory}
-          onMardCategoryChange={setSelectedMardCategory}
-          exportShowCodes={exportShowCodes}
-          onExportShowCodesChange={setExportShowCodes}
-          exportShowStats={exportShowStats}
-          onExportShowStatsChange={setExportShowStats}
-        />
+          <SettingsPanel
+            selectedDifficulty={selectedDifficulty}
+            onDifficultyChange={handleDifficultyChange}
+            gridWidth={gridWidth}
+            onGridWidthChange={handleGridWidthChange}
+            cellSize={cellSize}
+            onCellSizeChange={handleCellSizeChange}
+            selectedPalette={selectedPalette}
+            onPaletteChange={setSelectedPalette}
+            selectedMardCategory={selectedMardCategory}
+            onMardCategoryChange={setSelectedMardCategory}
+            exportShowCodes={exportShowCodes}
+            onExportShowCodesChange={setExportShowCodes}
+            exportShowStats={exportShowStats}
+            onExportShowStatsChange={setExportShowStats}
+          />
         </div>
 
         <div className='flex-shrink-0 space-y-4 p-4 lg:p-6 border-t border-[#E4E4E7] bg-white'>
+          {/* Add Save Button */}
+          <button
+            onClick={handleSaveToLibrary}
+            disabled={!image || matrix.length === 0 || isSaving}
+            className='flex items-center justify-center gap-2 w-full py-4 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2'
+          >
+            {isSaving ? (
+              <div className='w-3 h-3 border-2 border-white border-t-transparent animate-spin' />
+            ) : (
+              <Save size={14} />
+            )}
+            {t('savedToLibrary')}
+          </button>
+
           <input
             type='file'
             id='upload'
@@ -597,9 +650,11 @@ export function PixelBeadGenerator() {
                   <div key={color.id} className='flex items-center justify-between group'>
                     <div className='flex items-center gap-5'>
                       <div
-                        className='w-8 h-8 rounded-sm shadow-sm border border-[#E4E4E7]'
+                        className='w-8 h-8 rounded-full border border-zinc-200 shadow-sm flex items-center justify-center font-bold text-xs text-black'
                         style={{ backgroundColor: color.hex }}
-                      />
+                      >
+                        <span className="drop-shadow-md mix-blend-hard-light">{colorMap[color.id] || ''}</span>
+                      </div>
                       <div className='flex items-baseline gap-2'>
                         <span className='text-[14px] font-black text-[#18181B] uppercase tracking-wider w-12'>
                           {color.code}

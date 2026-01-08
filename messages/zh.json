@@ -18,7 +18,8 @@
         "fuseBeadsGuide": "拼豆完全指南",
         "fuseBeadsGuideDesc": "关于 Perler、Artkal 及熨烫技巧的终极指南。",
         "hamaBeads": "Hama 拼豆",
-        "hamaBeadsDesc": "关于丹麦原创拼豆的一切信息。"
+        "hamaBeadsDesc": "关于丹麦原创拼豆的一切信息。",
+        "patterns": "图纸库"
     },
     "HomePage": {
         "badge": "免费在线工具",
@@ -104,7 +105,9 @@
         "allColors": "所有 MARD 颜色",
         "exportSettings": "导出设置",
         "exportShowCodes": "在图片上显示珠子编号",
-        "exportShowStats": "显示珠子统计数据"
+        "exportShowStats": "显示珠子统计数据",
+        "savedToLibrary": "已保存到图纸库",
+        "failedToSave": "保存失败"
     },
     "Showcase": {
         "title": "拼豆作品合集",
@@ -194,5 +197,18 @@
         "blog": "博客",
         "privacyPolicy": "隐私政策",
         "termsOfService": "服务条款"
+    },
+    "Patterns": {
+        "title": "图纸库",
+        "description": "浏览并下载像素拼豆图纸。",
+        "viewDetails": "查看详情",
+        "mockTitle": "马里奥蘑菇",
+        "mockDesc": "经典的8位蘑菇",
+        "materials": "材料清单",
+        "totalBeads": "总珠数",
+        "exportPdf": "导出 PDF",
+        "exportImage": "导出图片",
+        "backToLibrary": "返回图纸库",
+        "zoom": "缩放"
     }
 }
