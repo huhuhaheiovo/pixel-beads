@@ -197,15 +197,15 @@ export function PixelBeadGenerator() {
 
     try {
       const doc = new jsPDF({
-        orientation: 'portrait',
+        orientation: 'landscape',
         unit: 'mm',
         format: 'a4'
       })
 
       const pageWidth = doc.internal.pageSize.getWidth()
       const margin = 20
-      const availableWidth = pageWidth - margin * 2
-      const pdfCellSize = availableWidth / gridWidth
+      // Convert cellSize from px to mm (96 DPI: 1px = 0.264583mm)
+      const pdfCellSize = cellSize * 0.264583
 
       // Title
       doc.setFontSize(22)
@@ -301,7 +301,7 @@ export function PixelBeadGenerator() {
     } catch (error) {
       console.error('Failed to export PDF:', error)
     }
-  }, [matrix, gridWidth, selectedPalette, colorById])
+  }, [matrix, gridWidth, selectedPalette, colorById, cellSize])
 
   const exportToImage = useCallback(async () => {
     if (!exportRef.current || !matrix.length) return
