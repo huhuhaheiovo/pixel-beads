@@ -11,6 +11,8 @@ interface BeadGridProps {
   colorById: Map<string, BeadColor>
   onCellClick: (x: number, y: number) => void
   zoom?: number
+  beadStyle: 'square' | 'round' | 'hollow'
+  gridSpacing: 'none' | 'small' | 'large'
 }
 
 function BeadGridComponent({
@@ -21,9 +23,15 @@ function BeadGridComponent({
   showBeadCodes,
   colorById,
   onCellClick,
-  zoom = 1
+  zoom = 1,
+  beadStyle = 'square',
+  gridSpacing = 'small'
 }: BeadGridProps) {
   const effectiveSize = cellSize * zoom
+
+  const gapSize = gridSpacing === 'none' ? '0px' : gridSpacing === 'small' ? '1px' : '3px'
+  const isRound = beadStyle === 'round' || beadStyle === 'hollow'
+  const isHollow = beadStyle === 'hollow'
 
   return (
     <div
@@ -33,9 +41,9 @@ function BeadGridComponent({
       style={{
         gridTemplateColumns: `repeat(${gridWidth}, ${effectiveSize}px)`,
         gridAutoRows: `${effectiveSize}px`,
-        gap: showGrid ? '1px' : '0px',
-        backgroundColor: showGrid ? '#D8CBB9' : 'transparent',
-        padding: showGrid ? '1px' : '0px'
+        gap: gapSize,
+        backgroundColor: showGrid && gridSpacing !== 'none' ? '#D8CBB9' : 'transparent',
+        padding: showGrid && gridSpacing !== 'none' ? '1px' : '0px'
       }}
     >
       {matrix.map((row, y) =>
@@ -74,7 +82,11 @@ function BeadGridComponent({
               style={{
                 width: `${effectiveSize}px`,
                 height: `${effectiveSize}px`,
-                backgroundColor: color?.hex || 'transparent',
+                backgroundColor: isHollow ? 'transparent' : (color?.hex || 'transparent'),
+                borderColor: isHollow ? (color?.hex || 'transparent') : 'transparent',
+                borderWidth: isHollow ? `${Math.max(2, effectiveSize * 0.25)}px` : '0px',
+                borderStyle: isHollow ? 'solid' : 'none',
+                borderRadius: isRound ? '50%' : '0%',
                 color: getContrastTextColor(color?.hex),
                 fontSize: `${fontSize}px`,
                 fontWeight: 800,
@@ -100,5 +112,17 @@ function BeadGridComponent({
   )
 }
 
-export const BeadGrid = memo(BeadGridComponent)
+export const BeadGrid = memo(BeadGridComponent, (prevProps, nextProps) => {
+  // Only re-render if these specific props change
+  return (
+    prevProps.matrix === nextProps.matrix &&
+    prevProps.gridWidth === nextProps.gridWidth &&
+    prevProps.cellSize === nextProps.cellSize &&
+    prevProps.showGrid === nextProps.showGrid &&
+    prevProps.showBeadCodes === nextProps.showBeadCodes &&
+    prevProps.zoom === nextProps.zoom &&
+    prevProps.beadStyle === nextProps.beadStyle &&
+    prevProps.gridSpacing === nextProps.gridSpacing
+  )
+})
 

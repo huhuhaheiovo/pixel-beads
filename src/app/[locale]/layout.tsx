@@ -49,7 +49,7 @@ export default async function LocaleLayout({
     return (
         <html lang={locale}>
             <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
             >
                 <Script
                     src="https://www.googletagmanager.com/gtag/js?id=G-PHKBP63X2W"

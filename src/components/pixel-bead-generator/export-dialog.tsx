@@ -74,17 +74,17 @@ export function ExportDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] bg-[#F7F1E1] border-[#D8CBB9] text-[#3E2A1E]">
         <DialogHeader>
-          <DialogTitle>{t('title')}</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-[#3E2A1E]">{t('title')}</DialogTitle>
+          <DialogDescription className="text-[#8F7E6F]">
             {exportType === 'pdf' ? t('descriptionPdf') : t('descriptionImage')}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
           <div className="space-y-2">
-            <Label htmlFor="pattern-name">
+            <Label htmlFor="pattern-name" className="text-[#5A4738]">
               {t('patternName')}
               <span className="text-red-500 ml-1">*</span>
             </Label>
@@ -99,7 +99,7 @@ export function ExportDialog({
                 }
               }}
               required
-              className={showNameError ? 'border-red-500 focus-visible:ring-red-500' : ''}
+              className={`bg-white border-[#D8CBB9] text-[#3E2A1E] placeholder:text-[#8F7E6F] focus-visible:ring-[#32B8A6] ${showNameError ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
             />
             {showNameError && (
               <p className="text-sm text-red-500 mt-1">
@@ -109,12 +109,13 @@ export function ExportDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="author-name">{t('authorName')}</Label>
+            <Label htmlFor="author-name" className="text-[#5A4738]">{t('authorName')}</Label>
             <Input
               id="author-name"
               placeholder={t('authorNamePlaceholder')}
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
+              className="bg-white border-[#D8CBB9] text-[#3E2A1E] placeholder:text-[#8F7E6F] focus-visible:ring-[#32B8A6]"
             />
           </div>
 
@@ -123,22 +124,24 @@ export function ExportDialog({
               id="is-public"
               checked={isPublic}
               onCheckedChange={(checked) => setIsPublic(checked === true)}
+              className="border-[#D8CBB9] data-[state=checked]:bg-[#32B8A6] data-[state=checked]:border-[#32B8A6] text-white"
             />
             <Label
               htmlFor="is-public"
-              className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-[#5A4738]"
             >
               {t('isPublic')}
             </Label>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="message">{t('message')}</Label>
+            <Label htmlFor="message" className="text-[#5A4738]">{t('message')}</Label>
             <Input
               id="message"
               placeholder={t('messagePlaceholder')}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              className="bg-white border-[#D8CBB9] text-[#3E2A1E] placeholder:text-[#8F7E6F] focus-visible:ring-[#32B8A6]"
             />
           </div>
         </div>
@@ -147,14 +150,14 @@ export function ExportDialog({
           <Button
             variant="outline"
             onClick={handleSkip}
-            className="w-full sm:w-auto order-2 sm:order-1"
+            className="w-full sm:w-auto order-2 sm:order-1 border-[#D8CBB9] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]"
           >
             {t('skipAndDownload')}
           </Button>
           <Button
-              onClick={handleSaveAndExport}
-              className="w-full sm:w-auto order-1 sm:order-2
-             bg-[#18181B] hover:bg-black
+            onClick={handleSaveAndExport}
+            className="w-full sm:w-auto order-1 sm:order-2
+             bg-[#32B8A6] hover:bg-[#2AA38F]
              text-white hover:text-white"
           >
             {t('saveAndDownload')}

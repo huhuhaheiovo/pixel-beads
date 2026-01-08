@@ -3,6 +3,8 @@ import { useTranslations } from 'next-intl'
 
 type MardCategory = '72' | '96' | '120' | '144' | '168' | 'all'
 export type Difficulty = 'easy' | 'medium' | 'hard' | 'custom'
+export type BeadStyle = 'square' | 'round' | 'hollow'
+export type GridSpacing = 'none' | 'small' | 'large'
 
 interface SettingsPanelProps {
   selectedDifficulty: Difficulty
@@ -15,10 +17,6 @@ interface SettingsPanelProps {
   onPaletteChange: (palette: string) => void
   selectedMardCategory: MardCategory
   onMardCategoryChange: (category: MardCategory) => void
-  exportShowCodes: boolean
-  onExportShowCodesChange: (show: boolean) => void
-  exportShowStats: boolean
-  onExportShowStatsChange: (show: boolean) => void
 }
 
 export function SettingsPanel({
@@ -31,11 +29,7 @@ export function SettingsPanel({
   selectedPalette,
   onPaletteChange,
   selectedMardCategory,
-  onMardCategoryChange,
-  exportShowCodes,
-  onExportShowCodesChange,
-  exportShowStats,
-  onExportShowStatsChange
+  onMardCategoryChange
 }: SettingsPanelProps) {
   const t = useTranslations('Generator')
 
@@ -48,14 +42,30 @@ export function SettingsPanel({
             <span>{t('width')}</span>
             <span>{gridWidth} {t('units')}</span>
           </div>
-          <input
-            type="range"
-            min="10"
-            max="100"
-            value={gridWidth}
-            onChange={(e) => onGridWidthChange(parseInt(e.target.value, 10))}
-            className="w-full h-1 bg-[#F0EEE8] appearance-none cursor-pointer accent-[#3E2A1E]"
-          />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => onGridWidthChange(Math.max(10, gridWidth - 1))}
+              className="w-7 h-7 flex items-center justify-center bg-[#F7F1E1] hover:bg-[#F0EEE8] text-[#3E2A1E] rounded-lg font-bold text-sm transition-colors"
+              aria-label="Decrease width"
+            >
+              −
+            </button>
+            <input
+              type="range"
+              min="10"
+              max="100"
+              value={gridWidth}
+              onChange={(e) => onGridWidthChange(parseInt(e.target.value, 10))}
+              className="flex-1 h-1 bg-[#F0EEE8] appearance-none cursor-pointer accent-[#3E2A1E]"
+            />
+            <button
+              onClick={() => onGridWidthChange(Math.min(100, gridWidth + 1))}
+              className="w-7 h-7 flex items-center justify-center bg-[#F7F1E1] hover:bg-[#F0EEE8] text-[#3E2A1E] rounded-lg font-bold text-sm transition-colors"
+              aria-label="Increase width"
+            >
+              +
+            </button>
+          </div>
         </div>
 
         <div className="space-y-2">
@@ -63,14 +73,30 @@ export function SettingsPanel({
             <span>{t('cellSize')}</span>
             <span>{cellSize}px</span>
           </div>
-          <input
-            type="range"
-            min="8"
-            max="30"
-            value={cellSize}
-            onChange={(e) => onCellSizeChange(parseInt(e.target.value, 10))}
-            className="w-full h-1 bg-[#F0EEE8] appearance-none cursor-pointer accent-[#3E2A1E]"
-          />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => onCellSizeChange(Math.max(8, cellSize - 1))}
+              className="w-7 h-7 flex items-center justify-center bg-[#F7F1E1] hover:bg-[#F0EEE8] text-[#3E2A1E] rounded-lg font-bold text-sm transition-colors"
+              aria-label="Decrease cell size"
+            >
+              −
+            </button>
+            <input
+              type="range"
+              min="8"
+              max="30"
+              value={cellSize}
+              onChange={(e) => onCellSizeChange(parseInt(e.target.value, 10))}
+              className="flex-1 h-1 bg-[#F0EEE8] appearance-none cursor-pointer accent-[#3E2A1E]"
+            />
+            <button
+              onClick={() => onCellSizeChange(Math.min(30, cellSize + 1))}
+              className="w-7 h-7 flex items-center justify-center bg-[#F7F1E1] hover:bg-[#F0EEE8] text-[#3E2A1E] rounded-lg font-bold text-sm transition-colors"
+              aria-label="Increase cell size"
+            >
+              +
+            </button>
+          </div>
         </div>
 
         <div className="space-y-2">
@@ -79,8 +105,8 @@ export function SettingsPanel({
             <button
               onClick={() => onDifficultyChange('easy')}
               className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${selectedDifficulty === 'easy'
-                  ? 'bg-[#3E2A1E] text-white shadow-lg'
-                  : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
+                ? 'bg-[#3E2A1E] text-white shadow-lg'
+                : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
                 }`}
             >
               {t('difficultyEasy')}
@@ -88,8 +114,8 @@ export function SettingsPanel({
             <button
               onClick={() => onDifficultyChange('medium')}
               className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${selectedDifficulty === 'medium'
-                  ? 'bg-[#3E2A1E] text-white shadow-lg'
-                  : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
+                ? 'bg-[#3E2A1E] text-white shadow-lg'
+                : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
                 }`}
             >
               {t('difficultyMedium')}
@@ -97,8 +123,8 @@ export function SettingsPanel({
             <button
               onClick={() => onDifficultyChange('hard')}
               className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${selectedDifficulty === 'hard'
-                  ? 'bg-[#3E2A1E] text-white shadow-lg'
-                  : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
+                ? 'bg-[#3E2A1E] text-white shadow-lg'
+                : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
                 }`}
             >
               {t('difficultyHard')}
@@ -139,33 +165,8 @@ export function SettingsPanel({
           </div>
         )}
 
-        <div className='pt-6 space-y-4 border-t border-[#D8CBB9]'>
-          <label className='text-xs font-bold uppercase tracking-widest text-[#8F7E6F]'>{t('exportSettings')}</label>
-          <div className='space-y-3'>
-            <label className='flex items-center gap-3 cursor-pointer group'>
-              <input
-                type='checkbox'
-                checked={exportShowCodes}
-                onChange={(e) => onExportShowCodesChange(e.target.checked)}
-                className='w-4 h-4 rounded border-[#D8CBB9] text-[#3E2A1E] focus:ring-[#3E2A1E]'
-              />
-              <span className='text-[10px] font-bold uppercase text-[#5A4738] group-hover:text-[#3E2A1E] transition-colors'>
-                {t('exportShowCodes')}
-              </span>
-            </label>
-            <label className='flex items-center gap-3 cursor-pointer group'>
-              <input
-                type='checkbox'
-                checked={exportShowStats}
-                onChange={(e) => onExportShowStatsChange(e.target.checked)}
-                className='w-4 h-4 rounded border-[#D8CBB9] text-[#3E2A1E] focus:ring-[#3E2A1E]'
-              />
-              <span className='text-[10px] font-bold uppercase text-[#5A4738] group-hover:text-[#3E2A1E] transition-colors'>
-                {t('exportShowStats')}
-              </span>
-            </label>
-          </div>
-        </div>
+        {/*导出设置*/}
+
       </div>
     </div>
   )

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect, useCallback, useRef } from 'react'
+import { useState, useMemo, useEffect, useCallback, useRef, useTransition } from 'react'
 import { Upload, Download, Image as ImageIcon, Minus, Plus } from 'lucide-react'
 import { BeadColor, MARD_CATEGORIES, PALETTES } from '@/lib/beadData'
 import { jsPDF } from 'jspdf'
@@ -23,6 +23,8 @@ import type { Pattern } from '@/lib/pattern-service'
 
 type Tool = 'brush' | 'eraser' | 'picker'
 type MardCategory = '72' | '96' | '120' | '144' | '168' | 'all'
+export type BeadStyle = 'square' | 'round' | 'hollow'
+export type GridSpacing = 'none' | 'small' | 'large'
 
 interface DifficultyConfig {
   gridWidth: number
@@ -55,6 +57,11 @@ export function PixelBeadGenerator() {
   const [zoom, setZoom] = useState(1)
   const [showExportDialog, setShowExportDialog] = useState(false)
   const [pendingExportType, setPendingExportType] = useState<'pdf' | 'image' | null>(null)
+
+  const [beadStyle, setBeadStyle] = useState<BeadStyle>('round')
+  const [gridSpacing, setGridSpacing] = useState<GridSpacing>('small')
+  const [isStyleChanging, setIsStyleChanging] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
   const gridRef = useRef<HTMLDivElement>(null)
 
@@ -262,7 +269,7 @@ export function PixelBeadGenerator() {
   }, [redo])
 
   // Execute actual export
-  const executeExport = useCallback((type: 'pdf' | 'image') => {
+  const executeExport = useCallback(async (type: 'pdf' | 'image') => {
     if (!matrix.length) return
 
     if (type === 'pdf') {
@@ -420,6 +427,7 @@ export function PixelBeadGenerator() {
 
       const progressInterval = setInterval(() => {
         setExportProgress(prev => {
+          // Start from 30% if coming from save flow, otherwise from 10%
           if (prev >= 90) return prev
           return prev + 5
         })
@@ -464,10 +472,31 @@ export function PixelBeadGenerator() {
   }) => {
     if (!pendingExportType || !matrix.length) return
 
+    const exportType = pendingExportType
+
+    // Step 1: Immediately close dialog and reset state
+    setShowExportDialog(false)
+    setPendingExportType(null)
+
+    // Step 2: Show loading state immediately
+    if (exportType === 'image') {
+      setIsExportingImage(true)
+      setExportProgress(5)
+    }
+
+    // Step 3: Save to database
     setIsSaving(true)
     try {
-      const pattern = convertToPattern(pendingExportType, formData)
+      if (exportType === 'image') {
+        setExportProgress(15)
+      }
+
+      const pattern = convertToPattern(exportType, formData)
       const success = await savePatternAction(pattern)
+
+      if (exportType === 'image') {
+        setExportProgress(30)
+      }
 
       if (success) {
         toast.success(t('savedToLibrary'))
@@ -477,13 +506,22 @@ export function PixelBeadGenerator() {
     } catch (error) {
       console.error('Failed to save:', error)
       toast.error(t('failedToSave'))
-    } finally {
+
+      // Reset states on error
       setIsSaving(false)
-      setShowExportDialog(false)
-      setPendingExportType(null)
-      // Execute export after saving
-      executeExport(pendingExportType)
+      if (exportType === 'image') {
+        setIsExportingImage(false)
+        setExportProgress(0)
+      }
+      return
     }
+
+    setIsSaving(false)
+
+    // Step 4: Execute export (this will continue the progress)
+    // For image export, progress continues from 30% to 100%
+    // For PDF export, it executes immediately
+    executeExport(exportType)
   }, [pendingExportType, matrix.length, convertToPattern, t, executeExport])
 
   const handleSkipExport = useCallback(() => {
@@ -529,6 +567,22 @@ export function PixelBeadGenerator() {
   const handleCellSizeChange = useCallback((size: number) => {
     setCellSize(size)
     setSelectedDifficulty('custom')
+  }, [])
+
+  const handleBeadStyleChange = useCallback((style: BeadStyle) => {
+    setIsStyleChanging(true)
+    startTransition(() => {
+      setBeadStyle(style)
+      setTimeout(() => setIsStyleChanging(false), 300)
+    })
+  }, [])
+
+  const handleGridSpacingChange = useCallback((spacing: GridSpacing) => {
+    setIsStyleChanging(true)
+    startTransition(() => {
+      setGridSpacing(spacing)
+      setTimeout(() => setIsStyleChanging(false), 300)
+    })
   }, [])
 
   return (
@@ -597,10 +651,6 @@ export function PixelBeadGenerator() {
               onPaletteChange={setSelectedPalette}
               selectedMardCategory={selectedMardCategory}
               onMardCategoryChange={setSelectedMardCategory}
-              exportShowCodes={exportShowCodes}
-              onExportShowCodesChange={setExportShowCodes}
-              exportShowStats={exportShowStats}
-              onExportShowStatsChange={setExportShowStats}
             />
           </section>
         </div>
@@ -661,10 +711,12 @@ export function PixelBeadGenerator() {
                     colorById={colorById}
                     onCellClick={handleCellClick}
                     zoom={zoom}
+                    beadStyle={beadStyle}
+                    gridSpacing={gridSpacing}
                   />
                 </div>
               )}
-              {(isProcessing || isExportingImage) && (
+              {(isProcessing || isExportingImage || isStyleChanging) && (
                 <div
                   className='absolute inset-0 bg-white/90 backdrop-blur-md flex items-center justify-center z-50 transition-opacity'
                   role="status"
@@ -682,7 +734,9 @@ export function PixelBeadGenerator() {
                       <>
                         <div className='w-full space-y-4'>
                           <div className='flex justify-between items-end'>
-                            <span className='text-[10px] font-black uppercase tracking-[0.2em] text-[#3E2A1E]'>{t('exporting')}</span>
+                            <span className='text-[10px] font-black uppercase tracking-[0.2em] text-[#3E2A1E]'>
+                              {exportProgress < 30 ? t('savingPattern') : exportProgress < 90 ? t('generatingImage') : t('downloading')}
+                            </span>
                             <span className='text-sm font-black text-[#3E2A1E]'>
                               {exportProgress}%
                             </span>
@@ -692,6 +746,16 @@ export function PixelBeadGenerator() {
                       </>
                     )}
                   </div>
+                </div>
+              )}
+
+              {/* Style Change Loading Indicator */}
+              {isStyleChanging && (
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-[#3E2A1E]/90 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg z-50 flex items-center gap-3">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-white">
+                    {t('styleChanging')}
+                  </span>
                 </div>
               )}
             </div>
@@ -707,6 +771,73 @@ export function PixelBeadGenerator() {
         onColorSelect={setSelectedColorId}
       >
         {/* Primary Actions moved here */}
+        <div className="space-y-4 mb-6">
+          <label className='text-xs font-bold uppercase tracking-widest text-[#8F7E6F] border-b border-[#D8CBB9] pb-2 block'>{t('exportSettings')}</label>
+
+          <div className='flex gap-4'>
+            <label className='flex items-center gap-2 cursor-pointer group'>
+              <input
+                type='checkbox'
+                checked={exportShowCodes}
+                onChange={(e) => setExportShowCodes(e.target.checked)}
+                className='w-3.5 h-3.5 rounded border-[#D8CBB9] text-[#3E2A1E] focus:ring-[#3E2A1E]'
+              />
+              <span className='text-[10px] font-bold uppercase text-[#5A4738] group-hover:text-[#3E2A1E] transition-colors'>
+                {t('exportShowCodes')}
+              </span>
+            </label>
+            <label className='flex items-center gap-2 cursor-pointer group'>
+              <input
+                type='checkbox'
+                checked={exportShowStats}
+                onChange={(e) => setExportShowStats(e.target.checked)}
+                className='w-3.5 h-3.5 rounded border-[#D8CBB9] text-[#3E2A1E] focus:ring-[#3E2A1E]'
+              />
+              <span className='text-[10px] font-bold uppercase text-[#5A4738] group-hover:text-[#3E2A1E] transition-colors'>
+                {t('exportShowStats')}
+              </span>
+            </label>
+          </div>
+
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-bold uppercase text-[#5A4738]">{t('beadStyle')}</span>
+              <div className="grid grid-cols-3 gap-2">
+                {(['square', 'round', 'hollow'] as BeadStyle[]).map((style) => (
+                  <button
+                    key={style}
+                    onClick={() => handleBeadStyleChange(style)}
+                    className={`py-1.5 px-1 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all ${beadStyle === style
+                      ? 'bg-[#3E2A1E] text-white shadow-lg'
+                      : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
+                      }`}
+                  >
+                    {t(`beadStyle${style.charAt(0).toUpperCase() + style.slice(1)}`)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-bold uppercase text-[#5A4738]">{t('gridSpacing')}</span>
+              <div className="grid grid-cols-3 gap-2">
+                {(['none', 'small', 'large'] as GridSpacing[]).map((spacing) => (
+                  <button
+                    key={spacing}
+                    onClick={() => handleGridSpacingChange(spacing)}
+                    className={`py-1.5 px-1 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all ${gridSpacing === spacing
+                      ? 'bg-[#3E2A1E] text-white shadow-lg'
+                      : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
+                      }`}
+                  >
+                    {t(`gridSpacing${spacing.charAt(0).toUpperCase() + spacing.slice(1)}`)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-2">
             <button
@@ -741,7 +872,7 @@ export function PixelBeadGenerator() {
           style={{ width: 'fit-content' }}
         >
           {/* Left: Bead Grid */}
-          <div className='bg-white p-1 shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-[#E4E4E7]'>
+          <div className='relative bg-white p-1 shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-[#E4E4E7]'>
             <BeadGrid
               matrix={matrix}
               gridWidth={gridWidth}
@@ -750,7 +881,15 @@ export function PixelBeadGenerator() {
               showBeadCodes={exportShowCodes} // Conditional based on export setting
               colorById={colorById}
               onCellClick={() => { }}
+              beadStyle={beadStyle}
+              gridSpacing={gridSpacing}
             />
+            {/* Watermark Overlay */}
+            <div className="absolute bottom-3 right-3 opacity-50 pointer-events-none z-10">
+              <span className="text-lg font-bold text-[#18181B] tracking-tight">
+                https://www.pixel-beads.com/
+              </span>
+            </div>
           </div>
 
           {/* Right: Statistics Panel */}
