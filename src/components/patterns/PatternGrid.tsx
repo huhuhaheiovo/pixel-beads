@@ -25,27 +25,29 @@ export function PatternGrid({ patterns }: PatternGridProps) {
                         <div
                             className="grid"
                             style={{
-                                gridTemplateColumns: `repeat(${pattern.width}, 1fr)`,
+                                gridTemplateColumns: `repeat(${pattern.gridSize.width}, 1fr)`,
                                 width: '100%',
                                 height: '100%',
                                 maxHeight: '200px',
                                 maxWidth: '200px'
                             }}
                         >
-                            {pattern.pixels.flat().map((color, idx) => (
+                            {pattern.pixels?.flat().map((color, idx) => (
                                 <div key={idx} style={{ backgroundColor: resolveBeadColor(color) }} />
                             ))}
                         </div>
                     </div>
                     <div className="p-4">
                         <h3 className="font-bold text-lg mb-1 group-hover:text-blue-600 transition-colors">
-                            {pattern.title}
+                            {pattern.name || `Pattern ${pattern.id}`}
                         </h3>
-                        <p className="text-sm text-zinc-500 line-clamp-2">
-                            {pattern.description}
-                        </p>
+                        {pattern.message && (
+                            <p className="text-sm text-zinc-500 line-clamp-2">
+                                {pattern.message}
+                            </p>
+                        )}
                         <div className="mt-4 flex items-center justify-between text-xs text-zinc-400">
-                            <span>{pattern.width}x{pattern.height}</span>
+                            <span>{pattern.gridSize.width}x{pattern.gridSize.height}</span>
                             <span className="font-medium text-zinc-900 border border-zinc-200 px-2 py-1 rounded">
                                 {t('viewDetails')}
                             </span>

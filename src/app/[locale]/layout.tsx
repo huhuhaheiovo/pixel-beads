@@ -8,6 +8,8 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { routing, Link } from '@/i18n/routing';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import React from "react";
+import Image from "next/image";
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -71,29 +73,28 @@ export default async function LocaleLayout({
                 <NextIntlClientProvider messages={messages}>
                     <Header />
                     {children}
-                    <footer className="mt-auto border-t border-[#E4E4E7] py-12 bg-[#FAFAFA]">
+                    <footer className="mt-auto border-t border-[#543A2A] py-12 bg-[#3E2A1E] text-[#F7F1E1]">
                         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
                             <div className="flex items-center gap-2">
-                                <div className="w-6 h-6 bg-[#18181B] rounded flex items-center justify-center">
-                                    <div className="w-3 h-3 bg-white rounded-full grid grid-cols-2 gap-0.5 p-0.5">
-                                        <div className="bg-red-400 rounded-full"></div>
-                                        <div className="bg-blue-400 rounded-full"></div>
-                                        <div className="bg-yellow-400 rounded-full"></div>
-                                        <div className="bg-green-400 rounded-full"></div>
-                                    </div>
-                                </div>
-                                <span className="font-black text-xs uppercase tracking-tighter italic">PixelBeads.Art</span>
+                                <Image
+                                    src='/web-app-manifest-192x192.png'
+                                    alt='拼豆艺术'
+                                    width={32}
+                                    height={32}
+                                    className='w-8 h-8 rounded'
+                                />
+                                <span className='font-black text-sm uppercase tracking-tighter text-[#F7F1E1]'>拼豆艺术</span>
                             </div>
                             <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4">
-                                <Link href="/" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">{t('home')}</Link>
-                                <Link href="/showcase" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">{t('showcase')}</Link>
-                                <Link href="/cool-perler-bead-designs" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">{t('coolDesigns')}</Link>
-                                <Link href="/perler-bead-pattern-generator" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">{t('generator')}</Link>
-                                <Link href="/blog" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">{t('blog')}</Link>
-                                <Link href="/privacy-policy" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">{t('privacyPolicy')}</Link>
-                                <Link href="/terms-of-service" className="text-[10px] font-bold uppercase tracking-widest text-[#71717A] hover:text-[#18181B] transition-colors">{t('termsOfService')}</Link>
+                                <Link href="/" className="text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1]/70 hover:text-[#32B8A6] transition-colors">{t('home')}</Link>
+                                <Link href="/showcase" className="text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1]/70 hover:text-[#32B8A6] transition-colors">{t('showcase')}</Link>
+                                <Link href="/cool-perler-bead-designs" className="text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1]/70 hover:text-[#32B8A6] transition-colors">{t('coolDesigns')}</Link>
+                                <Link href="/perler-bead-pattern-generator" className="text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1]/70 hover:text-[#32B8A6] transition-colors">{t('generator')}</Link>
+                                <Link href="/blog" className="text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1]/70 hover:text-[#32B8A6] transition-colors">{t('blog')}</Link>
+                                <Link href="/privacy-policy" className="text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1]/70 hover:text-[#32B8A6] transition-colors">{t('privacyPolicy')}</Link>
+                                <Link href="/terms-of-service" className="text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1]/70 hover:text-[#32B8A6] transition-colors">{t('termsOfService')}</Link>
                             </nav>
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-[#A1A1AA]">© 2025 • PixelBeads</p>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1]/40">© 2025 • PixelBeads</p>
                         </div>
                     </footer>
                 </NextIntlClientProvider>

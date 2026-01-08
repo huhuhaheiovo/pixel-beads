@@ -10,17 +10,20 @@ interface BeadGridProps {
   showBeadCodes: boolean
   colorById: Map<string, BeadColor>
   onCellClick: (x: number, y: number) => void
+  zoom?: number
 }
 
-function BeadGridComponent ({
+function BeadGridComponent({
   matrix,
   gridWidth,
   cellSize,
   showGrid,
   showBeadCodes,
   colorById,
-  onCellClick
+  onCellClick,
+  zoom = 1
 }: BeadGridProps) {
+  const effectiveSize = cellSize * zoom
 
   return (
     <div
@@ -28,10 +31,10 @@ function BeadGridComponent ({
       role="grid"
       aria-label="Bead pattern grid"
       style={{
-        gridTemplateColumns: `repeat(${gridWidth}, ${cellSize}px)`,
-        gridAutoRows: `${cellSize}px`,
+        gridTemplateColumns: `repeat(${gridWidth}, ${effectiveSize}px)`,
+        gridAutoRows: `${effectiveSize}px`,
         gap: showGrid ? '1px' : '0px',
-        backgroundColor: showGrid ? '#E4E4E7' : 'transparent',
+        backgroundColor: showGrid ? '#D8CBB9' : 'transparent',
         padding: showGrid ? '1px' : '0px'
       }}
     >
@@ -40,37 +43,37 @@ function BeadGridComponent ({
           const color = colorById.get(cellId)
           const codeText = color?.code ?? ''
           const MIN_SIZE_FOR_TEXT = 8 // px - match minimum cell size in settings
-          
+
           let displayContent: string | null = null
           if (showBeadCodes && color) {
-            if (cellSize >= MIN_SIZE_FOR_TEXT && codeText) {
+            if (effectiveSize >= MIN_SIZE_FOR_TEXT && codeText) {
               // Large enough for text
               displayContent = codeText
             }
           }
-          
+
           // Calculate font size based on cell size
           // For small cells (8-12px): use smaller font, for larger cells: scale proportionally
           const fontSize = displayContent
-            ? cellSize < 12
-              ? Math.max(6, Math.floor(cellSize * 0.5)) // Smaller font for very small cells
-              : Math.max(8, Math.floor(cellSize * 0.45)) // Normal scaling for larger cells
+            ? effectiveSize < 12
+              ? Math.max(6, Math.floor(effectiveSize * 0.5)) // Smaller font for very small cells
+              : Math.max(8, Math.floor(effectiveSize * 0.45)) // Normal scaling for larger cells
             : 0
-          
-          const cellLabel = color 
+
+          const cellLabel = color
             ? `${color.name}${color.code ? ` (${color.code})` : ''} at position ${x + 1}, ${y + 1}`
             : `Empty cell at position ${x + 1}, ${y + 1}`
-          
+
           return (
             <div
               key={`${x}-${y}`}
               role="gridcell"
               tabIndex={0}
               aria-label={cellLabel}
-              className="cursor-crosshair transition-all hover:scale-110 hover:z-10 flex items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:ring-offset-1"
+              className="cursor-crosshair transition-all hover:scale-110 hover:z-10 flex items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#3E2A1E] focus:ring-offset-1"
               style={{
-                width: `${cellSize}px`,
-                height: `${cellSize}px`,
+                width: `${effectiveSize}px`,
+                height: `${effectiveSize}px`,
                 backgroundColor: color?.hex || 'transparent',
                 color: getContrastTextColor(color?.hex),
                 fontSize: `${fontSize}px`,

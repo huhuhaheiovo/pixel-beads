@@ -107,7 +107,24 @@
         "exportShowCodes": "在图片上显示珠子编号",
         "exportShowStats": "显示珠子统计数据",
         "savedToLibrary": "已保存到图纸库",
-        "failedToSave": "保存失败"
+        "failedToSave": "保存失败",
+        "imageSource": "1. 图片来源",
+        "zoom": "缩放",
+        "exportDialog": {
+            "title": "导出设置",
+            "descriptionPdf": "填写信息后保存到图纸库，或直接下载 PDF",
+            "descriptionImage": "填写信息后保存到图纸库，或直接下载图片",
+            "patternName": "拼豆图名称",
+            "authorName": "作者昵称",
+            "isPublic": "是否公开",
+            "message": "作者留言",
+            "skipAndDownload": "跳过，直接下载",
+            "saveAndDownload": "保存并下载",
+            "patternNamePlaceholder": "例如：可爱猫咪拼豆",
+            "authorNamePlaceholder": "例如：小豆匠",
+            "messagePlaceholder": "例如：适合新手练习",
+            "nameRequired": "为你喜欢的拼豆图片起个名字，让更多人看见吧"
+        }
     },
     "Showcase": {
         "title": "拼豆作品合集",

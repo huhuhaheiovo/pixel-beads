@@ -107,7 +107,24 @@
         "exportShowCodes": "Show Bead Codes",
         "exportShowStats": "Show Bead Statistics",
         "savedToLibrary": "Saved to Library",
-        "failedToSave": "Failed to save"
+        "failedToSave": "Failed to save",
+        "imageSource": "1. Image Source",
+        "zoom": "Zoom",
+        "exportDialog": {
+            "title": "Export Settings",
+            "descriptionPdf": "Save to library with your info, or download PDF directly",
+            "descriptionImage": "Save to library with your info, or download image directly",
+            "patternName": "Pattern Name",
+            "authorName": "Author Name",
+            "isPublic": "Make Public",
+            "message": "Author Message",
+            "skipAndDownload": "Skip and Download",
+            "saveAndDownload": "Save and Download",
+            "patternNamePlaceholder": "e.g., Cute Cat Pattern",
+            "authorNamePlaceholder": "e.g., BeadMaster",
+            "messagePlaceholder": "e.g., Great for beginners",
+            "nameRequired": "Give your favorite bead pattern a name so more people can see it"
+        }
     },
     "Showcase": {
         "title": "Bead Pattern Gallery",

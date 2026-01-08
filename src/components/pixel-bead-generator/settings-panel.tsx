@@ -41,10 +41,10 @@ export function SettingsPanel({
 
   return (
     <div className="space-y-4">
-      <label className="text-xs font-bold uppercase tracking-widest text-[#A1A1AA]">{t('settings')}</label>
+      <label className="text-xs font-bold uppercase tracking-widest text-[#8F7E6F]">{t('settings')}</label>
       <div className="space-y-4 pt-2">
         <div className="space-y-2">
-          <div className="flex justify-between text-[10px] font-bold uppercase text-[#71717A]">
+          <div className="flex justify-between text-[10px] font-bold uppercase text-[#5A4738]">
             <span>{t('width')}</span>
             <span>{gridWidth} {t('units')}</span>
           </div>
@@ -54,12 +54,12 @@ export function SettingsPanel({
             max="100"
             value={gridWidth}
             onChange={(e) => onGridWidthChange(parseInt(e.target.value, 10))}
-            className="w-full h-1 bg-[#E4E4E7] appearance-none cursor-pointer accent-[#18181B]"
+            className="w-full h-1 bg-[#F0EEE8] appearance-none cursor-pointer accent-[#3E2A1E]"
           />
         </div>
 
         <div className="space-y-2">
-          <div className="flex justify-between text-[10px] font-bold uppercase text-[#71717A]">
+          <div className="flex justify-between text-[10px] font-bold uppercase text-[#5A4738]">
             <span>{t('cellSize')}</span>
             <span>{cellSize}px</span>
           </div>
@@ -69,40 +69,37 @@ export function SettingsPanel({
             max="30"
             value={cellSize}
             onChange={(e) => onCellSizeChange(parseInt(e.target.value, 10))}
-            className="w-full h-1 bg-[#E4E4E7] appearance-none cursor-pointer accent-[#18181B]"
+            className="w-full h-1 bg-[#F0EEE8] appearance-none cursor-pointer accent-[#3E2A1E]"
           />
         </div>
 
         <div className="space-y-2">
-          <span className="text-[10px] font-bold uppercase text-[#71717A]">{t('difficulty')}</span>
+          <span className="text-[10px] font-bold uppercase text-[#5A4738]">{t('difficulty')}</span>
           <div className="grid grid-cols-3 gap-2">
             <button
               onClick={() => onDifficultyChange('easy')}
-              className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
-                selectedDifficulty === 'easy'
-                  ? 'bg-[#18181B] text-white shadow-lg'
-                  : 'bg-[#F4F4F5] text-[#71717A] hover:bg-[#E4E4E7] hover:text-[#18181B]'
-              }`}
+              className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${selectedDifficulty === 'easy'
+                  ? 'bg-[#3E2A1E] text-white shadow-lg'
+                  : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
+                }`}
             >
               {t('difficultyEasy')}
             </button>
             <button
               onClick={() => onDifficultyChange('medium')}
-              className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
-                selectedDifficulty === 'medium'
-                  ? 'bg-[#18181B] text-white shadow-lg'
-                  : 'bg-[#F4F4F5] text-[#71717A] hover:bg-[#E4E4E7] hover:text-[#18181B]'
-              }`}
+              className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${selectedDifficulty === 'medium'
+                  ? 'bg-[#3E2A1E] text-white shadow-lg'
+                  : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
+                }`}
             >
               {t('difficultyMedium')}
             </button>
             <button
               onClick={() => onDifficultyChange('hard')}
-              className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
-                selectedDifficulty === 'hard'
-                  ? 'bg-[#18181B] text-white shadow-lg'
-                  : 'bg-[#F4F4F5] text-[#71717A] hover:bg-[#E4E4E7] hover:text-[#18181B]'
-              }`}
+              className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${selectedDifficulty === 'hard'
+                  ? 'bg-[#3E2A1E] text-white shadow-lg'
+                  : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
+                }`}
             >
               {t('difficultyHard')}
             </button>
@@ -110,11 +107,11 @@ export function SettingsPanel({
         </div>
 
         <div className="space-y-2">
-          <span className="text-[10px] font-bold uppercase text-[#71717A]">{t('beadBrand')}</span>
+          <span className="text-[10px] font-bold uppercase text-[#5A4738]">{t('beadBrand')}</span>
           <select
             value={selectedPalette}
             onChange={(e) => onPaletteChange(e.target.value)}
-            className="w-full p-3 bg-[#F4F4F5] border-none text-sm focus:ring-1 focus:ring-[#18181B]"
+            className="w-full p-3 bg-[#F7F1E1] border-none text-sm text-[#3E2A1E] focus:ring-1 focus:ring-[#3E2A1E]"
           >
             {Object.keys(PALETTE_LABELS).map((key) => (
               <option key={key} value={key}>
@@ -126,11 +123,11 @@ export function SettingsPanel({
 
         {selectedPalette === 'MARD' && (
           <div className="space-y-2">
-            <span className="text-[10px] font-bold uppercase text-[#71717A]">{t('mardCategory')}</span>
+            <span className="text-[10px] font-bold uppercase text-[#5A4738]">{t('mardCategory')}</span>
             <select
               value={selectedMardCategory}
               onChange={(e) => onMardCategoryChange(e.target.value as MardCategory)}
-              className="w-full p-3 bg-[#F4F4F5] border-none text-sm focus:ring-1 focus:ring-[#18181B]"
+              className="w-full p-3 bg-[#F7F1E1] border-none text-sm text-[#3E2A1E] focus:ring-1 focus:ring-[#3E2A1E]"
             >
               <option value="72">72 {t('colors')}</option>
               <option value="96">96 {t('colors')}</option>
@@ -142,17 +139,17 @@ export function SettingsPanel({
           </div>
         )}
 
-        <div className='pt-6 space-y-4 border-t border-[#E4E4E7]'>
-          <label className='text-xs font-bold uppercase tracking-widest text-[#A1A1AA]'>{t('exportSettings')}</label>
+        <div className='pt-6 space-y-4 border-t border-[#D8CBB9]'>
+          <label className='text-xs font-bold uppercase tracking-widest text-[#8F7E6F]'>{t('exportSettings')}</label>
           <div className='space-y-3'>
             <label className='flex items-center gap-3 cursor-pointer group'>
               <input
                 type='checkbox'
                 checked={exportShowCodes}
                 onChange={(e) => onExportShowCodesChange(e.target.checked)}
-                className='w-4 h-4 rounded border-[#E4E4E7] text-[#18181B] focus:ring-[#18181B]'
+                className='w-4 h-4 rounded border-[#D8CBB9] text-[#3E2A1E] focus:ring-[#3E2A1E]'
               />
-              <span className='text-[10px] font-bold uppercase text-[#71717A] group-hover:text-[#18181B] transition-colors'>
+              <span className='text-[10px] font-bold uppercase text-[#5A4738] group-hover:text-[#3E2A1E] transition-colors'>
                 {t('exportShowCodes')}
               </span>
             </label>
@@ -161,9 +158,9 @@ export function SettingsPanel({
                 type='checkbox'
                 checked={exportShowStats}
                 onChange={(e) => onExportShowStatsChange(e.target.checked)}
-                className='w-4 h-4 rounded border-[#E4E4E7] text-[#18181B] focus:ring-[#18181B]'
+                className='w-4 h-4 rounded border-[#D8CBB9] text-[#3E2A1E] focus:ring-[#3E2A1E]'
               />
-              <span className='text-[10px] font-bold uppercase text-[#71717A] group-hover:text-[#18181B] transition-colors'>
+              <span className='text-[10px] font-bold uppercase text-[#5A4738] group-hover:text-[#3E2A1E] transition-colors'>
                 {t('exportShowStats')}
               </span>
             </label>

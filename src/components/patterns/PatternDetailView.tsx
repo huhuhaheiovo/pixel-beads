@@ -26,25 +26,27 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
 
     const colorMap = useMemo(() => generateColorMap(pattern.pixels), [pattern.pixels]);
 
+    const patternName = pattern.name || `Pattern ${pattern.id}`
+
     const handleExportImage = useCallback(async () => {
         if (!canvasRef.current) return;
         try {
             const dataUrl = await toPng(canvasRef.current, { cacheBust: true });
             const link = document.createElement('a');
-            link.download = `${pattern.title.replace(/\s+/g, '_')}_pattern.png`;
+            link.download = `${patternName.replace(/\s+/g, '_')}_pattern.png`;
             link.href = dataUrl;
             link.click();
         } catch (err) {
             console.error('Failed to export image', err);
         }
-    }, [pattern.title]);
+    }, [patternName]);
 
     const handleExportPDF = useCallback(async () => {
         if (!canvasRef.current) return;
         try {
             const dataUrl = await toPng(canvasRef.current, { cacheBust: true });
             const pdf = new jsPDF({
-                orientation: pattern.width > pattern.height ? 'landscape' : 'portrait',
+                orientation: pattern.gridSize.width > pattern.gridSize.height ? 'landscape' : 'portrait',
             });
 
             const imgProps = pdf.getImageProperties(dataUrl);
@@ -52,17 +54,17 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
             const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
             pdf.setFontSize(20);
-            pdf.text(pattern.title, 10, 15);
+            pdf.text(patternName, 10, 15);
 
             pdf.addImage(dataUrl, 'PNG', 0, 25, pdfWidth, pdfHeight);
 
             // TODO: Add BOM to PDF if needed, simplified for now
 
-            pdf.save(`${pattern.title.replace(/\s+/g, '_')}.pdf`);
+            pdf.save(`${patternName.replace(/\s+/g, '_')}.pdf`);
         } catch (err) {
             console.error('Failed to export PDF', err);
         }
-    }, [pattern.width, pattern.height, pattern.title]);
+    }, [pattern.gridSize.width, pattern.gridSize.height, patternName]);
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -76,8 +78,13 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
                 <div className="flex-1 w-full">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                         <div>
-                            <h1 className="text-3xl font-black">{pattern.title}</h1>
-                            <p className="text-zinc-500 mt-1">{pattern.description}</p>
+                            <h1 className="text-3xl font-black">{patternName}</h1>
+                            {pattern.message && (
+                                <p className="text-zinc-500 mt-1">{pattern.message}</p>
+                            )}
+                            {pattern.author && (
+                                <p className="text-zinc-400 mt-1 text-sm">by {pattern.author}</p>
+                            )}
                         </div>
                         <div className="flex gap-2">
                             <Button variant="outline" onClick={handleExportImage}>
@@ -108,8 +115,8 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
                         <PatternCanvas
                             ref={canvasRef}
                             pixels={pattern.pixels}
-                            width={pattern.width}
-                            height={pattern.height}
+                            width={pattern.gridSize.width}
+                            height={pattern.gridSize.height}
                             colorMap={colorMap}
                             zoom={zoom}
                         />

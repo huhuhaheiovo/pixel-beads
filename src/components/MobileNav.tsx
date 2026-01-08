@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Image from 'next/image'
 import { Link, usePathname } from '@/i18n/routing'
 import { useTranslations, useLocale } from 'next-intl'
 import { Menu, Hammer, Globe } from 'lucide-react'
@@ -23,16 +24,17 @@ export function MobileNav() {
 
     const navItems = [
         { href: '/', label: t('home') },
+        { href: '/perler-bead-pattern-generator', label: t('generator'), icon: Hammer },
         { href: '/patterns', label: t('patterns') },
-        { href: '/showcase', label: t('showcase') },
-        { href: '/perler-bead-pattern-generator', label: t('generator'), icon: Hammer }
+        { href: '/showcase', label: t('showcase') }
+
     ]
 
     const toolItems = [
+        { href: '/perler-bead-pattern-generator', title: t('fusePatternTool') },
         { href: '/pixel-art-maker', title: t('pixelArtMaker') },
         { href: '/image-to-pixel', title: t('imageToPixel') },
         { href: '/minecraft-pixel-art', title: t('minecraftGuide') },
-        { href: '/perler-bead-pattern-generator', title: t('fusePatternTool') },
         { href: '/wplace', title: t('rplaceTool') }
     ]
 
@@ -44,23 +46,22 @@ export function MobileNav() {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
+                <Button variant="ghost" size="icon" className="md:hidden text-[#F7F1E1] hover:bg-white/10 hover:text-[#32B8A6]">
                     <Menu className="h-5 w-5" />
                     <span className="sr-only">Toggle menu</span>
                 </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px] p-0">
-                <SheetHeader className="p-6 border-b border-[#E4E4E7]">
-                    <SheetTitle className="text-left flex items-center gap-2">
-                        <div className="w-8 h-8 bg-[#18181B] rounded flex items-center justify-center">
-                            <div className="w-4 h-4 bg-white rounded-full grid grid-cols-2 gap-0.5 p-0.5">
-                                <div className="bg-red-400 rounded-full"></div>
-                                <div className="bg-blue-400 rounded-full"></div>
-                                <div className="bg-yellow-400 rounded-full"></div>
-                                <div className="bg-green-400 rounded-full"></div>
-                            </div>
-                        </div>
-                        <span className="font-black text-sm uppercase tracking-tighter">PixelBeads</span>
+            <SheetContent side="right" className="w-[300px] sm:w-[400px] p-0 bg-[#3E2A1E] border-none text-[#F7F1E1]">
+                <SheetHeader className="p-6 border-b border-[#543A2A]">
+                    <SheetTitle className="text-left flex items-center gap-2 text-[#F7F1E1]">
+                        <Image
+                            src='/web-app-manifest-192x192.png'
+                            alt='拼豆艺术'
+                            width={32}
+                            height={32}
+                            className='w-8 h-8 rounded'
+                        />
+                        <span className="font-black text-sm uppercase tracking-tighter text-[#F7F1E1]">拼豆艺术</span>
                     </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col h-[calc(100vh-80px)] overflow-y-auto">
@@ -74,7 +75,7 @@ export function MobileNav() {
                                     onClick={() => setOpen(false)}
                                     className={cn(
                                         'text-sm font-bold uppercase tracking-widest py-2 transition-colors',
-                                        pathname === item.href ? 'text-[#18181B]' : 'text-[#71717A]'
+                                        pathname === item.href ? 'text-[#32B8A6]' : 'text-[#F7F1E1] hover:text-[#32B8A6]'
                                     )}
                                 >
                                     <div className="flex items-center gap-2">
@@ -87,7 +88,7 @@ export function MobileNav() {
 
                         {/* Tools */}
                         <div className="space-y-4">
-                            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#A1A1AA]">
+                            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#F7F1E1]/50">
                                 {t('tools')}
                             </h3>
                             <div className="grid gap-2">
@@ -96,9 +97,9 @@ export function MobileNav() {
                                         key={item.href}
                                         href={item.href}
                                         onClick={() => setOpen(false)}
-                                        className="flex flex-col p-3 rounded-lg hover:bg-[#F4F4F5] transition-colors border border-[#F4F4F5]"
+                                        className="flex flex-col p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-[#32B8A6]/20"
                                     >
-                                        <span className="text-[12px] font-bold text-[#18181B]">{item.title}</span>
+                                        <span className="text-[12px] font-bold text-[#F7F1E1] group-hover:text-[#32B8A6]">{item.title}</span>
                                     </Link>
                                 ))}
                             </div>
@@ -106,7 +107,7 @@ export function MobileNav() {
 
                         {/* Guides */}
                         <div className="space-y-4">
-                            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#A1A1AA]">
+                            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#F7F1E1]/50">
                                 {t('guides')}
                             </h3>
                             <div className="grid gap-2">
@@ -115,9 +116,9 @@ export function MobileNav() {
                                         key={item.href}
                                         href={item.href}
                                         onClick={() => setOpen(false)}
-                                        className="flex flex-col p-3 rounded-lg hover:bg-[#F4F4F5] transition-colors border border-[#F4F4F5]"
+                                        className="flex flex-col p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-[#32B8A6]/20"
                                     >
-                                        <span className="text-[12px] font-bold text-[#18181B]">{item.title}</span>
+                                        <span className="text-[12px] font-bold text-[#F7F1E1] group-hover:text-[#32B8A6]">{item.title}</span>
                                     </Link>
                                 ))}
                             </div>
@@ -125,18 +126,18 @@ export function MobileNav() {
                     </div>
 
                     {/* Footer with Language Switcher */}
-                    <div className="mt-auto p-6 bg-[#FAFAFA] border-t border-[#E4E4E7]">
+                    <div className="mt-auto p-6 bg-[#3E2A1E] border-t border-[#543A2A]">
                         <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-bold uppercase tracking-widest text-[#71717A]">Language</span>
-                            <div className="flex items-center border border-[#E4E4E7] rounded-full px-2 py-1 gap-1 bg-white">
-                                <Globe size={10} className="text-[#A1A1AA] ml-1" />
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1]/50">Language</span>
+                            <div className="flex items-center border border-[#F7F1E1]/20 rounded-full px-2 py-1 gap-1 bg-white/5">
+                                <Globe size={10} className="text-[#F7F1E1]/70 ml-1" />
                                 <Link
                                     href={pathname}
                                     locale="en"
                                     onClick={() => setOpen(false)}
                                     className={cn(
                                         'px-3 py-1 text-[10px] font-black uppercase rounded-full transition-all',
-                                        locale === 'en' ? 'bg-[#18181B] text-white shadow-sm' : 'text-[#71717A] hover:bg-[#F4F4F5]'
+                                        locale === 'en' ? 'bg-[#32B8A6] text-[#3E2A1E] shadow-sm' : 'text-[#F7F1E1]/70 hover:bg-white/10 hover:text-[#F7F1E1]'
                                     )}
                                 >
                                     EN
@@ -147,7 +148,7 @@ export function MobileNav() {
                                     onClick={() => setOpen(false)}
                                     className={cn(
                                         'px-3 py-1 text-[10px] font-black uppercase rounded-full transition-all',
-                                        locale === 'zh' ? 'bg-[#18181B] text-white shadow-sm' : 'text-[#71717A] hover:bg-[#F4F4F5]'
+                                        locale === 'zh' ? 'bg-[#32B8A6] text-[#3E2A1E] shadow-sm' : 'text-[#F7F1E1]/70 hover:bg-white/10 hover:text-[#F7F1E1]'
                                     )}
                                 >
                                     ZH
