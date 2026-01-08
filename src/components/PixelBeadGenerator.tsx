@@ -288,8 +288,12 @@ export function PixelBeadGenerator() {
         const availableHeight = pageHeight - headerHeight - margin
         const pdfCellSize = cellSize * 0.264583
 
-        const colsPerPage = Math.max(1, Math.floor(availableWidth / pdfCellSize))
-        const rowsPerPage = Math.max(1, Math.floor(availableHeight / pdfCellSize))
+        // 计算网格间距（转换为mm）
+        const gapSize = gridSpacing === 'none' ? 0 : gridSpacing === 'small' ? 0.264583 : 0.79375 // 1px = 0.264583mm, 3px = 0.79375mm
+        const cellSizeWithGap = pdfCellSize + gapSize
+
+        const colsPerPage = Math.max(1, Math.floor(availableWidth / cellSizeWithGap))
+        const rowsPerPage = Math.max(1, Math.floor(availableHeight / cellSizeWithGap))
         const colChunks = Math.max(1, Math.ceil(gridWidth / colsPerPage))
         const rowChunks = Math.max(1, Math.ceil(matrix.length / rowsPerPage))
         const totalMainPages = colChunks * rowChunks
@@ -323,6 +327,13 @@ export function PixelBeadGenerator() {
 
         const MIN_CELL_SIZE_FOR_TEXT = 2
 
+        // 添加水印函数
+        const drawWatermark = () => {
+          doc.setFontSize(8)
+          doc.setTextColor(200, 200, 200) // 浅灰色
+          doc.text('https://www.pixel-beads.com/', margin, pageHeight - margin / 2, { align: 'left' })
+        }
+
         for (let rowChunk = 0; rowChunk < rowChunks; rowChunk++) {
           for (let colChunk = 0; colChunk < colChunks; colChunk++) {
             const rowStart = rowChunk * rowsPerPage
@@ -335,32 +346,55 @@ export function PixelBeadGenerator() {
               for (let x = colStart; x < colEnd; x++) {
                 const cellId = row?.[x]
                 const color = colorById.get(cellId)
-                const cellX = margin + (x - colStart) * pdfCellSize
-                const cellY = headerHeight + (y - rowStart) * pdfCellSize
+                const cellX = margin + (x - colStart) * cellSizeWithGap
+                const cellY = headerHeight + (y - rowStart) * cellSizeWithGap
 
                 if (color) {
-                  doc.setFillColor(color.hex)
-                  doc.rect(cellX, cellY, pdfCellSize, pdfCellSize, 'F')
+                  const centerX = cellX + pdfCellSize / 2
+                  const centerY = cellY + pdfCellSize / 2
+                  const radius = pdfCellSize / 2
+
+                  if (beadStyle === 'square') {
+                    // 方形：矩形填充
+                    doc.setFillColor(color.hex)
+                    doc.rect(cellX, cellY, pdfCellSize, pdfCellSize, 'F')
+                  } else if (beadStyle === 'round') {
+                    // 圆形：圆形填充
+                    doc.setFillColor(color.hex)
+                    doc.circle(centerX, centerY, radius, 'F')
+                  } else if (beadStyle === 'hollow') {
+                    // 空心：圆形边框
+                    doc.setDrawColor(color.hex)
+                    doc.setLineWidth(pdfCellSize * 0.25) // 边框宽度约为单元格大小的15%
+                    doc.circle(centerX, centerY, radius, 'S') // 'S' 表示只描边
+                  }
 
                   const textColor = getContrastTextColor(color.hex)
                   const isWhite = textColor === '#FFFFFF'
                   if (pdfCellSize >= MIN_CELL_SIZE_FOR_TEXT && color.code) {
                     doc.setTextColor(isWhite ? 255 : 0)
+                    // 字体大小减少30%：乘以0.7
                     const fontSize = pdfCellSize < 3
-                      ? Math.max(4, pdfCellSize * 0.35)
-                      : Math.max(6, pdfCellSize * 0.4)
+                      ? Math.max(4, pdfCellSize * 0.35) * 0.7
+                      : Math.max(6, pdfCellSize * 0.4) * 0.7
                     doc.setFontSize(fontSize)
+                    // 确保垂直水平居中
                     const textX = cellX + pdfCellSize / 2
-                    const textY = cellY + pdfCellSize / 2 + pdfCellSize * 0.15
+                    const textY = cellY + pdfCellSize / 2
                     doc.text(color.code, textX, textY, { align: 'center', baseline: 'middle' })
                   }
                 }
-                doc.setDrawColor(230)
-                doc.rect(cellX, cellY, pdfCellSize, pdfCellSize, 'S')
+                // 绘制网格边框（仅方形样式）
+                if (beadStyle === 'square') {
+                  doc.setDrawColor(230)
+                  doc.setLineWidth(0.1) // 重置为默认细线宽度
+                  doc.rect(cellX, cellY, pdfCellSize, pdfCellSize, 'S')
+                }
               }
             }
 
             drawPageNumber()
+            drawWatermark()
             if (rowChunk !== rowChunks - 1 || colChunk !== colChunks - 1) {
               doc.addPage()
               currentPage += 1
@@ -382,6 +416,7 @@ export function PixelBeadGenerator() {
 
             if (index > 0 && yPos + statsLineHeight > pageHeight - margin) {
               drawPageNumber()
+              drawWatermark()
               doc.addPage()
               currentPage += 1
               doc.setTextColor(0)
@@ -414,6 +449,7 @@ export function PixelBeadGenerator() {
         }
 
         drawPageNumber()
+        drawWatermark()
         doc.save(`pixel-bead-pattern-${Date.now()}.pdf`)
       } catch (error) {
         console.error('Failed to export PDF:', error)
@@ -462,7 +498,7 @@ export function PixelBeadGenerator() {
           setExportProgress(0)
         })
     }
-  }, [matrix, gridWidth, selectedPalette, colorById, cellSize, exportRef])
+  }, [matrix, gridWidth, selectedPalette, colorById, cellSize, exportRef, beadStyle, gridSpacing])
 
   const handleSaveAndExport = useCallback(async (formData: {
     name?: string
@@ -885,7 +921,7 @@ export function PixelBeadGenerator() {
               gridSpacing={gridSpacing}
             />
             {/* Watermark Overlay */}
-            <div className="absolute bottom-3 right-3 opacity-50 pointer-events-none z-10">
+            <div className="absolute bottom-3 left-3 opacity-50 pointer-events-none z-10">
               <span className="text-lg font-bold text-[#18181B] tracking-tight">
                 https://www.pixel-beads.com/
               </span>
