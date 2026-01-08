@@ -26,7 +26,7 @@ interface DifficultyConfig {
 
 const DIFFICULTY_CONFIGS: Record<Difficulty, DifficultyConfig> = {
   easy: { gridWidth: 30, cellSize: 15 },
-  medium: { gridWidth: 50, cellSize: 10 },
+  medium: { gridWidth: 50, cellSize: 17 },
   hard: { gridWidth: 80, cellSize: 8 },
   custom: { gridWidth: 65, cellSize: 8 }
 }
@@ -41,7 +41,7 @@ export function PixelBeadGenerator() {
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null)
   const [showGrid, setShowGrid] = useState(true)
   const [showBeadCodes, setShowBeadCodes] = useState(false)
-  const [cellSize, setCellSize] = useState(10)
+  const [cellSize, setCellSize] = useState(17)
   const [isExportingImage, setIsExportingImage] = useState(false)
   const [exportProgress, setExportProgress] = useState(0)
   const [exportShowCodes, setExportShowCodes] = useState(false)
@@ -203,100 +203,143 @@ export function PixelBeadGenerator() {
       })
 
       const pageWidth = doc.internal.pageSize.getWidth()
+      const pageHeight = doc.internal.pageSize.getHeight()
       const margin = 20
+      const headerHeight = 35
+      const availableWidth = pageWidth - margin * 2
+      const availableHeight = pageHeight - headerHeight - margin
       // Convert cellSize from px to mm (96 DPI: 1px = 0.264583mm)
       const pdfCellSize = cellSize * 0.264583
 
-      // Title
-      doc.setFontSize(22)
-      doc.text('Pixel Bead Pattern', margin, 20)
-      doc.setFontSize(10)
-      doc.setTextColor(100)
-      doc.text(`Generated for ${selectedPalette} Beads | Grid size: ${gridWidth}x${matrix.length}`, margin, 26)
-
-      // Draw Pattern
-      const MIN_CELL_SIZE_FOR_TEXT = 2 // mm - reduced to allow text in smaller cells
-      matrix.forEach((row, y) => {
-        row.forEach((cellId, x) => {
-          const color = colorById.get(cellId)
-          const cellX = margin + x * pdfCellSize
-          const cellY = 35 + y * pdfCellSize
-
-          if (color) {
-            doc.setFillColor(color.hex)
-            doc.rect(cellX, cellY, pdfCellSize, pdfCellSize, 'F')
-
-            // Draw text if cell is large enough
-            const textColor = getContrastTextColor(color.hex)
-            const isWhite = textColor === '#FFFFFF'
-            if (pdfCellSize >= MIN_CELL_SIZE_FOR_TEXT && color.code) {
-              // Cell is large enough for text
-              doc.setTextColor(isWhite ? 255 : 0)
-              // Adjust font size based on cell size - smaller cells get proportionally smaller font
-              const fontSize = pdfCellSize < 3
-                ? Math.max(4, pdfCellSize * 0.35) // Smaller font for very small cells
-                : Math.max(6, pdfCellSize * 0.4) // Normal scaling for larger cells
-              doc.setFontSize(fontSize)
-              const textX = cellX + pdfCellSize / 2
-              const textY = cellY + pdfCellSize / 2 + pdfCellSize * 0.15
-              doc.text(color.code, textX, textY, { align: 'center', baseline: 'middle' })
-            }
-          }
-          doc.setDrawColor(230)
-          doc.rect(cellX, cellY, pdfCellSize, pdfCellSize, 'S')
-        })
-      })
-
-      // Add Legend Page
-      doc.addPage()
-      doc.setTextColor(0)
-      doc.setFontSize(18)
-      doc.text('Color Shopping List', margin, 20)
+      const colsPerPage = Math.max(1, Math.floor(availableWidth / pdfCellSize))
+      const rowsPerPage = Math.max(1, Math.floor(availableHeight / pdfCellSize))
+      const colChunks = Math.max(1, Math.ceil(gridWidth / colsPerPage))
+      const rowChunks = Math.max(1, Math.ceil(matrix.length / rowsPerPage))
+      const totalMainPages = colChunks * rowChunks
 
       const counts: Record<string, number> = {}
       matrix.flat().forEach(id => {
         if (id) counts[id] = (counts[id] || 0) + 1
       })
 
-      let yPos = 35
-      Object.entries(counts).forEach(([id, count]) => {
-        const color = colorById.get(id)
-        if (color) {
-          if (yPos > 260) {
-            doc.addPage()
-            yPos = 20
+      // Estimate stats pages based on available height and line height
+      const statsStartY = 35
+      const statsLineHeight = 14
+      const statsAvailableHeight = pageHeight - statsStartY - margin
+      const statsItemsPerPage = Math.max(1, Math.floor(statsAvailableHeight / statsLineHeight))
+      const statsEntries = Object.keys(counts).length
+      const statsPages = Math.max(1, Math.ceil(statsEntries / statsItemsPerPage))
+
+      const totalPages = totalMainPages + statsPages
+      let currentPage = 1
+
+      const drawPageNumber = () => {
+        doc.setFontSize(9)
+        doc.setTextColor(80)
+        doc.text(`Page ${currentPage} of ${totalPages}`, pageWidth - margin, pageHeight - margin / 2, { align: 'right' })
+      }
+
+      // Title on first page
+      doc.setFontSize(22)
+      doc.text('Pixel Bead Pattern', margin, 20)
+      doc.setFontSize(10)
+      doc.setTextColor(100)
+      doc.text(`Generated for ${selectedPalette} Beads | Grid size: ${gridWidth}x${matrix.length}`, margin, 26)
+
+      const MIN_CELL_SIZE_FOR_TEXT = 2 // mm - reduced to allow text in smaller cells
+
+      for (let rowChunk = 0; rowChunk < rowChunks; rowChunk++) {
+        for (let colChunk = 0; colChunk < colChunks; colChunk++) {
+          const rowStart = rowChunk * rowsPerPage
+          const colStart = colChunk * colsPerPage
+          const rowEnd = Math.min(rowStart + rowsPerPage, matrix.length)
+          const colEnd = Math.min(colStart + colsPerPage, gridWidth)
+
+          for (let y = rowStart; y < rowEnd; y++) {
+            const row = matrix[y]
+            for (let x = colStart; x < colEnd; x++) {
+              const cellId = row?.[x]
+              const color = colorById.get(cellId)
+              const cellX = margin + (x - colStart) * pdfCellSize
+              const cellY = headerHeight + (y - rowStart) * pdfCellSize
+
+              if (color) {
+                doc.setFillColor(color.hex)
+                doc.rect(cellX, cellY, pdfCellSize, pdfCellSize, 'F')
+
+                const textColor = getContrastTextColor(color.hex)
+                const isWhite = textColor === '#FFFFFF'
+                if (pdfCellSize >= MIN_CELL_SIZE_FOR_TEXT && color.code) {
+                  doc.setTextColor(isWhite ? 255 : 0)
+                  const fontSize = pdfCellSize < 3
+                    ? Math.max(4, pdfCellSize * 0.35)
+                    : Math.max(6, pdfCellSize * 0.4)
+                  doc.setFontSize(fontSize)
+                  const textX = cellX + pdfCellSize / 2
+                  const textY = cellY + pdfCellSize / 2 + pdfCellSize * 0.15
+                  doc.text(color.code, textX, textY, { align: 'center', baseline: 'middle' })
+                }
+              }
+              doc.setDrawColor(230)
+              doc.rect(cellX, cellY, pdfCellSize, pdfCellSize, 'S')
+            }
           }
-          // Color swatch
+
+          drawPageNumber()
+          if (rowChunk !== rowChunks - 1 || colChunk !== colChunks - 1) {
+            doc.addPage()
+            currentPage += 1
+          }
+        }
+      }
+
+      // Stats pages (shopping list)
+      if (statsPages > 0) {
+        doc.addPage()
+        currentPage += 1
+        doc.setTextColor(0)
+        doc.setFontSize(18)
+        doc.text('Color Shopping List', margin, 20)
+
+        let yPos = statsStartY
+        Object.entries(counts).forEach(([id, count], index) => {
+          const color = colorById.get(id)
+          if (!color) return
+
+          if (index > 0 && yPos + statsLineHeight > pageHeight - margin) {
+            drawPageNumber()
+            doc.addPage()
+            currentPage += 1
+            doc.setTextColor(0)
+            doc.setFontSize(18)
+            doc.text('Color Shopping List', margin, 20)
+            yPos = statsStartY
+          }
+
           doc.setFillColor(color.hex)
           doc.rect(margin, yPos, 10, 10, 'F')
           doc.rect(margin, yPos, 10, 10, 'S')
 
-          // Text information
           doc.setFontSize(10)
           doc.setTextColor(0)
-
           const textX = margin + 15
-          // const lineHeight = 4
-
-          // Line 1: Name and Code
           const codeText = color.code ? ` (${color.code})` : ''
           doc.text(`${color.name}${codeText}`, textX, yPos + 3)
 
-          // Line 2: Hex
           const hexText = `Hex: ${color.hex.toUpperCase()}`
           doc.setFontSize(9)
           doc.setTextColor(80)
           doc.text(hexText, textX, yPos + 7)
 
-          // Count on the right
           doc.setFontSize(10)
           doc.setTextColor(0)
           doc.text(`${count} beads`, pageWidth - margin - 20, yPos + 5, { align: 'right' })
 
-          yPos += 14
-        }
-      })
+          yPos += statsLineHeight
+        })
+      }
 
+      drawPageNumber()
       doc.save(`pixel-bead-pattern-${Date.now()}.pdf`)
     } catch (error) {
       console.error('Failed to export PDF:', error)
