@@ -6,6 +6,7 @@ import '../globals.css'
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { routing, Link } from '@/i18n/routing';
+import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 const geistSans = Geist({
@@ -18,15 +19,8 @@ const geistMono = Geist_Mono({
     subsets: ['latin']
 })
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
-    const { locale } = await params;
-    const t = await getTranslations({ locale, namespace: 'HomePage' });
-
-    return {
-        metadataBase: new URL('https://www.pixel-beads.com'),
-        title: t('titlePrefix') + ' ' + t('titleAccent') + ' ' + t('titleSuffix'),
-        description: t('description'),
-    };
+export function generateStaticParams() {
+    return routing.locales.map((locale) => ({ locale }));
 }
 
 export default async function LocaleLayout({
@@ -42,6 +36,9 @@ export default async function LocaleLayout({
     if (!routing.locales.includes(locale as any)) {
         notFound();
     }
+
+    // Enable static rendering
+    setRequestLocale(locale);
 
     // Obtaining messages for client components
     const messages = await getMessages();

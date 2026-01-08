@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { setRequestLocale } from 'next-intl/server';
 import { getBlogPost, getBlogPosts } from '../utils';
 import BlogLayout from '../BlogLayout';
 import { Link } from '@/i18n/routing';
