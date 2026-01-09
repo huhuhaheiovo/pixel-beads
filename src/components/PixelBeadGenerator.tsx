@@ -8,6 +8,7 @@ import { toPng } from 'html-to-image'
 import { useImageProcessing } from '@/hooks/use-image-processing'
 import { useHistory } from '@/hooks/use-history'
 import { getContrastTextColor } from '@/utils/color-utils'
+import { generateColorMap } from '@/lib/color-map'
 import { Toolbar } from './pixel-bead-generator/toolbar'
 import { SettingsPanel, type Difficulty } from './pixel-bead-generator/settings-panel'
 import { PaletteSidebar } from './pixel-bead-generator/palette-sidebar'
@@ -16,15 +17,14 @@ import { UploadArea } from './pixel-bead-generator/upload-area'
 import { useTranslations } from 'next-intl'
 import { Progress } from './ui/progress'
 import { savePatternAction } from '@/app/actions/patterns'
-import { generateColorMap } from '@/lib/color-map'
 import { toast } from 'sonner'
 import { ExportDialog } from './pixel-bead-generator/export-dialog'
+import { usePatternExport, type BeadStyle, type GridSpacing } from '@/hooks/use-pattern-export'
+import { ExportContainer } from './patterns/ExportContainer'
 import type { Pattern } from '@/lib/pattern-service'
 
 type Tool = 'brush' | 'eraser' | 'picker'
 type MardCategory = '72' | '96' | '120' | '144' | '168' | 'all'
-export type BeadStyle = 'square' | 'round' | 'hollow'
-export type GridSpacing = 'none' | 'small' | 'large'
 
 interface DifficultyConfig {
   gridWidth: number
@@ -49,8 +49,6 @@ export function PixelBeadGenerator() {
   const [showGrid, setShowGrid] = useState(true)
   const [showBeadCodes, setShowBeadCodes] = useState(false)
   const [cellSize, setCellSize] = useState(17)
-  const [isExportingImage, setIsExportingImage] = useState(false)
-  const [exportProgress, setExportProgress] = useState(0)
   const [exportShowCodes, setExportShowCodes] = useState(false)
   const [exportShowStats, setExportShowStats] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
@@ -260,6 +258,40 @@ export function PixelBeadGenerator() {
     addToHistory(newMatrix)
   }, [matrix, activeTool, selectedColorId, addToHistory])
 
+  // Export Translations
+  const exportTranslations = useMemo(() => ({
+    patternTitle: 'Pixel Bead Pattern',
+    generatedFor: t('generatedFor'),
+    gridSize: t('gridSize'),
+    colorShoppingList: t('colorShoppingList'),
+    beadsCount: t('beadsCount'),
+    total: t('total'),
+    savingPattern: t('savingPattern'),
+    generatingImage: t('generatingImage'),
+    downloading: t('downloading'),
+    statsTitle: t('statsTitle')
+  }), [t])
+
+  const {
+    exportToPDF: executeExportPDF,
+    exportToImage: executeExportImage,
+    isExportingImage,
+    setIsExportingImage,
+    exportProgress,
+    setExportProgress
+  } = usePatternExport({
+    matrix,
+    gridWidth,
+    selectedPalette,
+    colorById: colorById as any,
+    beadStats: beadStats as any,
+    totalBeads,
+    beadStyle,
+    gridSpacing,
+    exportRef,
+    translations: exportTranslations
+  })
+
   const handleUndo = useCallback(() => {
     undo()
   }, [undo])
@@ -268,237 +300,6 @@ export function PixelBeadGenerator() {
     redo()
   }, [redo])
 
-  // Execute actual export
-  const executeExport = useCallback(async (type: 'pdf' | 'image') => {
-    if (!matrix.length) return
-
-    if (type === 'pdf') {
-      try {
-        const doc = new jsPDF({
-          orientation: 'landscape',
-          unit: 'mm',
-          format: 'a4'
-        })
-
-        const pageWidth = doc.internal.pageSize.getWidth()
-        const pageHeight = doc.internal.pageSize.getHeight()
-        const margin = 20
-        const headerHeight = 35
-        const availableWidth = pageWidth - margin * 2
-        const availableHeight = pageHeight - headerHeight - margin
-        const pdfCellSize = cellSize * 0.264583
-
-        // 计算网格间距（转换为mm）
-        const gapSize = gridSpacing === 'none' ? 0 : gridSpacing === 'small' ? 0.264583 : 0.79375 // 1px = 0.264583mm, 3px = 0.79375mm
-        const cellSizeWithGap = pdfCellSize + gapSize
-
-        const colsPerPage = Math.max(1, Math.floor(availableWidth / cellSizeWithGap))
-        const rowsPerPage = Math.max(1, Math.floor(availableHeight / cellSizeWithGap))
-        const colChunks = Math.max(1, Math.ceil(gridWidth / colsPerPage))
-        const rowChunks = Math.max(1, Math.ceil(matrix.length / rowsPerPage))
-        const totalMainPages = colChunks * rowChunks
-
-        const counts: Record<string, number> = {}
-        matrix.flat().forEach(id => {
-          if (id) counts[id] = (counts[id] || 0) + 1
-        })
-
-        const statsStartY = 35
-        const statsLineHeight = 14
-        const statsAvailableHeight = pageHeight - statsStartY - margin
-        const statsItemsPerPage = Math.max(1, Math.floor(statsAvailableHeight / statsLineHeight))
-        const statsEntries = Object.keys(counts).length
-        const statsPages = Math.max(1, Math.ceil(statsEntries / statsItemsPerPage))
-
-        const totalPages = totalMainPages + statsPages
-        let currentPage = 1
-
-        const drawPageNumber = () => {
-          doc.setFontSize(9)
-          doc.setTextColor(80)
-          doc.text(`Page ${currentPage} of ${totalPages}`, pageWidth - margin, pageHeight - margin / 2, { align: 'right' })
-        }
-
-        doc.setFontSize(22)
-        doc.text('Pixel Bead Pattern', margin, 20)
-        doc.setFontSize(10)
-        doc.setTextColor(100)
-        doc.text(`Generated for ${selectedPalette} Beads | Grid size: ${gridWidth}x${matrix.length}`, margin, 26)
-
-        const MIN_CELL_SIZE_FOR_TEXT = 2
-
-        // 添加水印函数
-        const drawWatermark = () => {
-          doc.setFontSize(8)
-          doc.setTextColor(200, 200, 200) // 浅灰色
-          doc.text('https://www.pixel-beads.com/', margin, pageHeight - margin / 2, { align: 'left' })
-        }
-
-        for (let rowChunk = 0; rowChunk < rowChunks; rowChunk++) {
-          for (let colChunk = 0; colChunk < colChunks; colChunk++) {
-            const rowStart = rowChunk * rowsPerPage
-            const colStart = colChunk * colsPerPage
-            const rowEnd = Math.min(rowStart + rowsPerPage, matrix.length)
-            const colEnd = Math.min(colStart + colsPerPage, gridWidth)
-
-            for (let y = rowStart; y < rowEnd; y++) {
-              const row = matrix[y]
-              for (let x = colStart; x < colEnd; x++) {
-                const cellId = row?.[x]
-                const color = colorById.get(cellId)
-                const cellX = margin + (x - colStart) * cellSizeWithGap
-                const cellY = headerHeight + (y - rowStart) * cellSizeWithGap
-
-                if (color) {
-                  const centerX = cellX + pdfCellSize / 2
-                  const centerY = cellY + pdfCellSize / 2
-                  const radius = pdfCellSize / 2
-
-                  if (beadStyle === 'square') {
-                    // 方形：矩形填充
-                    doc.setFillColor(color.hex)
-                    doc.rect(cellX, cellY, pdfCellSize, pdfCellSize, 'F')
-                  } else if (beadStyle === 'round') {
-                    // 圆形：圆形填充
-                    doc.setFillColor(color.hex)
-                    doc.circle(centerX, centerY, radius, 'F')
-                  } else if (beadStyle === 'hollow') {
-                    // 空心：圆形边框
-                    doc.setDrawColor(color.hex)
-                    doc.setLineWidth(pdfCellSize * 0.25) // 边框宽度约为单元格大小的15%
-                    doc.circle(centerX, centerY, radius, 'S') // 'S' 表示只描边
-                  }
-
-                  const textColor = getContrastTextColor(color.hex)
-                  const isWhite = textColor === '#FFFFFF'
-                  if (pdfCellSize >= MIN_CELL_SIZE_FOR_TEXT && color.code) {
-                    doc.setTextColor(isWhite ? 255 : 0)
-                    // 字体大小减少30%：乘以0.7
-                    const fontSize = pdfCellSize < 3
-                      ? Math.max(4, pdfCellSize * 0.35) * 0.7
-                      : Math.max(6, pdfCellSize * 0.4) * 0.7
-                    doc.setFontSize(fontSize)
-                    // 确保垂直水平居中
-                    const textX = cellX + pdfCellSize / 2
-                    const textY = cellY + pdfCellSize / 2
-                    doc.text(color.code, textX, textY, { align: 'center', baseline: 'middle' })
-                  }
-                }
-                // 绘制网格边框（仅方形样式）
-                if (beadStyle === 'square') {
-                  doc.setDrawColor(230)
-                  doc.setLineWidth(0.1) // 重置为默认细线宽度
-                  doc.rect(cellX, cellY, pdfCellSize, pdfCellSize, 'S')
-                }
-              }
-            }
-
-            drawPageNumber()
-            drawWatermark()
-            if (rowChunk !== rowChunks - 1 || colChunk !== colChunks - 1) {
-              doc.addPage()
-              currentPage += 1
-            }
-          }
-        }
-
-        if (statsPages > 0) {
-          doc.addPage()
-          currentPage += 1
-          doc.setTextColor(0)
-          doc.setFontSize(18)
-          doc.text('Color Shopping List', margin, 20)
-
-          let yPos = statsStartY
-          Object.entries(counts).forEach(([id, count], index) => {
-            const color = colorById.get(id)
-            if (!color) return
-
-            if (index > 0 && yPos + statsLineHeight > pageHeight - margin) {
-              drawPageNumber()
-              drawWatermark()
-              doc.addPage()
-              currentPage += 1
-              doc.setTextColor(0)
-              doc.setFontSize(18)
-              doc.text('Color Shopping List', margin, 20)
-              yPos = statsStartY
-            }
-
-            doc.setFillColor(color.hex)
-            doc.rect(margin, yPos, 10, 10, 'F')
-            doc.rect(margin, yPos, 10, 10, 'S')
-
-            doc.setFontSize(10)
-            doc.setTextColor(0)
-            const textX = margin + 15
-            const codeText = color.code ? ` (${color.code})` : ''
-            doc.text(`${color.name}${codeText}`, textX, yPos + 3)
-
-            const hexText = `Hex: ${color.hex.toUpperCase()}`
-            doc.setFontSize(9)
-            doc.setTextColor(80)
-            doc.text(hexText, textX, yPos + 7)
-
-            doc.setFontSize(10)
-            doc.setTextColor(0)
-            doc.text(`${count} beads`, pageWidth - margin - 20, yPos + 5, { align: 'right' })
-
-            yPos += statsLineHeight
-          })
-        }
-
-        drawPageNumber()
-        drawWatermark()
-        doc.save(`pixel-bead-pattern-${Date.now()}.pdf`)
-      } catch (error) {
-        console.error('Failed to export PDF:', error)
-      }
-    } else {
-      // Image export
-      if (!exportRef.current) return
-
-      setIsExportingImage(true)
-      setExportProgress(10)
-
-      const progressInterval = setInterval(() => {
-        setExportProgress(prev => {
-          // Start from 30% if coming from save flow, otherwise from 10%
-          if (prev >= 90) return prev
-          return prev + 5
-        })
-      }, 200)
-
-      toPng(exportRef.current, {
-        cacheBust: true,
-        backgroundColor: '#ffffff',
-        pixelRatio: 3,
-        style: {
-          transform: 'scale(1)',
-          transformOrigin: 'top left'
-        }
-      })
-        .then((dataUrl) => {
-          clearInterval(progressInterval)
-          setExportProgress(100)
-
-          setTimeout(() => {
-            const link = document.createElement('a')
-            link.download = `pixel-bead-pattern-${Date.now()}.png`
-            link.href = dataUrl
-            link.click()
-            setIsExportingImage(false)
-            setExportProgress(0)
-          }, 300)
-        })
-        .catch((error) => {
-          console.error('Failed to export image:', error)
-          clearInterval(progressInterval)
-          setIsExportingImage(false)
-          setExportProgress(0)
-        })
-    }
-  }, [matrix, gridWidth, selectedPalette, colorById, cellSize, exportRef, beadStyle, gridSpacing])
 
   const handleSaveAndExport = useCallback(async (formData: {
     name?: string
@@ -555,18 +356,23 @@ export function PixelBeadGenerator() {
     setIsSaving(false)
 
     // Step 4: Execute export (this will continue the progress)
-    // For image export, progress continues from 30% to 100%
-    // For PDF export, it executes immediately
-    executeExport(exportType)
-  }, [pendingExportType, matrix.length, convertToPattern, t, executeExport])
+    if (exportType === 'pdf') {
+      executeExportPDF()
+    } else {
+    }
+  }, [pendingExportType, matrix.length, convertToPattern, t, executeExportPDF, executeExportImage, setIsExportingImage, setExportProgress])
 
   const handleSkipExport = useCallback(() => {
     if (!pendingExportType) return
     setShowExportDialog(false)
     const exportType = pendingExportType
     setPendingExportType(null)
-    executeExport(exportType)
-  }, [pendingExportType, executeExport])
+    if (exportType === 'pdf') {
+      executeExportPDF()
+    } else {
+      executeExportImage()
+    }
+  }, [pendingExportType, executeExportPDF, executeExportImage])
 
   const exportToPDF = useCallback(() => {
     if (!matrix.length) return
@@ -901,85 +707,23 @@ export function PixelBeadGenerator() {
       </PaletteSidebar>
 
       {/* Off-screen Export Container */}
-      <div style={{ position: 'absolute', left: '-9999px', top: 0, pointerEvents: 'none' }}>
-        <div
-          ref={exportRef}
-          className='bg-white p-12 flex flex-row gap-16 items-start'
-          style={{ width: 'fit-content' }}
-        >
-          {/* Left: Bead Grid */}
-          <div className='relative bg-white p-1 shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-[#E4E4E7]'>
-            <BeadGrid
-              matrix={matrix}
-              gridWidth={gridWidth}
-              cellSize={18} // Fixed larger size for export to ensure codes are legible
-              showGrid={true} // Always show grid in export
-              showBeadCodes={exportShowCodes} // Conditional based on export setting
-              colorById={colorById}
-              onCellClick={() => { }}
-              beadStyle={beadStyle}
-              gridSpacing={gridSpacing}
-            />
-            {/* Watermark Overlay */}
-            <div className="absolute bottom-3 left-3 opacity-50 pointer-events-none z-10">
-              <span className="text-lg font-bold text-[#18181B] tracking-tight">
-                https://www.pixel-beads.com/
-              </span>
-            </div>
-          </div>
-
-          {/* Right: Statistics Panel */}
-          {exportShowStats && (
-            <div className='w-[320px] flex flex-col pt-2 pr-4'>
-              <h2 className='text-[20px] font-black uppercase tracking-[0.1em] text-[#18181B] text-center mb-8 pb-4 border-b-2 border-[#F4F4F5]'>
-                {t('statsTitle')}
-              </h2>
-
-              <div className='space-y-4'>
-                {beadStats.map(color => (
-                  <div key={color.id} className='flex items-center justify-between group'>
-                    <div className='flex items-center gap-5'>
-                      <div
-                        className='w-8 h-8 rounded-full border border-zinc-200 shadow-sm flex items-center justify-center font-bold text-xs text-black'
-                        style={{ backgroundColor: color.hex }}
-                      >
-                        <span className="drop-shadow-md mix-blend-hard-light">{colorMap[color.id] || ''}</span>
-                      </div>
-                      <div className='flex items-baseline gap-2'>
-                        <span className='text-[14px] font-black text-[#18181B] uppercase tracking-wider w-12'>
-                          {color.code}
-                        </span>
-                      </div>
-                    </div>
-                    <div className='flex items-baseline gap-1'>
-                      <span className='text-[16px] font-black text-[#18181B]'>
-                        {color.count}
-                      </span>
-                      <span className='text-[10px] font-bold text-[#A1A1AA] uppercase tracking-tighter'>
-                        beads
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className='mt-12 pt-8 border-t-2 border-[#F4F4F5] flex justify-between items-center px-2'>
-                <span className='text-[12px] font-black uppercase tracking-[0.2em] text-[#A1A1AA]'>
-                  {t('total')}
-                </span>
-                <div className='flex items-baseline gap-1'>
-                  <span className='text-[24px] font-black text-[#18181B]'>
-                    {totalBeads}
-                  </span>
-                  <span className='text-[12px] font-black text-[#18181B] uppercase tracking-tighter'>
-                    beads
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+      <ExportContainer
+        ref={exportRef}
+        matrix={matrix}
+        gridWidth={gridWidth}
+        colorById={colorById}
+        beadStyle={beadStyle}
+        gridSpacing={gridSpacing}
+        exportShowCodes={exportShowCodes}
+        exportShowStats={exportShowStats}
+        beadStats={beadStats}
+        colorMap={colorMap}
+        totalBeads={totalBeads}
+        translations={{
+          statsTitle: t('statsTitle'),
+          total: t('total')
+        }}
+      />
 
       {/* Export Dialog */}
       {pendingExportType && (

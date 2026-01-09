@@ -136,7 +136,11 @@
             "authorNamePlaceholder": "例如：小豆匠",
             "messagePlaceholder": "例如：适合新手练习",
             "nameRequired": "为你喜欢的拼豆图片起个名字，让更多人看见吧"
-        }
+        },
+        "generatedFor": "适配品牌",
+        "gridSize": "网格尺寸",
+        "colorShoppingList": "颜色购物清单",
+        "beadsCount": "颗"
     },
     "Showcase": {
         "title": "拼豆作品合集",

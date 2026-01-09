@@ -136,7 +136,11 @@
             "authorNamePlaceholder": "e.g., BeadMaster",
             "messagePlaceholder": "e.g., Great for beginners",
             "nameRequired": "Give your favorite bead pattern a name so more people can see it"
-        }
+        },
+        "generatedFor": "Generated for",
+        "gridSize": "Grid Size",
+        "colorShoppingList": "Color Shopping List",
+        "beadsCount": "beads"
     },
     "Showcase": {
         "title": "Bead Pattern Gallery",
