@@ -134,7 +134,7 @@
             "saveAndDownload": "Save and Download",
             "patternNamePlaceholder": "e.g., Cute Cat Pattern",
             "authorNamePlaceholder": "e.g., BeadMaster",
-            "messagePlaceholder": "e.g., Great for beginners",
+            "messagePlaceholder": "e.g., Christmas present",
             "nameRequired": "Give your favorite bead pattern a name so more people can see it"
         },
         "generatedFor": "Generated for",
@@ -242,6 +242,21 @@
         "exportPdf": "Export PDF",
         "exportImage": "Export Image",
         "backToLibrary": "Back to Library",
-        "zoom": "Zoom"
+        "zoom": "Zoom",
+        "createdAt": "Created on",
+        "patternDescription": "Description",
+        "patternAuthor": "Author",
+        "patternSize": "Pattern Size",
+        "beads": "beads",
+        "dimensions": "Dimensions",
+        "seoTitle": "Perler Bead Patterns Gallery | Pixel Art & Fuse Bead Designs",
+        "seoDescription": "Discover a curated gallery of perler bead patterns and pixel art designs. Browse fuse bead ideas, save your favorites, and turn inspiration into custom bead art.",
+        "h1Title": "Perler Bead Patterns Gallery",
+        "h2Popular": "Popular Pixel Art & Fuse Bead Designs",
+        "h2BrowseByTheme": "Browse Perler Bead Ideas by Theme",
+        "h2TurnIntoArt": "Turn Patterns into Custom Pixel Art",
+        "descriptionExtended": "Explore our collection of pixel art perler beads, fuse bead patterns, and perler bead ideas. Find inspiration for your next perler bead art gallery project.",
+        "ctaDescription": "Found a pattern you love? Use our free perler bead pattern generator to customize designs, adjust colors, and create your own pixel art patterns. Transform any image into a fuse bead pattern in seconds.",
+        "ctaButton": "Start Creating Patterns"
     }
 }

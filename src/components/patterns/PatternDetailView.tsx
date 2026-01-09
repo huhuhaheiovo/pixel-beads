@@ -3,7 +3,7 @@
 import { useRef, useCallback, useState, useMemo } from 'react';
 import { Pattern } from '@/lib/pattern-service';
 import { BillOfMaterials } from './BillOfMaterials';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { Download, ArrowLeft, Image as ImageIcon, Plus, Minus } from 'lucide-react';
@@ -22,6 +22,7 @@ interface PatternDetailViewProps {
 export function PatternDetailView({ pattern }: PatternDetailViewProps) {
     const t = useTranslations('Patterns');
     const tg = useTranslations('Generator');
+    const locale = useLocale();
     const canvasRef = useRef<HTMLDivElement>(null);
     const exportRef = useRef<HTMLDivElement>(null);
     const [zoom, setZoom] = useState(0.5);
@@ -47,10 +48,13 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
             const hex = resolveBeadColor(id);
             const detail = pattern.materials?.colors.find(c => c.hex.toLowerCase() === hex.toLowerCase());
 
+            // Sanitize names and codes for PDF export (remove Chinese/non-ASCII)
+            const sanitize = (str: string) => str.replace(/[\u4e00-\u9fa5]/g, '').trim();
+
             map.set(id, {
                 id: id,
-                code: detail?.colorCode || id.split(':').pop() || id,
-                name: detail?.colorName || id,
+                code: sanitize(detail?.colorCode || id.split(':').pop() || id) || id,
+                name: sanitize(detail?.colorName || id) || id,
                 hex: hex,
                 brand: pattern.materials?.brand || ''
             });
@@ -88,13 +92,13 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
         gridSpacing,
         exportRef,
         translations: {
-            patternTitle: patternName,
-            generatedFor: tg('generatedFor'),
-            gridSize: tg('gridSize'),
-            colorShoppingList: tg('colorShoppingList'),
-            beadsCount: tg('beadsCount'),
-            total: tg('total'),
-            statsTitle: tg('statsTitle'),
+            patternTitle: patternName.replace(/[\u4e00-\u9fa5]/g, '').trim() || 'Pattern',
+            generatedFor: 'Generated for',
+            gridSize: 'Grid Size',
+            colorShoppingList: 'Color Shopping List',
+            beadsCount: 'beads',
+            total: 'Total',
+            statsTitle: 'Bead Count Statistics',
             savingPattern: tg('savingPattern'),
             generatingImage: tg('generatingImage'),
             downloading: tg('downloading')
@@ -119,21 +123,52 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
             <div className="flex flex-col lg:flex-row gap-8 items-start">
                 {/* Main Content */}
                 <div className="flex-1 w-full">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                        <div>
-                            <h1 className="text-3xl font-black">{patternName}</h1>
-                            {pattern.message && (
-                                <p className="text-zinc-500 mt-1">{pattern.message}</p>
+                    <div className="mb-6">
+                        <h1 className="text-3xl font-black mb-4">{patternName}</h1>
+                        
+                        {/* Pattern Metadata */}
+                        <div className="flex flex-wrap gap-4 text-sm text-zinc-600 mb-4">
+                            {pattern.createdAt && (
+                                <div className="flex items-center gap-1">
+                                    <span className="font-medium">{t('createdAt')}:</span>
+                                    <time dateTime={pattern.createdAt}>
+                                        {new Date(pattern.createdAt).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric'
+                                        })}
+                                    </time>
+                                </div>
                             )}
                             {pattern.author && (
-                                <p className="text-zinc-400 mt-1 text-sm">by {pattern.author}</p>
+                                <div className="flex items-center gap-1">
+                                    <span className="font-medium">{t('patternAuthor')}:</span>
+                                    <span>{pattern.author}</span>
+                                </div>
                             )}
+                            <div className="flex items-center gap-1">
+                                <span className="font-medium">{t('patternSize')}:</span>
+                                <span>
+                                    {pattern.gridSize.width} × {pattern.gridSize.height} {t('beads')}
+                                </span>
+                            </div>
                         </div>
-                        <div className="flex gap-2">
-                            {/* Buttons moved to sidebar for better UX with settings */}
-                        </div>
+
+                        {/* Pattern Description */}
+                        {pattern.description && (
+                            <div className="mb-4">
+                                <h2 className="text-lg font-bold mb-2">{t('patternDescription')}</h2>
+                                <p className="text-zinc-600 leading-relaxed">{pattern.description}</p>
+                            </div>
+                        )}
+
+                        {/* Author Message */}
+                        {pattern.message && (
+                            <p className="text-zinc-500 italic">{pattern.message}</p>
+                        )}
                     </div>
 
+                    {/* Pattern Preview */}
                     <div className="flex justify-center bg-zinc-50 rounded-xl p-8 border border-zinc-100 overflow-auto relative">
                         <div className="absolute top-4 right-4 bg-white p-2 rounded-lg shadow-sm border border-zinc-200 flex items-center gap-3 z-10">
                             <span className="text-xs font-medium text-zinc-500">{t('zoom')}:</span>

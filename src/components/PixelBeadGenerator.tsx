@@ -105,6 +105,7 @@ export function PixelBeadGenerator() {
       .filter(c => counts[c.id])
       .map(c => ({
         ...c,
+        name: c.name.replace(/[\u4e00-\u9fa5]/g, '').trim() || c.id.split(':').pop() || c.id,
         count: counts[c.id]
       }))
       .sort((a, b) => b.count - a.count)
@@ -261,15 +262,15 @@ export function PixelBeadGenerator() {
   // Export Translations
   const exportTranslations = useMemo(() => ({
     patternTitle: 'Pixel Bead Pattern',
-    generatedFor: t('generatedFor'),
-    gridSize: t('gridSize'),
-    colorShoppingList: t('colorShoppingList'),
-    beadsCount: t('beadsCount'),
-    total: t('total'),
+    generatedFor: 'Generated for',
+    gridSize: 'Grid Size',
+    colorShoppingList: 'Color Shopping List',
+    beadsCount: 'beads',
+    total: 'Total',
     savingPattern: t('savingPattern'),
     generatingImage: t('generatingImage'),
     downloading: t('downloading'),
-    statsTitle: t('statsTitle')
+    statsTitle: 'Bead Count Statistics'
   }), [t])
 
   const {

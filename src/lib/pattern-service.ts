@@ -7,6 +7,7 @@ export interface Pattern {
   author?: string
   public?: boolean
   message?: string
+  description?: string
   createdAt: string
   format: 'pdf' | 'png'
   gridSize: {

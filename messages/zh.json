@@ -134,7 +134,7 @@
             "saveAndDownload": "保存并下载",
             "patternNamePlaceholder": "例如：可爱猫咪拼豆",
             "authorNamePlaceholder": "例如：小豆匠",
-            "messagePlaceholder": "例如：适合新手练习",
+            "messagePlaceholder": "例如：冰箱贴",
             "nameRequired": "为你喜欢的拼豆图片起个名字，让更多人看见吧"
         },
         "generatedFor": "适配品牌",
@@ -242,6 +242,21 @@
         "exportPdf": "导出 PDF",
         "exportImage": "导出图片",
         "backToLibrary": "返回图纸库",
-        "zoom": "缩放"
+        "zoom": "缩放",
+        "createdAt": "创建于",
+        "patternDescription": "图纸描述",
+        "patternAuthor": "作者",
+        "patternSize": "图纸尺寸",
+        "beads": "珠子",
+        "dimensions": "尺寸",
+        "seoTitle": "拼豆图纸库 | 像素艺术与拼豆设计",
+        "seoDescription": "发现精心策划的拼豆图纸和像素艺术设计图库。浏览拼豆创意，保存您的最爱，将灵感转化为定制拼豆艺术品。",
+        "h1Title": "拼豆图纸库",
+        "h2Popular": "热门像素艺术与拼豆设计",
+        "h2BrowseByTheme": "按主题浏览拼豆创意",
+        "h2TurnIntoArt": "将图纸转化为定制像素艺术",
+        "descriptionExtended": "探索我们的像素艺术拼豆、拼豆图纸和拼豆创意合集。为您的下一个拼豆艺术画廊项目寻找灵感。",
+        "ctaDescription": "找到喜欢的图纸了吗？使用我们的免费拼豆图纸生成器自定义设计、调整颜色，并创建您自己的像素艺术图案。几秒钟内将任何图片转换为拼豆图纸。",
+        "ctaButton": "开始创作图纸"
     }
 }
