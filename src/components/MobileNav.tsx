@@ -25,7 +25,7 @@ export function MobileNav() {
     const navItems = [
         { href: '/', label: t('home') },
         { href: '/perler-bead-pattern-generator', label: t('generator'), icon: Hammer },
-        { href: '/patterns', label: t('patterns') },
+        { href: '/perler-bead-pattern', label: t('patterns') },
         { href: '/showcase', label: t('showcase') }
 
     ]

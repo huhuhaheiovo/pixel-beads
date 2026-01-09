@@ -360,6 +360,7 @@ export function PixelBeadGenerator() {
     if (exportType === 'pdf') {
       executeExportPDF()
     } else {
+      executeExportImage({ skipSaveProgress: true })
     }
   }, [pendingExportType, matrix.length, convertToPattern, t, executeExportPDF, executeExportImage, setIsExportingImage, setExportProgress])
 

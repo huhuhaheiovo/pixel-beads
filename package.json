@@ -11,7 +11,8 @@
     "gen:mard": "node scripts/generate-mard.mjs",
     "gen:json-palettes": "node scripts/generate-json-palettes.mjs",
     "gen:data": "npm run gen:palettes && npm run gen:mard && npm run gen:json-palettes",
-    "convert:webp": "node scripts/png-to-webp.mjs"
+    "convert:webp": "node scripts/png-to-webp.mjs",
+    "migrate:patterns": "node scripts/migrate-patterns-to-supabase.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -62,6 +63,7 @@
     "next": "15.4.8",
     "next-intl": "^4.6.1",
     "next-themes": "^0.4.4",
+    "pinyin": "^4.0.0",
     "react": "^18.3.1",
     "react-day-picker": "9.8.0",
     "react-dom": "^18.3.1",
@@ -80,6 +82,7 @@
     "@tailwindcss/postcss": "^4.1.18",
     "@types/mdx": "^2.0.13",
     "@types/node": "^22",
+    "@types/pinyin": "^2.10.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.23",

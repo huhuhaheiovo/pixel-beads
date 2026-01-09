@@ -4,6 +4,7 @@ import { Link } from '@/i18n/routing';
 import { Pattern } from '@/lib/pattern-service';
 import { useTranslations } from 'next-intl';
 import { resolveBeadColor } from '@/lib/beadData';
+import { toSlug } from '@/lib/slug-utils';
 
 interface PatternGridProps {
     patterns: Pattern[];
@@ -29,11 +30,12 @@ export function PatternGrid({ patterns }: PatternGridProps) {
                 const patternName = pattern.name || `Pattern ${pattern.id}`
                 const altText = getPatternAltText(pattern)
                 const titleText = getPatternTitle(pattern)
+                const slug = toSlug(pattern.name, pattern.id)
 
                 return (
                     <Link
                         key={pattern.id}
-                        href={`/patterns/${pattern.id}`}
+                        href={`/perler-bead-pattern/${slug}`}
                         className="group block border border-zinc-200 rounded-lg overflow-hidden hover:shadow-lg transition-all bg-white"
                         aria-label={`View ${patternName} perler bead pattern`}
                     >

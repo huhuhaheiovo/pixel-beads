@@ -2,13 +2,15 @@ import type { Metadata } from 'next'
 import { fetchPatternAction } from '@/app/actions/patterns';
 import { PatternDetailView } from '@/components/patterns/PatternDetailView';
 import { notFound } from 'next/navigation';
+import { parseSlugToId, toSlug } from '@/lib/slug-utils';
 
 interface PageProps {
-    params: Promise<{ locale: string; id: string }>;
+    params: Promise<{ locale: string; slug: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const { locale, id } = await params
+    const { locale, slug } = await params
+    const id = parseSlugToId(slug)
     const pattern = await fetchPatternAction(id)
 
     if (!pattern) {
@@ -37,10 +39,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     // Ensure title is within 60 characters
     const finalTitle = title.length > 60 ? title.substring(0, 57) + '...' : title
 
+    // Generate slug for canonical URL
+    const canonicalSlug = toSlug(pattern.name, pattern.id)
     const baseUrl = 'https://www.pixel-beads.com'
     const canonicalPath = locale === 'en' 
-        ? `/patterns/${id}` 
-        : `/${locale}/patterns/${id}`
+        ? `/perler-bead-pattern/${canonicalSlug}` 
+        : `/${locale}/perler-bead-pattern/${canonicalSlug}`
 
     return {
         title: finalTitle,
@@ -56,28 +60,30 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         alternates: {
             canonical: `${baseUrl}${canonicalPath}`,
             languages: {
-                en: `/patterns/${id}`,
-                zh: `/zh/patterns/${id}`,
-                'x-default': `${baseUrl}/patterns/${id}`
+                en: `/perler-bead-pattern/${canonicalSlug}`,
+                zh: `/zh/perler-bead-pattern/${canonicalSlug}`,
+                'x-default': `${baseUrl}/perler-bead-pattern/${canonicalSlug}`
             }
         }
     }
 }
 
 export default async function PatternDetailPage({ params }: PageProps) {
-    const { locale, id } = await params;
+    const { locale, slug } = await params;
+    const id = parseSlugToId(slug);
     const pattern = await fetchPatternAction(id);
 
     if (!pattern) {
         notFound();
     }
 
-    // Generate structured data (JSON-LD)
+    // Generate slug for structured data URL
+    const canonicalSlug = toSlug(pattern.name, pattern.id)
     const patternName = pattern.name || `Pattern ${pattern.id}`
     const baseUrl = 'https://www.pixel-beads.com'
     const canonicalPath = locale === 'en' 
-        ? `/patterns/${id}` 
-        : `/${locale}/patterns/${id}`
+        ? `/perler-bead-pattern/${canonicalSlug}` 
+        : `/${locale}/perler-bead-pattern/${canonicalSlug}`
     
     const structuredData: any = {
         '@context': 'https://schema.org',

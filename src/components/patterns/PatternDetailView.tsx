@@ -115,7 +115,7 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <Link href="/patterns" className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-900 mb-6 transition-colors">
+            <Link href="/perler-bead-pattern" className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-900 mb-6 transition-colors">
                 <ArrowLeft className="w-4 h-4" />
                 {t('backToLibrary')}
             </Link>

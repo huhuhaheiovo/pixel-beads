@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const routes = [
         '',
         '/perler-bead-pattern-generator',
+        '/perler-bead-pattern',
         '/showcase',
         '/showcase/halloween-perler-bead-patterns',
         '/showcase/christmas-perler-bead-patterns',

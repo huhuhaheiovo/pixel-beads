@@ -1,5 +1,4 @@
-import fs from 'fs/promises'
-import path from 'path'
+import { createServerClient } from './supabase'
 
 export interface Pattern {
   id: string
@@ -28,19 +27,39 @@ export interface Pattern {
   source?: string
 }
 
-const DATA_FILE = path.join(process.cwd(), 'src', 'data', 'patterns.json');
-
 export async function getPatterns(options?: {
   page?: number
   limit?: number
 }): Promise<{ data: Pattern[]; total: number }> {
   try {
-    const data = await fs.readFile(DATA_FILE, 'utf-8')
-    const patterns: Pattern[] = JSON.parse(data)
+    const supabase = createServerClient()
+    
+    let query = supabase
+      .from('patterns')
+      .select('*', { count: 'exact' })
+      .eq('public', true)
+      .order('createdAt', { ascending: false })
+
+    if (options?.limit) {
+      query = query.limit(options.limit)
+    }
+
+    if (options?.page && options?.limit) {
+      const from = (options.page - 1) * options.limit
+      const to = from + options.limit - 1
+      query = query.range(from, to)
+    }
+
+    const { data, error, count } = await query
+
+    if (error) {
+      console.error('Error fetching patterns from Supabase:', error)
+      return { data: [], total: 0 }
+    }
 
     return {
-      data: patterns,
-      total: patterns.length
+      data: (data as Pattern[]) || [],
+      total: count || 0
     }
   } catch (error) {
     console.error('Error reading patterns:', error)
@@ -50,9 +69,24 @@ export async function getPatterns(options?: {
 
 export async function getPatternById(id: string): Promise<Pattern | null> {
   try {
-    const data = await fs.readFile(DATA_FILE, 'utf-8')
-    const patterns: Pattern[] = JSON.parse(data)
-    return patterns.find((p) => p.id === id) || null
+    const supabase = createServerClient()
+    
+    const { data, error } = await supabase
+      .from('patterns')
+      .select('*')
+      .eq('id', id)
+      .single()
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        // No rows returned
+        return null
+      }
+      console.error('Error fetching pattern from Supabase:', error)
+      return null
+    }
+
+    return data as Pattern | null
   } catch (error) {
     console.error('Error reading pattern:', error)
     return null
@@ -61,16 +95,17 @@ export async function getPatternById(id: string): Promise<Pattern | null> {
 
 export async function savePattern(pattern: Pattern): Promise<boolean> {
   try {
-    let patterns: Pattern[] = []
-    try {
-      const data = await fs.readFile(DATA_FILE, 'utf-8')
-      patterns = JSON.parse(data)
-    } catch (error) {
-      // File doesn't exist or is empty, start with empty array
-      patterns = []
+    const supabase = createServerClient()
+    
+    const { error } = await supabase
+      .from('patterns')
+      .insert([pattern])
+
+    if (error) {
+      console.error('Error saving pattern to Supabase:', error)
+      return false
     }
-    patterns.push(pattern)
-    await fs.writeFile(DATA_FILE, JSON.stringify(patterns, null, 2), 'utf-8')
+
     return true
   } catch (error) {
     console.error('Error saving pattern:', error)

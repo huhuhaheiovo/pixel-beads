@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const baseUrl = 'https://www.pixel-beads.com'
     const canonicalPath = locale === 'en' 
-        ? '/patterns' 
-        : `/${locale}/patterns`
+        ? '/perler-bead-pattern' 
+        : `/${locale}/perler-bead-pattern`
 
     return {
         title: t('seoTitle'),
@@ -30,9 +30,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         alternates: {
             canonical: `${baseUrl}${canonicalPath}`,
             languages: {
-                en: '/patterns',
-                zh: '/zh/patterns',
-                'x-default': `${baseUrl}/patterns`
+                en: '/perler-bead-pattern',
+                zh: '/zh/perler-bead-pattern',
+                'x-default': `${baseUrl}/perler-bead-pattern`
             }
         }
     }
