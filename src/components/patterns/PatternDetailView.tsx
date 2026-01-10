@@ -162,6 +162,37 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
                             </div>
                         )}
 
+                        {/* Pattern Details Section */}
+                        <div className="mb-6">
+                            <h2 className="text-xl font-bold mb-4">{t('patternDetails') || 'Pattern Details'}</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <h3 className="text-sm font-semibold text-zinc-700 mb-2">{t('patternSize')}</h3>
+                                    <p className="text-zinc-600">
+                                        {pattern.gridSize.width} × {pattern.gridSize.height} {t('beads')}
+                                    </p>
+                                </div>
+                                {pattern.materials?.brand && (
+                                    <div>
+                                        <h3 className="text-sm font-semibold text-zinc-700 mb-2">{t('materialBrand') || 'Material Brand'}</h3>
+                                        <p className="text-zinc-600">{pattern.materials.brand}</p>
+                                    </div>
+                                )}
+                                {pattern.materials?.totalBeads && (
+                                    <div>
+                                        <h3 className="text-sm font-semibold text-zinc-700 mb-2">{t('totalBeads')}</h3>
+                                        <p className="text-zinc-600">{pattern.materials.totalBeads.toLocaleString()} {t('beads')}</p>
+                                    </div>
+                                )}
+                                {pattern.author && (
+                                    <div>
+                                        <h3 className="text-sm font-semibold text-zinc-700 mb-2">{t('patternAuthor')}</h3>
+                                        <p className="text-zinc-600">{pattern.author}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
                         {/* Author Message */}
                         {pattern.message && (
                             <p className="text-zinc-500 italic">{pattern.message}</p>
@@ -169,7 +200,9 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
                     </div>
 
                     {/* Pattern Preview */}
-                    <div className="flex justify-center bg-zinc-50 rounded-xl p-8 border border-zinc-100 overflow-auto relative">
+                    <div className="mb-6">
+                        <h2 className="text-xl font-bold mb-4">{t('patternPreview') || 'Pattern Preview'}</h2>
+                        <div className="flex justify-center bg-zinc-50 rounded-xl p-8 border border-zinc-100 overflow-auto relative">
                         <div className="absolute top-4 right-4 bg-white p-2 rounded-lg shadow-sm border border-zinc-200 flex items-center gap-3 z-10">
                             <span className="text-xs font-medium text-zinc-500">{t('zoom')}:</span>
                             <div className="flex items-center gap-2">
@@ -214,12 +247,14 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
                             />
                         </div>
                     </div>
+                    </div>
                 </div>
 
                 {/* Sidebar */}
                 <div className="w-full lg:w-80 shrink-0 space-y-6">
                     {/* Export Settings */}
                     <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 p-6 space-y-6">
+                        <h2 className="text-lg font-bold mb-4">{t('exportSettings') || 'Export Settings'}</h2>
                         <div className="space-y-4">
                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8F7E6F] flex items-center gap-2">
                                 <span className="w-1.5 h-1.5 rounded-full bg-[#3E2A1E]"></span>
@@ -259,6 +294,7 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
 
                     {/* Export Buttons */}
                     <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 p-6 space-y-4">
+                        <h2 className="text-lg font-bold mb-4">{t('exportOptions') || 'Export Options'}</h2>
                         <button
                             onClick={handleExportImage}
                             disabled={isExportingImage}
@@ -277,7 +313,11 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
                         </button>
                     </div>
 
-                    <BillOfMaterials pixels={pattern.pixels} colorMap={colorMap} />
+                    {/* Materials Section */}
+                    <div>
+                        <h2 className="text-lg font-bold mb-4">{t('materials')}</h2>
+                        <BillOfMaterials pixels={pattern.pixels} colorMap={colorMap} />
+                    </div>
                 </div>
             </div>
 

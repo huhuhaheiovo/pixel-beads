@@ -14,7 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/cool-perler-bead-designs',
         '/fuse-beads',
         '/hama-beads',
-        '/image-to-pixel',
+        '/pindou-pattern-generator',
         '/minecraft-pixel-art',
         '/pixel-art-maker',
         '/wplace',

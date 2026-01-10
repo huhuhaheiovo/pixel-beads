@@ -33,7 +33,7 @@ export function MobileNav() {
     const toolItems = [
         { href: '/perler-bead-pattern-generator', title: t('fusePatternTool') },
         { href: '/pixel-art-maker', title: t('pixelArtMaker') },
-        { href: '/image-to-pixel', title: t('imageToPixel') },
+        { href: '/pindou-pattern-generator', title: t('imageToPixel') },
         { href: '/minecraft-pixel-art', title: t('minecraftGuide') },
         { href: '/wplace', title: t('rplaceTool') }
     ]

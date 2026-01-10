@@ -200,7 +200,7 @@ export default async function FuseBeadsPage({ params }: { params: Promise<{ loca
                         <Link href="/minecraft-pixel-art" className="px-6 py-3 bg-white rounded-xl shadow-sm text-[#71717A] hover:text-green-600 hover:shadow-md transition-all font-bold">
                             Minecraft Pixel Art
                         </Link>
-                        <Link href="/image-to-pixel" className="px-6 py-3 bg-white rounded-xl shadow-sm text-[#71717A] hover:text-purple-600 hover:shadow-md transition-all font-bold">
+                        <Link href="/pindou-pattern-generator" className="px-6 py-3 bg-white rounded-xl shadow-sm text-[#71717A] hover:text-purple-600 hover:shadow-md transition-all font-bold">
                             Image to Pixel
                         </Link>
                     </div>

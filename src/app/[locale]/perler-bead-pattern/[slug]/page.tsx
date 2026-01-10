@@ -20,14 +20,47 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 
     const patternName = pattern.name || `Pattern ${pattern.id}`
-    const title = `${patternName} Perler Bead Pattern`
+    const sizeInfo = `${pattern.gridSize.width}×${pattern.gridSize.height}`
+    const brandInfo = pattern.materials?.brand ? ` ${pattern.materials.brand}` : ''
+    
+    // Generate optimized title (40-60 characters)
+    // Try different title formats to ensure optimal length
+    let title = `${patternName} - ${sizeInfo}${brandInfo} Perler Bead Pattern`
+    
+    // If title is too short, try with "Free" prefix
+    if (title.length < 40) {
+        const titleWithFree = `${patternName} - Free ${sizeInfo}${brandInfo} Perler Bead Pattern & PDF Guide`
+        if (titleWithFree.length >= 40 && titleWithFree.length <= 60) {
+            title = titleWithFree
+        } else if (titleWithFree.length < 40) {
+            // If still too short, try with "Download" prefix
+            const titleWithDownload = `Download ${patternName} - ${sizeInfo}${brandInfo} Perler Bead Pattern PDF`
+            if (titleWithDownload.length >= 40) {
+                title = titleWithDownload
+            } else {
+                // Last resort: add more descriptive text
+                title = `${patternName} - Free ${sizeInfo}${brandInfo} Perler Bead Pattern Template & Guide`
+            }
+        } else {
+            // titleWithFree is too long, keep original and pad it
+            title = `${patternName} - ${sizeInfo}${brandInfo} Perler Bead Pattern Template`
+        }
+    }
+    
+    // Ensure title is within 60 characters (truncate if needed)
+    let finalTitle = title.length > 60 ? title.substring(0, 57) + '...' : title
+    
+    // If final title is still too short, pad it (shouldn't happen, but safety check)
+    if (finalTitle.length < 40 && finalTitle.length > 0) {
+        const padding = ' - Free Perler Bead Pattern'
+        const paddedTitle = finalTitle + padding
+        finalTitle = paddedTitle.length > 60 ? paddedTitle.substring(0, 57) + '...' : paddedTitle
+    }
     
     // Generate description with pattern details
     let description = pattern.description
     if (!description) {
-        const sizeInfo = `${pattern.gridSize.width}×${pattern.gridSize.height}`
         const authorInfo = pattern.author ? ` by ${pattern.author}` : ''
-        const brandInfo = pattern.materials?.brand ? ` for ${pattern.materials.brand}` : ''
         description = `Free ${sizeInfo} perler bead pattern${authorInfo}${brandInfo}. Download PDF guide and start creating!`
     }
 
@@ -35,9 +68,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     if (description.length > 160) {
         description = description.substring(0, 157) + '...'
     }
-
-    // Ensure title is within 60 characters
-    const finalTitle = title.length > 60 ? title.substring(0, 57) + '...' : title
 
     // Generate slug for canonical URL
     const canonicalSlug = toSlug(pattern.name, pattern.id)
@@ -85,38 +115,41 @@ export default async function PatternDetailPage({ params }: PageProps) {
         ? `/perler-bead-pattern/${canonicalSlug}` 
         : `/${locale}/perler-bead-pattern/${canonicalSlug}`
     
+    // Ensure dateCreated is in ISO 8601 format
+    let dateCreated = pattern.createdAt
+    if (dateCreated && !dateCreated.includes('T')) {
+        // If it's just a date, ensure it's properly formatted
+        dateCreated = new Date(dateCreated).toISOString()
+    }
+
     const structuredData: any = {
         '@context': 'https://schema.org',
         '@type': 'CreativeWork',
         name: patternName,
         description: pattern.description || `A ${pattern.gridSize.width}×${pattern.gridSize.height} perler bead pattern`,
-        dateCreated: pattern.createdAt,
+        dateCreated: dateCreated || new Date().toISOString(),
         width: {
             '@type': 'QuantitativeValue',
-            value: pattern.gridSize.width,
+            value: Number(pattern.gridSize.width),
             unitText: 'beads'
         },
         height: {
             '@type': 'QuantitativeValue',
-            value: pattern.gridSize.height,
+            value: Number(pattern.gridSize.height),
             unitText: 'beads'
         },
-        url: `${baseUrl}${canonicalPath}`,
-        material: pattern.materials?.brand || 'Perler'
+        url: `${baseUrl}${canonicalPath}`
+    }
+
+    // Add material only if it exists and is a valid string
+    if (pattern.materials?.brand) {
+        structuredData.material = String(pattern.materials.brand)
     }
 
     if (pattern.author) {
         structuredData.author = {
             '@type': 'Person',
-            name: pattern.author
-        }
-    }
-
-    if (pattern.materials?.totalBeads) {
-        structuredData.aggregateRating = {
-            '@type': 'AggregateRating',
-            ratingValue: '5',
-            ratingCount: '1'
+            name: String(pattern.author)
         }
     }
 

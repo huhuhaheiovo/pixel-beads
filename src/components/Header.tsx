@@ -102,7 +102,7 @@ export function Header() {
                                             <ListItem href='/pixel-art-maker' title={t('pixelArtMaker')}>
                                                 {t('pixelArtMakerDesc')}
                                             </ListItem>
-                                            <ListItem href='/image-to-pixel' title={t('imageToPixel')}>
+                                            <ListItem href='/pindou-pattern-generator' title={t('imageToPixel')}>
                                                 {t('imageToPixelDesc')}
                                             </ListItem>
                                             <ListItem href='/minecraft-pixel-art' title={t('minecraftGuide')}>

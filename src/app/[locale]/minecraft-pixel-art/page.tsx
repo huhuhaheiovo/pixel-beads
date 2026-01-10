@@ -172,7 +172,7 @@ export default async function MinecraftPixelArtPage({ params }: { params: Promis
                 <div className="container mx-auto px-4 text-center">
                     <h2 className="text-3xl font-black tracking-tight text-[#18181B] mb-12">Related Guides</h2>
                     <div className="flex flex-wrap justify-center gap-4">
-                        <Link href="/image-to-pixel" className="px-6 py-3 bg-slate-50 text-[#18181B] border-2 border-[#18181B] font-bold hover:bg-[#18181B] hover:text-white transition-all">
+                        <Link href="/pindou-pattern-generator" className="px-6 py-3 bg-slate-50 text-[#18181B] border-2 border-[#18181B] font-bold hover:bg-[#18181B] hover:text-white transition-all">
                             Convert Image to Pixel Art
                         </Link>
                         <Link href="/pixel-art-maker" className="px-6 py-3 bg-slate-50 text-[#18181B] border-2 border-[#18181B] font-bold hover:bg-[#18181B] hover:text-white transition-all">
