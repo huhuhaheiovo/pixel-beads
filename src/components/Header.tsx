@@ -34,6 +34,7 @@ export function Header() {
                         height={32}
                         className='w-8 h-8 rounded'
                     />
+
                     <span className='font-black text-sm uppercase tracking-tighter text-[#F7F1E1]'>拼豆艺术</span>
                 </Link>
 
