@@ -33,12 +33,12 @@ export async function getPatterns(options?: {
 }): Promise<{ data: Pattern[]; total: number }> {
   try {
     const supabase = createServerClient()
-    
+
     let query = supabase
-      .from('patterns')
-      .select('*', { count: 'exact' })
-      .eq('public', true)
-      .order('createdAt', { ascending: false })
+        .from('patterns')
+        .select('*', { count: 'exact' })
+        .eq('public_at', true)         // 注意这里是 public_at
+        .order('createdAt', { ascending: false });
 
     if (options?.limit) {
       query = query.limit(options.limit)
@@ -70,7 +70,7 @@ export async function getPatterns(options?: {
 export async function getPatternById(id: string): Promise<Pattern | null> {
   try {
     const supabase = createServerClient()
-    
+
     const { data, error } = await supabase
       .from('patterns')
       .select('*')
@@ -96,7 +96,7 @@ export async function getPatternById(id: string): Promise<Pattern | null> {
 export async function savePattern(pattern: Pattern): Promise<boolean> {
   try {
     const supabase = createServerClient()
-    
+
     const { error } = await supabase
       .from('patterns')
       .insert([pattern])
