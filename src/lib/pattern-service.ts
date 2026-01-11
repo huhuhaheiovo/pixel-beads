@@ -57,8 +57,18 @@ export async function getPatterns(options?: {
       return { data: [], total: 0 }
     }
 
+    // Map database schema to Pattern interface
+    // Convert 'public_at' field to 'public' for TypeScript
+    const patterns: Pattern[] = (data || []).map((item: any) => {
+      const { public_at, ...rest } = item
+      return {
+        ...rest,
+        public: public_at ?? false
+      }
+    })
+
     return {
-      data: (data as Pattern[]) || [],
+      data: patterns,
       total: count || 0
     }
   } catch (error) {
@@ -86,7 +96,17 @@ export async function getPatternById(id: string): Promise<Pattern | null> {
       return null
     }
 
-    return data as Pattern | null
+    if (!data) return null
+
+    // Map database schema to Pattern interface
+    // Convert 'public_at' field to 'public' for TypeScript
+    const { public_at, ...rest } = data as any
+    const pattern: Pattern = {
+      ...rest,
+      public: public_at ?? false
+    }
+
+    return pattern
   } catch (error) {
     console.error('Error reading pattern:', error)
     return null
@@ -97,9 +117,17 @@ export async function savePattern(pattern: Pattern): Promise<boolean> {
   try {
     const supabase = createServerClient()
 
+    // Map Pattern interface to database schema
+    // Convert 'public' field to 'public_at' for database
+    const { public: publicValue, ...rest } = pattern
+    const dbPattern = {
+      ...rest,
+      public_at: publicValue ?? true
+    }
+
     const { error } = await supabase
       .from('patterns')
-      .insert([pattern])
+      .insert([dbPattern])
 
     if (error) {
       console.error('Error saving pattern to Supabase:', error)
