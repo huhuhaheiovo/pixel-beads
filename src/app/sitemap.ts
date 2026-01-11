@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/fuse-beads',
         '/hama-beads',
         '/pindou-pattern-generator',
+        '/image-to-pixel',
         '/minecraft-pixel-art',
         '/pixel-art-maker',
         '/wplace',
