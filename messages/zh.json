@@ -253,6 +253,8 @@
         "patternDetails": "图纸详情",
         "materialBrand": "材料品牌",
         "patternPreview": "图纸预览",
+        "views": "浏览量",
+        "viewCount": "查看次数",
         "exportSettings": "导出设置",
         "exportOptions": "导出选项",
         "seoTitle": "拼豆图纸库 | 像素艺术与拼豆设计",
@@ -262,6 +264,8 @@
         "h2BrowseByTheme": "按主题浏览拼豆创意",
         "h2TurnIntoArt": "将图纸转化为定制像素艺术",
         "descriptionExtended": "探索我们的像素艺术拼豆、拼豆图纸和拼豆创意合集。为您的下一个拼豆艺术画廊项目寻找灵感。",
+        "loading": "加载中...",
+        "loadMore": "加载更多",
         "ctaDescription": "找到喜欢的图纸了吗？使用我们的免费拼豆图纸生成器自定义设计、调整颜色，并创建您自己的像素艺术图案。几秒钟内将任何图片转换为拼豆图纸。",
         "ctaButton": "开始创作图纸"
     },

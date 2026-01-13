@@ -18,6 +18,8 @@ export function WeChatQRCode() {
             src="/WeChat.webp"
             alt="微信赞赏"
             className="h-24 w-24 rounded"
+            loading="lazy"
+            decoding="async"
           />
         </button>
       </DialogTrigger>
@@ -30,6 +32,8 @@ export function WeChatQRCode() {
             width={300}
             height={300}
             className="w-[300px] h-[300px] object-contain"
+            loading="lazy"
+            decoding="async"
           />
           <p className="text-sm text-center text-zinc-600 mt-4 font-medium">微信赞赏</p>
         </div>

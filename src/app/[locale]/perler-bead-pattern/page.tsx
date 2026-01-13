@@ -40,7 +40,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function PatternsPage({ params }: PageProps) {
     const { locale } = await params
-    const { data: patterns } = await fetchPatternsAction();
+    const initialLimit = 24
+    const { data: initialPatterns, total } = await fetchPatternsAction({ page: 1, limit: initialLimit });
     const t = await getTranslations({ locale, namespace: 'Patterns' });
 
     return (
@@ -54,7 +55,7 @@ export default async function PatternsPage({ params }: PageProps) {
 
             <section className="mb-12">
                 <h2 className="text-2xl font-bold mb-6">{t('h2Popular')}</h2>
-                <PatternGrid patterns={patterns} />
+                <PatternGrid initialPatterns={initialPatterns} total={total} initialLimit={initialLimit} />
             </section>
 
             <section className="mt-16 pt-12 border-t border-zinc-200">

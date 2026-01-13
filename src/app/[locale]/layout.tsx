@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import Script from 'next/script'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Header } from '@/components/Header'
 import { WeChatQRCode } from '@/components/WeChatQRCode'
+import { ThirdPartyScripts } from '@/components/ThirdPartyScripts'
 import '../globals.css'
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
@@ -14,12 +14,14 @@ import Image from "next/image";
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
-    subsets: ['latin']
+    subsets: ['latin'],
+    display: 'swap'
 })
 
 const geistMono = Geist_Mono({
     variable: '--font-geist-mono',
-    subsets: ['latin']
+    subsets: ['latin'],
+    display: 'swap'
 })
 
 export function generateStaticParams() {
@@ -52,25 +54,7 @@ export default async function LocaleLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
             >
-                <Script
-                    src="https://www.googletagmanager.com/gtag/js?id=G-PHKBP63X2W"
-                    strategy="afterInteractive"
-                />
-                <Script
-                    async
-                    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2409588554709380"
-                    crossOrigin="anonymous"
-                    strategy="afterInteractive"
-                />
-                <Script id="google-analytics" strategy="afterInteractive">
-                    {`
-                        window.dataLayer = window.dataLayer || [];
-                        function gtag(){dataLayer.push(arguments);}
-                        gtag('js', new Date());
-
-                        gtag('config', 'G-PHKBP63X2W');
-                    `}
-                </Script>
+                <ThirdPartyScripts />
                 <NextIntlClientProvider messages={messages}>
                     <Header />
                     {children}

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
-import { fetchPatternAction } from '@/app/actions/patterns';
+import { fetchPatternAction, incrementPatternViewAction } from '@/app/actions/patterns';
 import { PatternDetailView } from '@/components/patterns/PatternDetailView';
+import { PatternMetadata } from '@/components/patterns/PatternMetadata';
 import { notFound } from 'next/navigation';
 import { parseSlugToId, toSlug } from '@/lib/slug-utils';
 
@@ -22,14 +23,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const patternName = pattern.name || `Pattern ${pattern.id}`
     const sizeInfo = `${pattern.gridSize.width}×${pattern.gridSize.height}`
     const brandInfo = pattern.materials?.brand ? ` ${pattern.materials.brand}` : ''
-    
+
     // Generate optimized title (40-60 characters)
     // Try different title formats to ensure optimal length
     let title = `${patternName} - ${sizeInfo}${brandInfo} Perler Bead Pattern`
-    
+
     // If title is too short, try with "Free" prefix
     if (title.length < 40) {
-        const titleWithFree = `${patternName} - Free ${sizeInfo}${brandInfo} Perler Bead Pattern & PDF Guide`
+        const titleWithFree = `${patternName}拼豆图案下载-  Perler Bead Pattern & PDF Guide`
         if (titleWithFree.length >= 40 && titleWithFree.length <= 60) {
             title = titleWithFree
         } else if (titleWithFree.length < 40) {
@@ -46,22 +47,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             title = `${patternName} - ${sizeInfo}${brandInfo} Perler Bead Pattern Template`
         }
     }
-    
+
     // Ensure title is within 60 characters (truncate if needed)
     let finalTitle = title.length > 60 ? title.substring(0, 57) + '...' : title
-    
+
     // If final title is still too short, pad it (shouldn't happen, but safety check)
     if (finalTitle.length < 40 && finalTitle.length > 0) {
         const padding = ' - Free Perler Bead Pattern'
         const paddedTitle = finalTitle + padding
         finalTitle = paddedTitle.length > 60 ? paddedTitle.substring(0, 57) + '...' : paddedTitle
     }
-    
+
     // Generate description with pattern details
     let description = pattern.description
     if (!description) {
         const authorInfo = pattern.author ? ` by ${pattern.author}` : ''
-        description = `Free ${sizeInfo} perler bead pattern${authorInfo}${brandInfo}. Download PDF guide and start creating!`
+        description = `${patternName}拼豆图案下载 Free ${sizeInfo} perler bead pattern${authorInfo}${brandInfo}. Download PDF guide and start creating!`
     }
 
     // Ensure description is within 160 characters
@@ -72,8 +73,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     // Generate slug for canonical URL
     const canonicalSlug = toSlug(pattern.name, pattern.id)
     const baseUrl = 'https://www.pixel-beads.com'
-    const canonicalPath = locale === 'en' 
-        ? `/perler-bead-pattern/${canonicalSlug}` 
+    const canonicalPath = locale === 'en'
+        ? `/perler-bead-pattern/${canonicalSlug}`
         : `/${locale}/perler-bead-pattern/${canonicalSlug}`
 
     return {
@@ -107,14 +108,19 @@ export default async function PatternDetailPage({ params }: PageProps) {
         notFound();
     }
 
+    // Increment view count asynchronously (don't block page rendering)
+    incrementPatternViewAction(id).catch(error => {
+        console.error('Failed to increment pattern view count:', error);
+    });
+
     // Generate slug for structured data URL
     const canonicalSlug = toSlug(pattern.name, pattern.id)
     const patternName = pattern.name || `Pattern ${pattern.id}`
     const baseUrl = 'https://www.pixel-beads.com'
-    const canonicalPath = locale === 'en' 
-        ? `/perler-bead-pattern/${canonicalSlug}` 
+    const canonicalPath = locale === 'en'
+        ? `/perler-bead-pattern/${canonicalSlug}`
         : `/${locale}/perler-bead-pattern/${canonicalSlug}`
-    
+
     // Ensure dateCreated is in ISO 8601 format
     let dateCreated = pattern.createdAt
     if (dateCreated && !dateCreated.includes('T')) {
@@ -155,11 +161,33 @@ export default async function PatternDetailPage({ params }: PageProps) {
 
     return (
         <>
+            {/* Resource Preloading for Performance - Next.js will move these to head */}
+            <link
+                rel="preconnect"
+                href="https://fonts.googleapis.com"
+            />
+            <link
+                rel="dns-prefetch"
+                href="https://fonts.googleapis.com"
+            />
+            <link
+                rel="preconnect"
+                href="https://fonts.gstatic.com"
+                crossOrigin="anonymous"
+            />
+            <link
+                rel="prefetch"
+                href="/perler-bead-pattern"
+                as="document"
+            />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
             />
-            <PatternDetailView pattern={pattern} />
+            <div className="container mx-auto px-4 py-8">
+                <PatternMetadata pattern={pattern} />
+                <PatternDetailView pattern={pattern} />
+            </div>
         </>
     )
 }

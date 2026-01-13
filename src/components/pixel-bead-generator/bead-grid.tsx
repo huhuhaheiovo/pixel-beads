@@ -113,7 +113,7 @@ function BeadGridComponent({
 }
 
 export const BeadGrid = memo(BeadGridComponent, (prevProps, nextProps) => {
-  // Only re-render if these specific props change
+  // Return true if props are equal (no re-render needed), false if different (re-render needed)
   return (
     prevProps.matrix === nextProps.matrix &&
     prevProps.gridWidth === nextProps.gridWidth &&
@@ -122,7 +122,8 @@ export const BeadGrid = memo(BeadGridComponent, (prevProps, nextProps) => {
     prevProps.showBeadCodes === nextProps.showBeadCodes &&
     prevProps.zoom === nextProps.zoom &&
     prevProps.beadStyle === nextProps.beadStyle &&
-    prevProps.gridSpacing === nextProps.gridSpacing
+    prevProps.gridSpacing === nextProps.gridSpacing &&
+    prevProps.colorById === nextProps.colorById
   )
 })
 

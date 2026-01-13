@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { createServerClient } from './supabase'
 
 export interface Pattern {
@@ -25,9 +26,10 @@ export interface Pattern {
     }>
   }
   source?: string
+  viewCount?: number
 }
 
-export async function getPatterns(options?: {
+export const getPatterns = cache(async function getPatterns(options?: {
   page?: number
   limit?: number
 }): Promise<{ data: Pattern[]; total: number }> {
@@ -38,7 +40,8 @@ export async function getPatterns(options?: {
         .from('patterns')
         .select('*', { count: 'exact' })
         .eq('public_at', true)         // 注意这里是 public_at
-        .order('createdAt', { ascending: false });
+        .order('view_count', { ascending: false })
+        .order('createdAt', { ascending: false }); // Secondary sort by creation date
 
     if (options?.limit) {
       query = query.limit(options.limit)
@@ -58,12 +61,13 @@ export async function getPatterns(options?: {
     }
 
     // Map database schema to Pattern interface
-    // Convert 'public_at' field to 'public' for TypeScript
+    // Convert 'public_at' field to 'public' and 'view_count' to 'viewCount' for TypeScript
     const patterns: Pattern[] = (data || []).map((item: any) => {
-      const { public_at, ...rest } = item
+      const { public_at, view_count, ...rest } = item
       return {
         ...rest,
-        public: public_at ?? false
+        public: public_at ?? false,
+        viewCount: view_count ?? 0
       }
     })
 
@@ -75,9 +79,9 @@ export async function getPatterns(options?: {
     console.error('Error reading patterns:', error)
     return { data: [], total: 0 }
   }
-}
+})
 
-export async function getPatternById(id: string): Promise<Pattern | null> {
+export const getPatternById = cache(async function getPatternById(id: string): Promise<Pattern | null> {
   try {
     const supabase = createServerClient()
 
@@ -99,11 +103,12 @@ export async function getPatternById(id: string): Promise<Pattern | null> {
     if (!data) return null
 
     // Map database schema to Pattern interface
-    // Convert 'public_at' field to 'public' for TypeScript
-    const { public_at, ...rest } = data as any
+    // Convert 'public_at' field to 'public' and 'view_count' to 'viewCount' for TypeScript
+    const { public_at, view_count, ...rest } = data as any
     const pattern: Pattern = {
       ...rest,
-      public: public_at ?? false
+      public: public_at ?? false,
+      viewCount: view_count ?? 0
     }
 
     return pattern
@@ -111,18 +116,24 @@ export async function getPatternById(id: string): Promise<Pattern | null> {
     console.error('Error reading pattern:', error)
     return null
   }
-}
+})
 
 export async function savePattern(pattern: Pattern): Promise<boolean> {
   try {
-    const supabase = createServerClient()
-
     // Map Pattern interface to database schema
     // Convert 'public' field to 'public_at' for database
     const { public: publicValue, ...rest } = pattern
+    const public_at = publicValue ?? true
+
+    // 如果用户选择不公开（public_at 为 false），则不保存到数据库
+    if (!public_at) {
+      return true
+    }
+
+    const supabase = createServerClient()
     const dbPattern = {
       ...rest,
-      public_at: publicValue ?? true
+      public_at: true
     }
 
     const { error } = await supabase
@@ -137,6 +148,45 @@ export async function savePattern(pattern: Pattern): Promise<boolean> {
     return true
   } catch (error) {
     console.error('Error saving pattern:', error)
+    return false
+  }
+}
+
+export async function incrementPatternView(id: string): Promise<boolean> {
+  try {
+    const supabase = createServerClient()
+
+    // Get current view count
+    const { data: currentPattern, error: selectError } = await supabase
+      .from('patterns')
+      .select('view_count')
+      .eq('id', id)
+      .single()
+
+    if (selectError) {
+      console.error('Error fetching pattern for view increment:', selectError)
+      return false
+    }
+
+    if (!currentPattern) {
+      console.error('Pattern not found:', id)
+      return false
+    }
+
+    // Atomically increment view count
+    const { error: updateError } = await supabase
+      .from('patterns')
+      .update({ view_count: (currentPattern.view_count || 0) + 1 })
+      .eq('id', id)
+
+    if (updateError) {
+      console.error('Error incrementing pattern view:', updateError)
+      return false
+    }
+
+    return true
+  } catch (error) {
+    console.error('Error incrementing pattern view:', error)
     return false
   }
 }

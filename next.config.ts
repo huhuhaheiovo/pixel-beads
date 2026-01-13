@@ -13,6 +13,7 @@ const withMDX = createMDX({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+    compress: true,
     images: {
         remotePatterns: [
             {

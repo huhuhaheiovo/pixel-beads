@@ -1,18 +1,21 @@
 'use client';
 
-import { useRef, useCallback, useState, useMemo } from 'react';
+import { useRef, useCallback, useState, useMemo, lazy, Suspense } from 'react';
 import { Pattern } from '@/lib/pattern-service';
-import { BillOfMaterials } from './BillOfMaterials';
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { Button } from '@/components/ui/button';
 import { Download, ArrowLeft, Image as ImageIcon, Plus, Minus } from 'lucide-react';
 import { generateColorMap } from '@/lib/color-map';
 import { usePatternExport, type BeadStyle, type GridSpacing } from '@/hooks/use-pattern-export';
-import { ExportContainer } from './ExportContainer';
 import { Progress } from '../ui/progress';
-import { BeadGrid } from '../pixel-bead-generator/bead-grid';
 import { BeadColor, resolveBeadColor } from '@/lib/beadData';
+import { PatternMetadata } from './PatternMetadata';
+import { PatternExportSettings } from './PatternExportSettings';
+
+// Lazy load non-critical components
+const BillOfMaterials = lazy(() => import('./BillOfMaterials').then(mod => ({ default: mod.BillOfMaterials })));
+const ExportContainer = lazy(() => import('./ExportContainer').then(mod => ({ default: mod.ExportContainer })));
+const BeadGridCanvas = lazy(() => import('../pixel-bead-generator/bead-grid-canvas').then(mod => ({ default: mod.BeadGridCanvas })));
 
 interface PatternDetailViewProps {
     pattern: Pattern;
@@ -22,7 +25,6 @@ interface PatternDetailViewProps {
 export function PatternDetailView({ pattern }: PatternDetailViewProps) {
     const t = useTranslations('Patterns');
     const tg = useTranslations('Generator');
-    const locale = useLocale();
     const canvasRef = useRef<HTMLDivElement>(null);
     const exportRef = useRef<HTMLDivElement>(null);
     const [zoom, setZoom] = useState(0.5);
@@ -114,7 +116,7 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
     }, [executeExportPDF]);
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <>
             <Link href="/perler-bead-pattern" className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-900 mb-6 transition-colors">
                 <ArrowLeft className="w-4 h-4" />
                 {t('backToLibrary')}
@@ -123,81 +125,6 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
             <div className="flex flex-col lg:flex-row gap-8 items-start">
                 {/* Main Content */}
                 <div className="flex-1 w-full">
-                    <div className="mb-6">
-                        <h1 className="text-3xl font-black mb-4">{patternName}</h1>
-                        
-                        {/* Pattern Metadata */}
-                        <div className="flex flex-wrap gap-4 text-sm text-zinc-600 mb-4">
-                            {pattern.createdAt && (
-                                <div className="flex items-center gap-1">
-                                    <span className="font-medium">{t('createdAt')}:</span>
-                                    <time dateTime={pattern.createdAt}>
-                                        {new Date(pattern.createdAt).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', {
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric'
-                                        })}
-                                    </time>
-                                </div>
-                            )}
-                            {pattern.author && (
-                                <div className="flex items-center gap-1">
-                                    <span className="font-medium">{t('patternAuthor')}:</span>
-                                    <span>{pattern.author}</span>
-                                </div>
-                            )}
-                            <div className="flex items-center gap-1">
-                                <span className="font-medium">{t('patternSize')}:</span>
-                                <span>
-                                    {pattern.gridSize.width} × {pattern.gridSize.height} {t('beads')}
-                                </span>
-                            </div>
-                        </div>
-
-                        {/* Pattern Description */}
-                        {pattern.description && (
-                            <div className="mb-4">
-                                <h2 className="text-lg font-bold mb-2">{t('patternDescription')}</h2>
-                                <p className="text-zinc-600 leading-relaxed">{pattern.description}</p>
-                            </div>
-                        )}
-
-                        {/* Pattern Details Section */}
-                        <div className="mb-6">
-                            <h2 className="text-xl font-bold mb-4">{t('patternDetails') || 'Pattern Details'}</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <h3 className="text-sm font-semibold text-zinc-700 mb-2">{t('patternSize')}</h3>
-                                    <p className="text-zinc-600">
-                                        {pattern.gridSize.width} × {pattern.gridSize.height} {t('beads')}
-                                    </p>
-                                </div>
-                                {pattern.materials?.brand && (
-                                    <div>
-                                        <h3 className="text-sm font-semibold text-zinc-700 mb-2">{t('materialBrand') || 'Material Brand'}</h3>
-                                        <p className="text-zinc-600">{pattern.materials.brand}</p>
-                                    </div>
-                                )}
-                                {pattern.materials?.totalBeads && (
-                                    <div>
-                                        <h3 className="text-sm font-semibold text-zinc-700 mb-2">{t('totalBeads')}</h3>
-                                        <p className="text-zinc-600">{pattern.materials.totalBeads.toLocaleString()} {t('beads')}</p>
-                                    </div>
-                                )}
-                                {pattern.author && (
-                                    <div>
-                                        <h3 className="text-sm font-semibold text-zinc-700 mb-2">{t('patternAuthor')}</h3>
-                                        <p className="text-zinc-600">{pattern.author}</p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Author Message */}
-                        {pattern.message && (
-                            <p className="text-zinc-500 italic">{pattern.message}</p>
-                        )}
-                    </div>
 
                     {/* Pattern Preview */}
                     <div className="mb-6">
@@ -232,19 +159,21 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
                             </div>
                             <span className="text-xs w-8 text-right font-mono">{Math.round(zoom * 100)}%</span>
                         </div>
-                        <div ref={canvasRef} className="bg-white p-1 shadow-sm">
-                            <BeadGrid
-                                matrix={pattern.pixels}
-                                gridWidth={pattern.gridSize.width}
-                                cellSize={18}
-                                showGrid={true}
-                                showBeadCodes={zoom >= 0.8}
-                                colorById={internalColorById}
-                                onCellClick={() => { }}
-                                zoom={zoom}
-                                beadStyle={beadStyle}
-                                gridSpacing={gridSpacing}
-                            />
+                        <div ref={canvasRef} className="bg-white p-1 shadow-sm" style={{ minHeight: '400px' }}>
+                            <Suspense fallback={<div className="flex items-center justify-center h-full text-zinc-500">{t('loading') || 'Loading...'}</div>}>
+                                <BeadGridCanvas
+                                    matrix={pattern.pixels}
+                                    gridWidth={pattern.gridSize.width}
+                                    cellSize={18}
+                                    showGrid={true}
+                                    showBeadCodes={zoom >= 0.8}
+                                    colorById={internalColorById}
+                                    onCellClick={() => { }}
+                                    zoom={zoom}
+                                    beadStyle={beadStyle}
+                                    gridSpacing={gridSpacing}
+                                />
+                            </Suspense>
                         </div>
                     </div>
                     </div>
@@ -253,44 +182,12 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
                 {/* Sidebar */}
                 <div className="w-full lg:w-80 shrink-0 space-y-6">
                     {/* Export Settings */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 p-6 space-y-6">
-                        <h2 className="text-lg font-bold mb-4">{t('exportSettings') || 'Export Settings'}</h2>
-                        <div className="space-y-4">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8F7E6F] flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#3E2A1E]"></span>
-                                {tg('beadStyle')}
-                            </label>
-                            <div className="grid grid-cols-1 gap-2">
-                                {(['square', 'round', 'hollow'] as BeadStyle[]).map((style) => (
-                                    <button
-                                        key={style}
-                                        onClick={() => setBeadStyle(style)}
-                                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${beadStyle === style ? 'bg-[#3E2A1E] text-white border-[#3E2A1E]' : 'bg-[#F7F1E1] text-[#8F7E6F] border-transparent hover:border-[#D8CBB9]'}`}
-                                    >
-                                        {tg(`beadStyle${style.charAt(0).toUpperCase() + style.slice(1)}`)}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="space-y-4">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8F7E6F] flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#3E2A1E]"></span>
-                                {tg('gridSpacing')}
-                            </label>
-                            <div className="grid grid-cols-3 gap-2">
-                                {(['none', 'small', 'large'] as GridSpacing[]).map((spacing) => (
-                                    <button
-                                        key={spacing}
-                                        onClick={() => setGridSpacing(spacing)}
-                                        className={`px-2 py-2 rounded-xl text-[10px] font-bold transition-all border ${gridSpacing === spacing ? 'bg-[#3E2A1E] text-white border-[#3E2A1E]' : 'bg-[#F7F1E1] text-[#8F7E6F] border-transparent hover:border-[#D8CBB9]'}`}
-                                    >
-                                        {tg(`gridSpacing${spacing.charAt(0).toUpperCase() + spacing.slice(1)}`)}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+                    <PatternExportSettings
+                        beadStyle={beadStyle}
+                        gridSpacing={gridSpacing}
+                        onBeadStyleChange={setBeadStyle}
+                        onGridSpacingChange={setGridSpacing}
+                    />
 
                     {/* Export Buttons */}
                     <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 p-6 space-y-4">
@@ -314,30 +211,31 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
                     </div>
 
                     {/* Materials Section */}
-                    <div>
-                        <h2 className="text-lg font-bold mb-4">{t('materials')}</h2>
+                    <Suspense fallback={<div className="text-sm text-zinc-500">{t('loading') || 'Loading...'}</div>}>
                         <BillOfMaterials pixels={pattern.pixels} colorMap={colorMap} />
-                    </div>
+                    </Suspense>
                 </div>
             </div>
 
-            <ExportContainer
-                ref={exportRef}
-                matrix={pattern.pixels}
-                gridWidth={pattern.gridSize.width}
-                colorById={colorById}
-                beadStyle={beadStyle}
-                gridSpacing={gridSpacing}
-                exportShowCodes={exportShowCodes}
-                exportShowStats={exportShowStats}
-                beadStats={beadStats}
-                colorMap={colorMap}
-                totalBeads={totalBeads}
-                translations={{
-                    statsTitle: tg('statsTitle'),
-                    total: tg('total')
-                }}
-            />
+            <Suspense fallback={null}>
+                <ExportContainer
+                    ref={exportRef}
+                    matrix={pattern.pixels}
+                    gridWidth={pattern.gridSize.width}
+                    colorById={colorById}
+                    beadStyle={beadStyle}
+                    gridSpacing={gridSpacing}
+                    exportShowCodes={exportShowCodes}
+                    exportShowStats={exportShowStats}
+                    beadStats={beadStats}
+                    colorMap={colorMap}
+                    totalBeads={totalBeads}
+                    translations={{
+                        statsTitle: tg('statsTitle'),
+                        total: tg('total')
+                    }}
+                />
+            </Suspense>
 
             {isExportingImage && (
                 <div className='fixed inset-0 bg-white/90 backdrop-blur-md flex items-center justify-center z-50'>
@@ -356,6 +254,6 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 }

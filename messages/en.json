@@ -253,6 +253,8 @@
         "patternDetails": "Pattern Details",
         "materialBrand": "Material Brand",
         "patternPreview": "Pattern Preview",
+        "views": "Views",
+        "viewCount": "View Count",
         "exportSettings": "Export Settings",
         "exportOptions": "Export Options",
         "seoTitle": "Perler Bead Patterns Gallery | Pixel Art & Fuse Bead Designs",
@@ -262,6 +264,8 @@
         "h2BrowseByTheme": "Browse Perler Bead Ideas by Theme",
         "h2TurnIntoArt": "Turn Patterns into Custom Pixel Art",
         "descriptionExtended": "Explore our collection of pixel art perler beads, fuse bead patterns, and perler bead ideas. Find inspiration for your next perler bead art gallery project.",
+        "loading": "Loading...",
+        "loadMore": "Load More",
         "ctaDescription": "Found a pattern you love? Use our free perler bead pattern generator to customize designs, adjust colors, and create your own pixel art patterns. Transform any image into a fuse bead pattern in seconds.",
         "ctaButton": "Start Creating Patterns"
     },

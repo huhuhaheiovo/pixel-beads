@@ -2,8 +2,10 @@ import type { Metadata } from 'next'
 import { Link } from '@/i18n/routing'
 import { ArrowRight, ImageIcon, LayoutGrid, Download, Zap, Hammer, Heart, Star, Sparkles } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
+import { cache } from 'react'
 import fs from 'fs'
 import path from 'path'
+import { ImagePreloader } from '@/components/ImagePreloader'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params
@@ -71,27 +73,38 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     }
 
     // Sample images from all theme directories
-    const themeDirs = ['pallettes', 'halloween', 'christmas']
-    const sampledImages: { name: string, path: string }[] = []
+    // Cache file system operations to improve performance
+    const getSampledImages = cache(() => {
+        const themeDirs = ['pallettes', 'halloween', 'christmas']
+        const sampledImages: { name: string, path: string }[] = []
 
-    themeDirs.forEach(dir => {
-        const fullPath = path.join(process.cwd(), 'public', dir)
-        if (fs.existsSync(fullPath)) {
-            const files = fs.readdirSync(fullPath)
-                .filter(file => file.match(/\.(png|jpe?g|gif|webp)$/i))
-                .slice(0, 2) // Take 2 from each dir
+        themeDirs.forEach(dir => {
+            const fullPath = path.join(process.cwd(), 'public', dir)
+            if (fs.existsSync(fullPath)) {
+                const files = fs.readdirSync(fullPath)
+                    .filter(file => file.match(/\.(png|jpe?g|gif|webp)$/i))
+                    .slice(0, 2) // Take 2 from each dir
 
-            files.forEach(file => {
-                sampledImages.push({
-                    name: file.replace(/-/g, ' ').replace(/\.[^/.]+$/, ''),
-                    path: `/${dir}/${file}`
+                files.forEach(file => {
+                    sampledImages.push({
+                        name: file.replace(/-/g, ' ').replace(/\.[^/.]+$/, ''),
+                        path: `/${dir}/${file}`
+                    })
                 })
-            })
-        }
+            }
+        })
+
+        return sampledImages
     })
+
+    const sampledImages = getSampledImages()
+    
+    // Preload first 2 critical images
+    const criticalImages = sampledImages.slice(0, 2).map(img => img.path)
 
     return (
         <main className='min-h-screen'>
+            <ImagePreloader images={criticalImages} />
             <script
                 type='application/ld+json'
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -171,6 +184,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                                 <img
                                     src={image.path}
                                     alt={image.name}
+                                    loading={i < 2 ? 'eager' : 'lazy'}
+                                    fetchPriority={i < 2 ? 'high' : 'low'}
+                                    decoding='async'
+                                    sizes='(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 16vw'
                                     className='absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700'
                                 />
                                 <div className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-8 text-center'>
