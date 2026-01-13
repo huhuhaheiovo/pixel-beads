@@ -14,6 +14,9 @@ import { SettingsPanel, type Difficulty } from './pixel-bead-generator/settings-
 import { PaletteSidebar } from './pixel-bead-generator/palette-sidebar'
 import { BeadGrid } from './pixel-bead-generator/bead-grid'
 import { UploadArea } from './pixel-bead-generator/upload-area'
+import { GeneratorConfiguration } from './pixel-bead-generator/generator-configuration'
+import { MobileNav } from './pixel-bead-generator/mobile-nav'
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { useTranslations } from 'next-intl'
 import { Progress } from './ui/progress'
 import { savePatternAction } from '@/app/actions/patterns'
@@ -55,6 +58,9 @@ export function PixelBeadGenerator() {
   const [zoom, setZoom] = useState(1)
   const [showExportDialog, setShowExportDialog] = useState(false)
   const [pendingExportType, setPendingExportType] = useState<'pdf' | 'image' | null>(null)
+
+  // Mobile State
+  const [activeMobileTab, setActiveMobileTab] = useState<'settings' | 'palette' | 'export' | null>(null)
 
   const [beadStyle, setBeadStyle] = useState<BeadStyle>('round')
   const [gridSpacing, setGridSpacing] = useState<GridSpacing>('small')
@@ -202,8 +208,12 @@ export function PixelBeadGenerator() {
   }, [gridWidth, cellSize, selectedDifficulty])
 
   const handleImageUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setActiveMobileTab(null) // Close mobile sheet if open
     const file = e.target.files?.[0]
     if (!file) return
+
+    // Reset input value to allow selecting the same file again
+    e.target.value = ''
 
     const reader = new FileReader()
     reader.onload = (event) => {
@@ -429,75 +439,222 @@ export function PixelBeadGenerator() {
     })
   }, [])
 
+  // Close mobile sheets when clicking outside or selecting something that should close it
+  const handleMobileTabChange = useCallback((tab: 'settings' | 'palette' | 'export' | null) => {
+    if (tab === 'export') {
+      // For export, we open the dialog directly if we had a default, but here we probably want to show a sheet or just use the existing dialog logic?
+      // Actually, the user flow for export on mobile might surely be 'click export -> show options'.
+      // But we have 'ExportDialog' which is a Dialog.
+      // Let's make the 'Export' tab just open the Palette sidebar's export section? Or open a specific sheet?
+      // Re-reading plan: "Export: Opens Export Sheet/Dialog".
+      // Let's use a Sheet for Export or reuse the logic.
+      // Current export logic is on the right sidebar.
+      // Let's open the Palette sheet but scroll to bottom? Or just open the 'palette' tab?
+      // Alternatively, we can have a dedicated Export Sheet.
+      // However, the existing 'handleSaveAndExport' relies on 'pendingExportType'.
+      // For now, let's treat 'export' tab as opening the export options.
+      // We will render the export buttons in a sheet.
+      setActiveMobileTab(prev => prev === 'export' ? null : 'export')
+    } else {
+      setActiveMobileTab(prev => prev === tab ? null : tab)
+    }
+  }, [])
+
   return (
-    <div className='flex flex-col lg:flex-row min-h-[calc(100vh-64px)] bg-[#F7F1E1] text-[#3E2A1E] font-sans selection:bg-[#3E2A1E] selection:text-white'>
-      {/* Left Sidebar - Configuration (Input) */}
+    <div className='flex flex-col lg:flex-row min-h-[calc(100vh-64px)] bg-[#F7F1E1] text-[#3E2A1E] font-sans selection:bg-[#3E2A1E] selection:text-white pb-16 lg:pb-0'>
+      {/* Mobile Configuration Sheet */}
+      <Sheet open={activeMobileTab === 'settings'} onOpenChange={(open) => !open && setActiveMobileTab(null)}>
+        <SheetContent side="left" className="w-[85vw] sm:w-[350px] p-0 bg-white" aria-describedby='settings-description'>
+          <SheetTitle className="sr-only">Settings</SheetTitle>
+          <div id='settings-description' className="sr-only">Configuration settings for generator</div>
+          <GeneratorConfiguration
+            handleImageUpload={handleImageUpload}
+            activeTool={activeTool}
+            setActiveTool={setActiveTool}
+            showGrid={showGrid}
+            onToggleGrid={handleToggleGrid}
+            showBeadCodes={showBeadCodes}
+            onToggleBeadCodes={handleToggleBeadCodes}
+            canUndo={canUndo}
+            onUndo={handleUndo}
+            canRedo={canRedo}
+            onRedo={handleRedo}
+            selectedDifficulty={selectedDifficulty}
+            onDifficultyChange={handleDifficultyChange}
+            gridWidth={gridWidth}
+            onGridWidthChange={handleGridWidthChange}
+            cellSize={cellSize}
+            onCellSizeChange={handleCellSizeChange}
+            selectedPalette={selectedPalette}
+            onPaletteChange={setSelectedPalette}
+            selectedMardCategory={selectedMardCategory}
+            onMardCategoryChange={setSelectedMardCategory}
+            inputId="mobile-upload"
+          />
+        </SheetContent>
+      </Sheet>
+
+      {/* Mobile Palette Sheet */}
+      <Sheet open={activeMobileTab === 'palette'} onOpenChange={(open) => !open && setActiveMobileTab(null)}>
+        <SheetContent side="right" className="w-[85vw] sm:w-[350px] p-0 bg-white" aria-describedby='palette-description'>
+          <SheetTitle className="sr-only">Palette</SheetTitle>
+          <div id='palette-description' className="sr-only">Color palette selection</div>
+          <PaletteSidebar
+            activePalette={activePalette}
+            matrix={matrix}
+            selectedColorId={selectedColorId}
+            onColorSelect={(id) => {
+              setSelectedColorId(id)
+              setActiveMobileTab(null) // Close on select for better UX? Or keep open? Maybe keep open for multiple picks.
+            }}
+            className="flex w-full"
+          >
+            {/* Replicate Export Settings here or keep them in Export tab? */}
+            {/* Current PaletteSidebar renders children (Export Settings) at top. */}
+            {/* usage in desktop: */}
+          </PaletteSidebar>
+        </SheetContent>
+      </Sheet>
+
+      {/* Mobile Export Sheet */}
+      <Sheet open={activeMobileTab === 'export'} onOpenChange={(open) => !open && setActiveMobileTab(null)}>
+        <SheetContent side="bottom" className="h-auto max-h-[80vh] p-6 bg-white rounded-t-[20px]" aria-describedby='export-description'>
+          <SheetTitle className="text-center font-black uppercase tracking-widest text-[#3E2A1E] mb-6">Export & Save</SheetTitle>
+          <div id='export-description' className="sr-only">Export options</div>
+
+          {/* We need to render the Export Settings UI here.
+                 Since it's passed as children to PaletteSidebar in desktop, we should extract it or duplicate it.
+                 For now, duplicating the export UI structure for the mobile sheet.
+             */}
+          <div className="space-y-6">
+            {/* Export Settings Toggles */}
+            <div className="space-y-4">
+              <label className='text-xs font-bold uppercase tracking-widest text-[#8F7E6F] border-b border-[#D8CBB9] pb-2 block'>{t('exportSettings')}</label>
+              <div className='flex gap-4'>
+                <label className='flex items-center gap-2 cursor-pointer group'>
+                  <input
+                    type='checkbox'
+                    checked={exportShowCodes}
+                    onChange={(e) => setExportShowCodes(e.target.checked)}
+                    className='w-3.5 h-3.5 rounded border-[#D8CBB9] text-[#3E2A1E] focus:ring-[#3E2A1E]'
+                  />
+                  <span className='text-[10px] font-bold uppercase text-[#5A4738] group-hover:text-[#3E2A1E] transition-colors'>
+                    {t('exportShowCodes')}
+                  </span>
+                </label>
+                <label className='flex items-center gap-2 cursor-pointer group'>
+                  <input
+                    type='checkbox'
+                    checked={exportShowStats}
+                    onChange={(e) => setExportShowStats(e.target.checked)}
+                    className='w-3.5 h-3.5 rounded border-[#D8CBB9] text-[#3E2A1E] focus:ring-[#3E2A1E]'
+                  />
+                  <span className='text-[10px] font-bold uppercase text-[#5A4738] group-hover:text-[#3E2A1E] transition-colors'>
+                    {t('exportShowStats')}
+                  </span>
+                </label>
+              </div>
+
+              <div className="space-y-1.5">
+                <span className="text-[10px] font-bold uppercase text-[#5A4738]">{t('beadStyle')}</span>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['square', 'round', 'hollow'] as BeadStyle[]).map((style) => (
+                    <button
+                      key={style}
+                      onClick={() => handleBeadStyleChange(style)}
+                      className={`py-2 px-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${beadStyle === style
+                        ? 'bg-[#3E2A1E] text-white shadow-lg'
+                        : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
+                        }`}
+                    >
+                      {t(`beadStyle${style.charAt(0).toUpperCase() + style.slice(1)}`)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <span className="text-[10px] font-bold uppercase text-[#5A4738]">{t('gridSpacing')}</span>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['none', 'small', 'large'] as GridSpacing[]).map((spacing) => (
+                    <button
+                      key={spacing}
+                      onClick={() => handleGridSpacingChange(spacing)}
+                      className={`py-2 px-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${gridSpacing === spacing
+                        ? 'bg-[#3E2A1E] text-white shadow-lg'
+                        : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
+                        }`}
+                    >
+                      {t(`gridSpacing${spacing.charAt(0).toUpperCase() + spacing.slice(1)}`)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Export Actions */}
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => {
+                  setActiveMobileTab(null)
+                  exportToPDF()
+                }}
+                disabled={!image || matrix.length === 0}
+                className='flex flex-col items-center justify-center gap-2 py-4 bg-[#32B8A6] text-white text-[10px] font-bold uppercase tracking-widest hover:bg-[#2AA38F] hover:shadow-lg active:scale-[0.98] transition-all rounded-xl disabled:opacity-50 disabled:cursor-not-allowed'
+              >
+                <Download size={16} />
+                <span>Download PDF</span>
+              </button>
+              <button
+                onClick={() => {
+                  setActiveMobileTab(null)
+                  exportToImage()
+                }}
+                disabled={!image || matrix.length === 0 || isExportingImage}
+                className='flex flex-col items-center justify-center gap-2 py-4 bg-white border-2 border-[#3E2A1E] text-[#3E2A1E] text-[10px] font-bold uppercase tracking-widest hover:bg-[#F0EEE8] hover:shadow-md active:scale-[0.98] transition-all rounded-xl disabled:opacity-50 disabled:cursor-not-allowed'
+              >
+                {isExportingImage ? (
+                  <div className='w-4 h-4 border-2 border-[#18181B] border-t-transparent animate-spin' />
+                ) : (
+                  <ImageIcon size={16} />
+                )}
+                <span>Download IMG</span>
+              </button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+
+      {/* Left Sidebar - Configuration (Input) - Desktop Only */}
       <aside
-        className='w-full lg:w-80 bg-white border-b lg:border-r border-[#D8CBB9] flex flex-col shrink-0 z-30 shadow-[1px_0_20px_rgba(62,42,30,0.05)]'
+        className='hidden lg:flex w-80 bg-white border-r border-[#D8CBB9] flex-col shrink-0 z-30 shadow-[1px_0_20px_rgba(62,42,30,0.05)]'
         aria-label="Configuration"
       >
-        <div className='flex-1 flex flex-col p-6 space-y-8'>
-
-          {/* Section 1: Image Source */}
-          <section className='space-y-4'>
-            <label className='text-[10px] font-black uppercase tracking-[0.2em] text-[#8F7E6F] flex items-center gap-2'>
-              <span className='w-1.5 h-1.5 rounded-full bg-[#3E2A1E]'></span>
-              {t('imageSource')}
-            </label>
-
-            <input
-              type='file'
-              id='upload'
-              hidden
-              onChange={handleImageUpload}
-              accept='image/*'
-            />
-            <label
-              htmlFor='upload'
-              className='flex items-center justify-center gap-2 w-full py-6 border-2 border-dashed border-[#D8CBB9] rounded-xl text-[#8F7E6F] text-[10px] font-bold uppercase tracking-widest cursor-pointer hover:border-[#3E2A1E] hover:text-[#3E2A1E] hover:bg-[#F7F1E1]/50 transition-all group'
-            >
-              <Upload size={16} className='group-hover:scale-110 transition-transform' aria-hidden="true" />
-              {t('replaceImage')}
-            </label>
-          </section>
-
-          <div className='w-full h-px bg-[#F7F1E1]' />
-
-          {/* Section 2: Drawing Tools */}
-          <section className='space-y-4'>
-            <Toolbar
-              activeTool={activeTool}
-              onToolChange={setActiveTool}
-              showGrid={showGrid}
-              onToggleGrid={handleToggleGrid}
-              showBeadCodes={showBeadCodes}
-              onToggleBeadCodes={handleToggleBeadCodes}
-              canUndo={canUndo}
-              onUndo={handleUndo}
-              canRedo={canRedo}
-              onRedo={handleRedo}
-            />
-          </section>
-
-
-          <div className='w-full h-px bg-[#F7F1E1]' />
-
-          {/* Section 3: Canvas Setup */}
-          <section className='space-y-4 pb-8'>
-            <SettingsPanel
-              selectedDifficulty={selectedDifficulty}
-              onDifficultyChange={handleDifficultyChange}
-              gridWidth={gridWidth}
-              onGridWidthChange={handleGridWidthChange}
-              cellSize={cellSize}
-              onCellSizeChange={handleCellSizeChange}
-              selectedPalette={selectedPalette}
-              onPaletteChange={setSelectedPalette}
-              selectedMardCategory={selectedMardCategory}
-              onMardCategoryChange={setSelectedMardCategory}
-            />
-          </section>
-        </div>
+        <GeneratorConfiguration
+          handleImageUpload={handleImageUpload}
+          activeTool={activeTool}
+          setActiveTool={setActiveTool}
+          showGrid={showGrid}
+          onToggleGrid={handleToggleGrid}
+          showBeadCodes={showBeadCodes}
+          onToggleBeadCodes={handleToggleBeadCodes}
+          canUndo={canUndo}
+          onUndo={handleUndo}
+          canRedo={canRedo}
+          onRedo={handleRedo}
+          selectedDifficulty={selectedDifficulty}
+          onDifficultyChange={handleDifficultyChange}
+          gridWidth={gridWidth}
+          onGridWidthChange={handleGridWidthChange}
+          cellSize={cellSize}
+          onCellSizeChange={handleCellSizeChange}
+          selectedPalette={selectedPalette}
+          onPaletteChange={setSelectedPalette}
+          selectedMardCategory={selectedMardCategory}
+          onMardCategoryChange={setSelectedMardCategory}
+          inputId="desktop-upload"
+        />
       </aside>
 
       {/* Center - Workspace (Process) */}
@@ -737,6 +894,8 @@ export function PixelBeadGenerator() {
           exportType={pendingExportType}
         />
       )}
+      {/* Mobile Navigation */}
+      <MobileNav activeTab={activeMobileTab} onTabChange={handleMobileTabChange} />
     </div>
   )
 }

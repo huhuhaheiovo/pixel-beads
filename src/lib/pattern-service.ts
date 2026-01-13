@@ -37,11 +37,11 @@ export const getPatterns = cache(async function getPatterns(options?: {
     const supabase = createServerClient()
 
     let query = supabase
-        .from('patterns')
-        .select('*', { count: 'exact' })
-        .eq('public_at', true)         // 注意这里是 public_at
-        .order('view_count', { ascending: false })
-        .order('createdAt', { ascending: false }); // Secondary sort by creation date
+      .from('patterns')
+      .select('id, name, author, public_at, message, createdAt: "createdAt", format, gridSize: "gridSize", pixels, view_count', { count: 'exact' })
+      .eq('public_at', true)         // 注意这里是 public_at
+      .order('view_count', { ascending: false })
+      .order('"createdAt"', { ascending: false }); // Secondary sort by creation date
 
     if (options?.limit) {
       query = query.limit(options.limit)

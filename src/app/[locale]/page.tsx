@@ -5,7 +5,8 @@ import { getTranslations } from 'next-intl/server'
 import { cache } from 'react'
 import fs from 'fs'
 import path from 'path'
-import { ImagePreloader } from '@/components/ImagePreloader'
+import { HeroFloatingGallery } from '@/components/HeroFloatingGallery'
+
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params
@@ -98,19 +99,18 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     })
 
     const sampledImages = getSampledImages()
-    
-    // Preload first 2 critical images
-    const criticalImages = sampledImages.slice(0, 2).map(img => img.path)
 
     return (
         <main className='min-h-screen'>
-            <ImagePreloader images={criticalImages} />
             <script
                 type='application/ld+json'
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             {/* Hero Section */}
             <section className='relative pt-20 pb-16 lg:pt-32 lg:pb-32 overflow-hidden bg-white'>
+                {/* New Floating Gallery */}
+                <HeroFloatingGallery />
+
                 <div className='container mx-auto px-4 relative z-10'>
                     <div className='max-w-4xl mx-auto text-center'>
                         <div className='inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-50 border border-yellow-200 mb-8 animate-fade-in'>
@@ -141,30 +141,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                             >
                                 {t('ctaStart')} <ArrowRight size={22} className='group-hover:translate-x-1 transition-transform' />
                             </Link>
-                            <a
-                                href='#how-it-works'
-                                className='w-full sm:w-auto px-12 py-6 bg-white border-4 border-[#18181B] text-[#18181B] rounded-2xl font-black uppercase tracking-widest hover:bg-yellow-50 transition-all flex items-center justify-center'
-                            >
-                                {t('ctaLearn')}
-                            </a>
+
                         </div>
                     </div>
-                </div>
-
-                {/* Decorative Beads */}
-                <div className='absolute inset-0 pointer-events-none -z-10 overflow-hidden'>
-                    {/* Large Colorful Blurs */}
-                    <div className='absolute top-0 right-0 w-[600px] h-[600px] bg-red-50/60 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4' />
-                    <div className='absolute bottom-0 left-0 w-[500px] h-[500px] bg-yellow-50/60 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4' />
-
-                    {/* Floating Bead Elements */}
-                    <div className='absolute top-1/4 left-10 w-12 h-12 bg-blue-400 rounded-full blur-[2px] opacity-20 animate-bounce' style={{ animationDuration: '3s' }} />
-                    <div className='absolute top-1/3 right-20 w-8 h-8 bg-green-400 rounded-full blur-[1px] opacity-20 animate-pulse' />
-                    <div className='absolute bottom-1/4 right-1/4 w-16 h-16 bg-red-400 rounded-full blur-[3px] opacity-10 animate-bounce' style={{ animationDuration: '4s' }} />
-                    <div className='absolute top-1/2 left-1/3 w-6 h-6 bg-yellow-400 rounded-full opacity-30 shadow-[0_0_15px_rgba(250,204,21,0.5)] animate-pulse' />
-
-                    {/* Small Bead Dots Pattern */}
-                    <div className='absolute inset-0 opacity-[0.03]' style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
                 </div>
             </section>
 

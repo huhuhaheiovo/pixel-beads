@@ -5,19 +5,19 @@ interface PaletteSidebarProps {
   selectedColorId: string | null
   onColorSelect: (colorId: string) => void
   children?: React.ReactNode
+  className?: string
 }
 
 import { useState, useMemo } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
-
-// ... imports
 
 export function PaletteSidebar({
   activePalette,
   matrix,
   selectedColorId,
   onColorSelect,
-  children
+  children,
+  className
 }: PaletteSidebarProps) {
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({})
 
@@ -53,7 +53,7 @@ export function PaletteSidebar({
   }
 
   return (
-    <aside className='hidden xl:flex w-80 bg-white border-l border-[#D8CBB9] flex-col overflow-hidden shrink-0 h-full relative z-20 shadow-[-1px_0_20px_rgba(62,42,30,0.05)]'>
+    <aside className={`w-80 bg-white border-l border-[#D8CBB9] flex-col overflow-hidden shrink-0 h-full relative z-20 shadow-[-1px_0_20px_rgba(62,42,30,0.05)] ${className || 'hidden xl:flex'}`}>
       {/* Top Action Area */}
       {children && (
         <div className="p-4 border-b border-[#D8CBB9] bg-white space-y-3 z-10 sticky top-0">

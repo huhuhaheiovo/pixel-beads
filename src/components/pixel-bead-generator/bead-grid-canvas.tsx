@@ -38,14 +38,14 @@ function BeadGridCanvasComponent({
 }: BeadGridCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const animationFrameRef = useRef<number>()
+  const animationFrameRef = useRef<number | undefined>(undefined)
   const lastRenderRef = useRef<{
     visibleRect: VisibleRect
     zoom: number
     beadStyle: string
     gridSpacing: string
     showBeadCodes: boolean
-  }>()
+  } | undefined>(undefined)
   // Canvas 缓存：存储已渲染的单元格
   const cellCacheRef = useRef<Map<string, ImageData>>(new Map())
   // 直接使用高质量渲染
@@ -193,7 +193,7 @@ function BeadGridCanvasComponent({
       ctx.font = `800 ${fontSize}px sans-serif`
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
-      
+
       if (shouldUseShadows) {
         ctx.shadowColor = 'rgba(0,0,0,0.35)'
         ctx.shadowBlur = 1
@@ -218,7 +218,9 @@ function BeadGridCanvasComponent({
         // 限制缓存大小，避免内存溢出
         if (cellCacheRef.current.size > 1000) {
           const firstKey = cellCacheRef.current.keys().next().value
-          cellCacheRef.current.delete(firstKey)
+          if (firstKey) {
+            cellCacheRef.current.delete(firstKey)
+          }
         }
       } catch (e) {
         // 忽略缓存错误

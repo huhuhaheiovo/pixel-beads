@@ -96,6 +96,8 @@
         "undo": "Undo",
         "redo": "Redo",
         "settings": "Settings",
+        "palette": "Palette",
+        "export": "Export",
         "width": "Width",
         "units": "Beads",
         "cellSize": "Cell Size",
