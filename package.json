@@ -6,13 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "gen:palettes": "node scripts/generate-palettes.mjs",
-    "gen:mard": "node scripts/generate-mard.mjs",
-    "gen:json-palettes": "node scripts/generate-json-palettes.mjs",
-    "gen:data": "npm run gen:palettes && npm run gen:mard && npm run gen:json-palettes",
-    "convert:webp": "node scripts/png-to-webp.mjs",
-    "migrate:patterns": "node scripts/migrate-patterns-to-supabase.mjs"
+    "lint": "eslint"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
