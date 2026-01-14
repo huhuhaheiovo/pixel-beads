@@ -78,6 +78,10 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
 
     const totalBeads = pattern.materials?.totalBeads || 0;
 
+    // Use default cell size for pattern detail view (matches BeadGridCanvas cellSize)
+    const cellSize = 18;
+    const cellSizeUnit = 'px' as const;
+
     const {
         exportToPDF: executeExportPDF,
         exportToImage: executeExportImage,
@@ -92,6 +96,8 @@ export function PatternDetailView({ pattern }: PatternDetailViewProps) {
         totalBeads,
         beadStyle,
         gridSpacing,
+        cellSizeUnit,
+        cellSize,
         exportRef,
         translations: {
             patternTitle: patternName.replace(/[\u4e00-\u9fa5]/g, '').trim() || 'Pattern',
