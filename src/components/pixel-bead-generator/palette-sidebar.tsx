@@ -1,5 +1,7 @@
 import { BeadColor } from '@/lib/beadData'
 import { useTranslations } from 'next-intl'
+import { useState, useMemo, useEffect } from 'react'
+import { ChevronDown, ChevronRight, Info } from 'lucide-react'
 
 interface PaletteSidebarProps {
   activePalette: BeadColor[]
@@ -9,9 +11,6 @@ interface PaletteSidebarProps {
   children?: React.ReactNode
   className?: string
 }
-
-import { useState, useMemo } from 'react'
-import { ChevronDown, ChevronRight, Info } from 'lucide-react'
 
 export function PaletteSidebar({
   activePalette,
@@ -47,6 +46,32 @@ export function PaletteSidebar({
   const sortedGroupKeys = useMemo(() => {
     return Object.keys(groupedPalette).sort()
   }, [groupedPalette])
+
+  // Auto-scroll and expand when color is selected
+  useEffect(() => {
+    if (selectedColorId) {
+      // 1. Find the group containing this color
+      const groupKey = Object.keys(groupedPalette).find(key =>
+        groupedPalette[key].some(c => c.id === selectedColorId)
+      )
+
+      if (groupKey) {
+        // 2. Expand group if needed
+        setExpandedGroups(prev => {
+          if (prev[groupKey]) return prev
+          return { ...prev, [groupKey]: true }
+        })
+
+        // 3. Scroll into view (with delay to allow expansion rendering)
+        setTimeout(() => {
+          const element = document.getElementById(`palette-color-${selectedColorId}`)
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          }
+        }, 100)
+      }
+    }
+  }, [selectedColorId, groupedPalette])
 
   const toggleGroup = (key: string) => {
     setExpandedGroups(prev => ({
@@ -110,6 +135,7 @@ export function PaletteSidebar({
                     return (
                       <button
                         key={color.id}
+                        id={`palette-color-${color.id}`}
                         onClick={() => onColorSelect(color.id)}
                         className={`flex items-center justify-between w-full p-2.5 rounded-lg transition-all duration-200 group ${isActive ? 'bg-[#32B8A6] text-white shadow-lg translate-x-[-2px]' : 'hover:bg-white hover:shadow-sm text-[#5A4738]'}`}
                       >
@@ -151,4 +177,3 @@ export function PaletteSidebar({
     </aside>
   )
 }
-

@@ -81,7 +81,7 @@ export function Header() {
                                             <NavigationMenuLink asChild>
                                                 <Link
                                                     href='/perler-bead-pattern'
-                                                    className={`group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-[10px] font-bold uppercase tracking-widest transition-colors disabled:pointer-events-none disabled:opacity-50 ${pathname.startsWith('/perler-bead-pattern') ? 'text-[#32B8A6] bg-white/5' : 'text-[#F7F1E1] hover:text-[#32B8A6] hover:bg-white/5 bg-transparent'}`}
+                                                    className={`group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-[10px] font-bold uppercase tracking-widest transition-colors disabled:pointer-events-none disabled:opacity-50 ${(pathname === '/perler-bead-pattern' || pathname.startsWith('/perler-bead-pattern/')) ? 'text-[#32B8A6] bg-white/5' : 'text-[#F7F1E1] hover:text-[#32B8A6] hover:bg-white/5 bg-transparent'}`}
                                                 >
                                                     {t('patterns')}
                                                 </Link>

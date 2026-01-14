@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import { BeadColor } from '@/lib/beadData'
 import { findClosestColor } from '@/lib/colorUtils'
 
-export function useImageProcessing () {
+export function useImageProcessing() {
   const [image, setImage] = useState<HTMLImageElement | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
 
@@ -15,6 +15,9 @@ export function useImageProcessing () {
       try {
         setIsProcessing(true)
 
+        // prepare efficient image data extraction on main thread
+        // (Canvas operations must be on main thread unless using OffscreenCanvas, 
+        // but simple extraction is fast enough)
         const canvas = document.createElement('canvas')
         const ctx = canvas.getContext('2d')
         if (!ctx) {
@@ -29,23 +32,38 @@ export function useImageProcessing () {
         canvas.height = height
 
         ctx.drawImage(img, 0, 0, gridWidth, height)
-        const imageData = ctx.getImageData(0, 0, gridWidth, height).data
+        const imageData = ctx.getImageData(0, 0, gridWidth, height)
+        // We only pass the data buffer to worker to avoid cloning issues if any,
+        // though modern browsers handle ImageData cloning well.
+        // Actually passing the TypedArray (data) is efficient.
 
-        const newMatrix: string[][] = []
+        // Initialize Worker
+        const worker = new Worker(new URL('../workers/processing.worker.ts', import.meta.url))
 
-        for (let y = 0; y < height; y++) {
-          const row: string[] = []
-          for (let x = 0; x < gridWidth; x++) {
-            const i = (y * gridWidth + x) * 4
-            const rgb = { r: imageData[i], g: imageData[i + 1], b: imageData[i + 2] }
-            const closestId = findClosestColor(rgb, activePalette)
-            row.push(closestId)
+        worker.onmessage = (e) => {
+          setIsProcessing(false)
+          if (e.data.error) {
+            reject(new Error(e.data.error))
+          } else {
+            resolve(e.data.matrix)
           }
-          newMatrix.push(row)
+          worker.terminate()
         }
 
-        setIsProcessing(false)
-        resolve(newMatrix)
+        worker.onerror = (err) => {
+          setIsProcessing(false)
+          reject(err)
+          worker.terminate()
+        }
+
+        // Send data to worker
+        worker.postMessage({
+          imageData: imageData.data, // Uint8ClampedArray
+          gridWidth,
+          height,
+          activePalette
+        })
+
       } catch (error) {
         setIsProcessing(false)
         reject(error)

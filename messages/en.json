@@ -135,6 +135,7 @@
             "message": "Author Message",
             "skipAndDownload": "Skip and Download",
             "saveAndDownload": "Save and Download",
+            "processing": "Processing...",
             "patternNamePlaceholder": "e.g., Cute Cat Pattern",
             "authorNamePlaceholder": "e.g., BeadMaster",
             "messagePlaceholder": "e.g., Christmas present",

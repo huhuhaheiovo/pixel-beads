@@ -14,7 +14,7 @@ export interface LAB {
   b: number
 }
 
-export function hexToRgb (hex: string): RGB {
+export function hexToRgb(hex: string): RGB {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
   return result ? {
     r: parseInt(result[1], 16),
@@ -23,7 +23,7 @@ export function hexToRgb (hex: string): RGB {
   } : { r: 0, g: 0, b: 0 }
 }
 
-export function rgbToLab (rgb: RGB): LAB {
+export function rgbToLab(rgb: RGB): LAB {
   let r = rgb.r / 255
   let g = rgb.g / 255
   let b = rgb.b / 255
@@ -55,14 +55,21 @@ export function rgbToLab (rgb: RGB): LAB {
   }
 }
 
-export function deltaE (labA: LAB, labB: LAB): number {
+export function deltaE(labA: LAB, labB: LAB): number {
   const deltaL = labA.l - labB.l
   const deltaA = labA.a - labB.a
   const deltaB = labA.b - labB.b
   return Math.sqrt(deltaL * deltaL + deltaA * deltaA + deltaB * deltaB)
 }
 
-export function findClosestColor (targetRgb: RGB, palette: { hex: string, id: string }[]): string {
+export interface LabColor {
+  id: string
+  l: number
+  a: number
+  b: number
+}
+
+export function findClosestColor(targetRgb: RGB, palette: { hex: string, id: string }[]): string {
   if (palette.length === 0) {
     throw new Error('Palette cannot be empty')
   }
@@ -80,6 +87,35 @@ export function findClosestColor (targetRgb: RGB, palette: { hex: string, id: st
       closestId = color.id
     }
   })
+
+  return closestId
+}
+
+export function findClosestColorLab(targetLab: LAB, labPalette: LabColor[]): string {
+  if (labPalette.length === 0) {
+    throw new Error('Palette cannot be empty')
+  }
+
+  let minDistance = Infinity
+  let closestId = labPalette[0].id
+
+  // Unrolling or simple loop optimization could be done here if needed,
+  // but just removing the repeated rgbToLab calls is the biggest win.
+  for (let i = 0; i < labPalette.length; i++) {
+    const color = labPalette[i]
+    const deltaL = targetLab.l - color.l
+    const deltaA = targetLab.a - color.a
+    const deltaB = targetLab.b - color.b
+    // Squared distance is enough for comparison, avoiding sqrt,
+    // BUT we need standard deltaE behavior if specific threshold logic was used.
+    // Standard deltaE uses sqrt. Optimization: compare squared distance if strictly finding min.
+    const distanceSq = deltaL * deltaL + deltaA * deltaA + deltaB * deltaB
+
+    if (distanceSq < minDistance) {
+      minDistance = distanceSq
+      closestId = color.id
+    }
+  }
 
   return closestId
 }

@@ -56,6 +56,7 @@ export function usePatternExport({
     translations
 }: UsePatternExportOptions) {
     const [isExportingImage, setIsExportingImage] = useState(false)
+    const [isExportingPDF, setIsExportingPDF] = useState(false)
     const [exportProgress, setExportProgress] = useState(0)
 
     const getColor = (id: string): ExportColor | undefined => {
@@ -67,6 +68,7 @@ export function usePatternExport({
 
     const exportToPDF = useCallback(async () => {
         if (!matrix.length) return
+        setIsExportingPDF(true)
 
         try {
             const doc = new jsPDF({
@@ -82,9 +84,6 @@ export function usePatternExport({
             const availableWidth = pageWidth - margin * 2
             const availableHeight = pageHeight - headerHeight - margin
 
-            // Base cell size in pixels for calculation, then converted to mm
-            // In the generator it was cellSize * 0.264583. 
-            // We can use a fixed base or pass it. Let's use 18px as in the export container.
             const baseCellSize = 18
             const pdfCellSize = baseCellSize * 0.264583
 
@@ -248,6 +247,8 @@ export function usePatternExport({
             doc.save(`pixel-bead-pattern-${Date.now()}.pdf`)
         } catch (error) {
             console.error('Failed to export PDF:', error)
+        } finally {
+            setIsExportingPDF(false)
         }
     }, [matrix, gridWidth, selectedPalette, colorById, beadStats, beadStyle, gridSpacing, translations])
 
@@ -280,14 +281,17 @@ export function usePatternExport({
             clearInterval(progressInterval)
             setExportProgress(100)
 
-            setTimeout(() => {
-                const link = document.createElement('a')
-                link.download = `pixel-bead-pattern-${Date.now()}.png`
-                link.href = dataUrl
-                link.click()
-                setIsExportingImage(false)
-                setExportProgress(0)
-            }, 300)
+            await new Promise<void>(resolve => {
+                setTimeout(() => {
+                    const link = document.createElement('a')
+                    link.download = `pixel-bead-pattern-${Date.now()}.png`
+                    link.href = dataUrl
+                    link.click()
+                    setIsExportingImage(false)
+                    setExportProgress(0)
+                    resolve()
+                }, 300)
+            })
         } catch (error) {
             console.error('Failed to export image:', error)
             clearInterval(progressInterval)
@@ -300,8 +304,9 @@ export function usePatternExport({
         exportToPDF,
         exportToImage,
         isExportingImage,
-        setIsExportingImage,
-        exportProgress,
-        setExportProgress
+        isExportingPDF,
+        setIsExportingImage, // Keep returning these for manual control if needed in parent
+        setExportProgress,
+        exportProgress
     }
 }

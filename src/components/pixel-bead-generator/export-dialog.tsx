@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import {
   Dialog,
@@ -26,6 +26,7 @@ interface ExportDialogProps {
     message?: string
   }) => void
   exportType: 'pdf' | 'image'
+  loading?: boolean
 }
 
 export function ExportDialog({
@@ -33,7 +34,8 @@ export function ExportDialog({
   onOpenChange,
   onSkip,
   onSaveAndExport,
-  exportType
+  exportType,
+  loading = false
 }: ExportDialogProps) {
   const t = useTranslations('Generator.exportDialog')
   const [name, setName] = useState('')
@@ -41,35 +43,36 @@ export function ExportDialog({
   const [isPublic, setIsPublic] = useState(true)
   const [message, setMessage] = useState('')
   const [showNameError, setShowNameError] = useState(false)
+  const [clickedAction, setClickedAction] = useState<'skip' | 'save' | null>(null)
+
+  // Reset clickedAction when loading becomes false
+  useEffect(() => {
+    if (!loading) {
+      setClickedAction(null)
+    }
+  }, [loading])
 
   const handleSaveAndExport = () => {
+    if (loading) return
     const trimmedName = name.trim()
     if (!trimmedName) {
       setShowNameError(true)
       return // 名称不能为空，不执行保存
     }
     setShowNameError(false)
+    setClickedAction('save')
     onSaveAndExport({
       name: trimmedName,
       author: author.trim() || undefined,
       public: isPublic,
       message: message.trim() || undefined
     })
-    // Reset form
-    setName('')
-    setAuthor('')
-    setIsPublic(true)
-    setMessage('')
-    setShowNameError(false)
   }
 
   const handleSkip = () => {
+    if (loading) return
+    setClickedAction('skip')
     onSkip()
-    // Reset form
-    setName('')
-    setAuthor('')
-    setIsPublic(true)
-    setMessage('')
   }
 
   return (
@@ -99,6 +102,7 @@ export function ExportDialog({
                 }
               }}
               required
+              disabled={loading}
               className={`bg-white border-[#D8CBB9] text-[#3E2A1E] placeholder:text-[#8F7E6F] focus-visible:ring-[#32B8A6] ${showNameError ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
             />
             {showNameError && (
@@ -115,6 +119,7 @@ export function ExportDialog({
               placeholder={t('authorNamePlaceholder')}
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
+              disabled={loading}
               className="bg-white border-[#D8CBB9] text-[#3E2A1E] placeholder:text-[#8F7E6F] focus-visible:ring-[#32B8A6]"
             />
           </div>
@@ -124,6 +129,7 @@ export function ExportDialog({
               id="is-public"
               checked={isPublic}
               onCheckedChange={(checked) => setIsPublic(checked === true)}
+              disabled={loading}
               className="border-[#D8CBB9] data-[state=checked]:bg-[#32B8A6] data-[state=checked]:border-[#32B8A6] text-white"
             />
             <Label
@@ -141,6 +147,7 @@ export function ExportDialog({
               placeholder={t('messagePlaceholder')}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              disabled={loading}
               className="bg-white border-[#D8CBB9] text-[#3E2A1E] placeholder:text-[#8F7E6F] focus-visible:ring-[#32B8A6]"
             />
           </div>
@@ -150,17 +157,33 @@ export function ExportDialog({
           <Button
             variant="outline"
             onClick={handleSkip}
+            disabled={loading}
             className="w-full sm:w-auto order-2 sm:order-1 border-[#D8CBB9] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]"
           >
-            {t('skipAndDownload')}
+            {loading && clickedAction === 'skip' ? (
+              <>
+                <div className="w-4 h-4 border-2 border-[#5A4738] border-t-transparent animate-spin mr-2" />
+                {t('processing') || 'Processing...'}
+              </>
+            ) : (
+              t('skipAndDownload')
+            )}
           </Button>
           <Button
             onClick={handleSaveAndExport}
+            disabled={loading}
             className="w-full sm:w-auto order-1 sm:order-2
              bg-[#32B8A6] hover:bg-[#2AA38F]
              text-white hover:text-white"
           >
-            {t('saveAndDownload')}
+            {loading && clickedAction === 'save' ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent animate-spin mr-2" />
+                {t('processing') || 'Saving...'}
+              </>
+            ) : (
+              t('saveAndDownload')
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

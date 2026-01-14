@@ -41,10 +41,14 @@ const DIFFICULTY_CONFIGS: Record<Difficulty, DifficultyConfig> = {
   custom: { gridWidth: 65, cellSize: 8 }
 }
 
+import { useDebounce } from '@/hooks/use-debounce'
+
 export function PixelBeadGenerator() {
   const t = useTranslations('Generator')
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('medium')
   const [gridWidth, setGridWidth] = useState(50)
+  const debouncedGridWidth = useDebounce(gridWidth, 300) // Debounce grid width updates
+
   const [selectedPalette, setSelectedPalette] = useState<string>('MARD')
   const [selectedMardCategory, setSelectedMardCategory] = useState<MardCategory>('all')
   const [activeTool, setActiveTool] = useState<Tool>('brush')
@@ -236,7 +240,7 @@ export function PixelBeadGenerator() {
   useEffect(() => {
     if (!image || activePalette.length === 0) return
 
-    processImage(image, gridWidth, activePalette)
+    processImage(image, debouncedGridWidth, activePalette)
       .then((newMatrix) => {
         setMatrix(newMatrix)
         resetHistory(newMatrix)
@@ -247,27 +251,42 @@ export function PixelBeadGenerator() {
       .catch((error) => {
         console.error('Failed to process image:', error)
       })
-  }, [image, gridWidth, activePalette, processImage, resetHistory, selectedColorId])
+  }, [image, debouncedGridWidth, activePalette, processImage, resetHistory, selectedColorId])
+
+  // Refs for stable callback access
+  const matrixRef = useRef(matrix)
+  const activeToolRef = useRef(activeTool)
+  const selectedColorIdRef = useRef(selectedColorId)
+
+  useEffect(() => {
+    matrixRef.current = matrix
+    activeToolRef.current = activeTool
+    selectedColorIdRef.current = selectedColorId
+  }, [matrix, activeTool, selectedColorId])
 
   const handleCellClick = useCallback((x: number, y: number) => {
-    if (!matrix[y] || matrix[y][x] === undefined) return
+    const currentMatrix = matrixRef.current
+    const currentTool = activeToolRef.current
+    const currentSelectedColorId = selectedColorIdRef.current
 
-    if (activeTool === 'picker') {
-      setSelectedColorId(matrix[y][x])
+    if (!currentMatrix[y] || currentMatrix[y][x] === undefined) return
+
+    if (currentTool === 'picker') {
+      setSelectedColorId(currentMatrix[y][x])
       setActiveTool('brush')
       return
     }
 
-    const newMatrix = matrix.map(row => [...row])
-    if (activeTool === 'brush' && selectedColorId) {
-      newMatrix[y][x] = selectedColorId
-    } else if (activeTool === 'eraser') {
+    const newMatrix = currentMatrix.map(row => [...row])
+    if (currentTool === 'brush' && currentSelectedColorId) {
+      newMatrix[y][x] = currentSelectedColorId
+    } else if (currentTool === 'eraser') {
       newMatrix[y][x] = ''
     }
 
     setMatrix(newMatrix)
     addToHistory(newMatrix)
-  }, [matrix, activeTool, selectedColorId, addToHistory])
+  }, [addToHistory])
 
   // Export Translations
   const exportTranslations = useMemo(() => ({
@@ -287,6 +306,7 @@ export function PixelBeadGenerator() {
     exportToPDF: executeExportPDF,
     exportToImage: executeExportImage,
     isExportingImage,
+    isExportingPDF,
     setIsExportingImage,
     exportProgress,
     setExportProgress
@@ -322,11 +342,8 @@ export function PixelBeadGenerator() {
 
     const exportType = pendingExportType
 
-    // Step 1: Immediately close dialog and reset state
-    setShowExportDialog(false)
-    setPendingExportType(null)
-
-    // Step 2: Show loading state immediately
+    // Step 2: Show loading state immediately (handled by hooks)
+    // We NO LONGER close the dialog here immediately to show loading feedback in it
     if (exportType === 'image') {
       setIsExportingImage(true)
       setExportProgress(5)
@@ -366,23 +383,33 @@ export function PixelBeadGenerator() {
 
     setIsSaving(false)
 
-    // Step 4: Execute export (this will continue the progress)
-    if (exportType === 'pdf') {
-      executeExportPDF()
-    } else {
-      executeExportImage({ skipSaveProgress: true })
+    // Step 4: Execute export and wait
+    try {
+      if (exportType === 'pdf') {
+        await executeExportPDF()
+      } else {
+        await executeExportImage({ skipSaveProgress: true })
+      }
+    } finally {
+      // Step 5: Finally close dialog and cleanup
+      setShowExportDialog(false)
+      setPendingExportType(null)
     }
   }, [pendingExportType, matrix.length, convertToPattern, t, executeExportPDF, executeExportImage, setIsExportingImage, setExportProgress])
 
-  const handleSkipExport = useCallback(() => {
+  const handleSkipExport = useCallback(async () => {
     if (!pendingExportType) return
-    setShowExportDialog(false)
     const exportType = pendingExportType
-    setPendingExportType(null)
-    if (exportType === 'pdf') {
-      executeExportPDF()
-    } else {
-      executeExportImage()
+
+    try {
+      if (exportType === 'pdf') {
+        await executeExportPDF()
+      } else {
+        await executeExportImage()
+      }
+    } finally {
+      setShowExportDialog(false)
+      setPendingExportType(null)
     }
   }, [pendingExportType, executeExportPDF, executeExportImage])
 
@@ -843,10 +870,14 @@ export function PixelBeadGenerator() {
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={exportToPDF}
-              disabled={!image || matrix.length === 0}
+              disabled={!image || matrix.length === 0 || isExportingPDF}
               className='flex flex-col items-center justify-center gap-1.5 py-3 bg-[#32B8A6] text-white text-[9px] font-bold uppercase tracking-widest hover:bg-[#2AA38F] hover:shadow-lg active:scale-[0.98] transition-all rounded-xl disabled:opacity-50 disabled:cursor-not-allowed'
             >
-              <Download size={14} />
+              {isExportingPDF ? (
+                <div className='w-3 h-3 border-2 border-white border-t-transparent animate-spin' />
+              ) : (
+                <Download size={14} />
+              )}
               <span>PDF</span>
             </button>
             <button
@@ -892,6 +923,7 @@ export function PixelBeadGenerator() {
           onSkip={handleSkipExport}
           onSaveAndExport={handleSaveAndExport}
           exportType={pendingExportType}
+          loading={isSaving || isExportingPDF || isExportingImage}
         />
       )}
       {/* Mobile Navigation */}
