@@ -154,6 +154,17 @@ export function MobileNav() {
                                 >
                                     ZH
                                 </Link>
+                                <Link
+                                    href={pathname}
+                                    locale="ja"
+                                    onClick={() => setOpen(false)}
+                                    className={cn(
+                                        'px-3 py-1 text-[10px] font-black uppercase rounded-full transition-all',
+                                        locale === 'ja' ? 'bg-[#32B8A6] text-[#3E2A1E] shadow-sm' : 'text-[#F7F1E1]/70 hover:bg-white/10 hover:text-[#F7F1E1]'
+                                    )}
+                                >
+                                    JA
+                                </Link>
                             </div>
                         </div>
                     </div>

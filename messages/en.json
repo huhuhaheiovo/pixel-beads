@@ -86,7 +86,7 @@
         "uploadPrompt": "Upload Image to Start",
         "title": "Pixel Bead Generator",
         "description": "Convert your favorite photos into custom perler bead patterns. Perfect for gifts and home decor.",
-        "getStarted": "Get Started",
+        "getStarted": "Upload Image",
         "tools": "Tools",
         "brush": "Brush",
         "eraser": "Eraser",
@@ -143,7 +143,11 @@
         "generatedFor": "Generated for",
         "gridSize": "Grid Size",
         "colorShoppingList": "Color Shopping List",
-        "beadsCount": "beads"
+        "beadsCount": "beads",
+        "colorsTotal": "Colors Total",
+        "series": "Series",
+        "used": "used",
+        "paletteUsage": "Select a color from the palette, then click on beads in the pattern to replace colors"
     },
     "Showcase": {
         "title": "Bead Pattern Gallery",
@@ -374,5 +378,35 @@
         "structuredDataFeature2": "Custom Grid Sizes",
         "structuredDataFeature3": "Palette Mapping (Perler, Hama, Artkal)",
         "structuredDataFeature4": "Step-by-Step PDF Export"
+    },
+    "PixelArtMaker": {
+        "metaTitle": "Pixel Art Maker | Free Online Pixel Art Drawing Tool",
+        "metaDescription": "The best free online pixel art maker. Draw pixel art, create game sprites, and design bead patterns. No login required. Export to PNG or PDF.",
+        "heroBadge": "Browser-Based Editor",
+        "heroTitle1": "Pixel Art",
+        "heroTitle2": "Maker & Editor",
+        "heroDescription": "A powerful, free online tool for creating pixel art, game sprites, and bead patterns. Simple enough for beginners, powerful enough for pros.",
+        "ctaStartDrawing": "Start Drawing",
+        "feature1Title": "Custom Canvas",
+        "feature1Desc": "Choose any grid size from 8x8 icons to 100x100 scenes. Resizing is instant.",
+        "feature2Title": "Instant Export",
+        "feature2Desc": "Download your work as high-resolution PNGs or printer-friendly PDFs with grid numbers.",
+        "feature3Title": "No Sign-up Needed",
+        "feature3Desc": "Jump straight into creating. We store your session locally so you don't lose progress.",
+        "sectionWhatCanYouCreate": "What Can You Create?",
+        "gameSpritesTitle": "Game Sprites",
+        "gameSpritesDesc": "Perfect for indie game developers. Create characters, items, and environments. Our transparent background export makes it easy to import directly into engines like Unity or Godot.",
+        "beadStitchTitle": "Bead & Stitch Patterns",
+        "beadStitchDesc": "Turn on the \"Bead Mode\" to see color codes for Perler, Hama, or Artkal beads. It's the easiest way to plan your physical crafts before buying supplies.",
+        "sectionWhyUseTitle": "Why Use an Online Pixel Editor?",
+        "whyUsePara1": "Traditional image editors like Photoshop can be overkill for pixel art. They blur pixels when resizing and handle anti-aliasing in ways that ruin the crisp pixel aesthetic.",
+        "whyUsePara2": "Our <strong>Pixel Art Maker</strong> is built specifically for this medium. It ensures every pixel stays sharp (nearest-neighbor interpolation), provides specialized tools like a \"pixel-perfect\" pencil, and handles strict color palettes to ensure your art looks authentic to the 8-bit and 16-bit eras.",
+        "ctaReadyTitle": "Ready to create?",
+        "ctaLaunchEditor": "Launch Editor",
+        "structuredDataName": "Pixel Art Maker",
+        "structuredDataFeature1": "Online Pixel Editor",
+        "structuredDataFeature2": "Multiple Layer Support",
+        "structuredDataFeature3": "Animation Frames (coming soon)",
+        "structuredDataFeature4": "Palette Management"
     }
 }

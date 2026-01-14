@@ -86,7 +86,7 @@
         "uploadPrompt": "上传图片开始创作",
         "title": "拼豆图纸生成器",
         "description": "将您喜爱的照片转换为自定义拼豆图纸。是制作冰箱贴，生日礼物和家居装饰的完美选择。",
-        "getStarted": "开始使用",
+        "getStarted": "上传图片",
         "tools": "工具",
         "brush": "画笔",
         "eraser": "橡皮擦",
@@ -143,7 +143,11 @@
         "generatedFor": "适配品牌",
         "gridSize": "网格尺寸",
         "colorShoppingList": "颜色购物清单",
-        "beadsCount": "颗"
+        "beadsCount": "颗",
+        "colorsTotal": "种颜色",
+        "series": "系列",
+        "used": "已使用",
+        "paletteUsage": "选中色板中的颜色，点击图纸中的拼豆即可替换颜色"
     },
     "Showcase": {
         "title": "拼豆作品合集",
@@ -374,5 +378,35 @@
         "structuredDataFeature2": "自定义网格尺寸",
         "structuredDataFeature3": "调色板映射（Perler、Hama、Artkal）",
         "structuredDataFeature4": "分步 PDF 导出"
+    },
+    "PixelArtMaker": {
+        "metaTitle": "像素画编辑器 | 免费在线像素画绘制工具",
+        "metaDescription": "最好的免费在线像素画编辑器。绘制像素画、创建游戏精灵、设计拼豆图案。无需登录。可导出 PNG 或 PDF。",
+        "heroBadge": "基于浏览器的编辑器",
+        "heroTitle1": "像素画",
+        "heroTitle2": "编辑器",
+        "heroDescription": "功能强大的免费在线工具，用于创建像素画、游戏精灵和拼豆图案。对初学者足够简单，对专业人士足够强大。",
+        "ctaStartDrawing": "开始绘制",
+        "feature1Title": "自定义画布",
+        "feature1Desc": "选择从 8x8 图标到 100x100 场景的任何网格尺寸。调整大小即时生效。",
+        "feature2Title": "即时导出",
+        "feature2Desc": "将您的作品下载为高分辨率 PNG 或适合打印的带网格编号的 PDF。",
+        "feature3Title": "无需注册",
+        "feature3Desc": "直接开始创作。我们在本地存储您的会话，这样您不会丢失进度。",
+        "sectionWhatCanYouCreate": "您可以创建什么？",
+        "gameSpritesTitle": "游戏精灵",
+        "gameSpritesDesc": "非常适合独立游戏开发者。创建角色、物品和环境。我们的透明背景导出功能使您可以直接导入到 Unity 或 Godot 等引擎中。",
+        "beadStitchTitle": "拼豆与刺绣图案",
+        "beadStitchDesc": "开启\"拼豆模式\"以查看 Perler、Hama 或 Artkal 拼豆的色号。这是在购买材料之前规划实体手工艺的最简单方法。",
+        "sectionWhyUseTitle": "为什么使用在线像素编辑器？",
+        "whyUsePara1": "像 Photoshop 这样的传统图像编辑器对于像素画来说可能过于复杂。它们在调整大小时会模糊像素，并以破坏清晰像素美感的方式处理抗锯齿。",
+        "whyUsePara2": "我们的<strong>像素画编辑器</strong>专门为此媒介构建。它确保每个像素保持清晰（最近邻插值），提供专门的工具如\"像素完美\"铅笔，并处理严格的调色板，确保您的艺术作品看起来像 8 位和 16 位时代的真实作品。",
+        "ctaReadyTitle": "准备好创作了吗？",
+        "ctaLaunchEditor": "启动编辑器",
+        "structuredDataName": "像素画编辑器",
+        "structuredDataFeature1": "在线像素编辑器",
+        "structuredDataFeature2": "多图层支持",
+        "structuredDataFeature3": "动画帧（即将推出）",
+        "structuredDataFeature4": "调色板管理"
     }
 }

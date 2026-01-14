@@ -55,7 +55,7 @@ export function PixelBeadGenerator() {
   const [exportShowCodes, setExportShowCodes] = useState(false)
   const [exportShowStats, setExportShowStats] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
-  const [zoom, setZoom] = useState(1)
+  const [zoom, setZoom] = useState(0.5)
   const [showExportDialog, setShowExportDialog] = useState(false)
   const [pendingExportType, setPendingExportType] = useState<'pdf' | 'image' | null>(null)
 
@@ -695,7 +695,7 @@ export function PixelBeadGenerator() {
 
         <div className='flex-1 overflow-auto flex items-center justify-center p-8 lg:p-12'>
           {!image ? (
-            <UploadArea onUpload={handleImageUpload} />
+            <UploadArea onUpload={handleImageUpload} isProcessing={isProcessing} />
           ) : (
             <div
               ref={gridRef}

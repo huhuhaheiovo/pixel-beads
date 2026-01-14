@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { MARD_CATEGORIES, PALETTE_LABELS, PALETTES } from '@/lib/beadData'
 import { useTranslations } from 'next-intl'
+import { Loader2 } from 'lucide-react'
 
 type MardCategory = '72' | '96' | '120' | '144' | '168' | 'all'
 export type Difficulty = 'easy' | 'medium' | 'hard' | 'custom'
@@ -32,6 +34,16 @@ export function SettingsPanel({
   onMardCategoryChange
 }: SettingsPanelProps) {
   const t = useTranslations('Generator')
+  const [isProcessing, setIsProcessing] = useState(false)
+
+  const handleDifficultyChange = (difficulty: Difficulty) => {
+    if (isProcessing) return
+    setIsProcessing(true)
+    onDifficultyChange(difficulty)
+    setTimeout(() => {
+      setIsProcessing(false)
+    }, 400)
+  }
 
   return (
     <div className="space-y-4">
@@ -102,33 +114,32 @@ export function SettingsPanel({
         <div className="space-y-2">
           <span className="text-[10px] font-bold uppercase text-[#5A4738]">{t('difficulty')}</span>
           <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={() => onDifficultyChange('easy')}
-              className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${selectedDifficulty === 'easy'
-                ? 'bg-[#3E2A1E] text-white shadow-lg'
-                : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
-                }`}
-            >
-              {t('difficultyEasy')}
-            </button>
-            <button
-              onClick={() => onDifficultyChange('medium')}
-              className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${selectedDifficulty === 'medium'
-                ? 'bg-[#3E2A1E] text-white shadow-lg'
-                : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
-                }`}
-            >
-              {t('difficultyMedium')}
-            </button>
-            <button
-              onClick={() => onDifficultyChange('hard')}
-              className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${selectedDifficulty === 'hard'
-                ? 'bg-[#3E2A1E] text-white shadow-lg'
-                : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
-                }`}
-            >
-              {t('difficultyHard')}
-            </button>
+            {(['easy', 'medium', 'hard'] as Difficulty[]).map((difficulty) => {
+              const isActive = selectedDifficulty === difficulty
+              return (
+                <button
+                  key={difficulty}
+                  onClick={() => handleDifficultyChange(difficulty)}
+                  disabled={isProcessing}
+                  className={`py-2.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${
+                    isActive 
+                      ? 'bg-[#3E2A1E] text-white shadow-lg' 
+                      : isProcessing
+                      ? 'bg-[#F7F1E1]/50 text-[#5A4738] cursor-wait opacity-75'
+                      : 'bg-[#F7F1E1] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]'
+                  }`}
+                >
+                  {isProcessing && !isActive ? (
+                    <>
+                      <Loader2 size={12} className="animate-spin" />
+                      <span className="text-[9px]">{t('processing')}</span>
+                    </>
+                  ) : (
+                    t(`difficulty${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`)
+                  )}
+                </button>
+              )
+            })}
           </div>
         </div>
 

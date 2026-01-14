@@ -6,6 +6,7 @@ import { cache } from 'react'
 import fs from 'fs'
 import path from 'path'
 import { HeroFloatingGallery } from '@/components/HeroFloatingGallery'
+import { StartButton } from '@/components/StartButton'
 
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -135,13 +136,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                         </p>
 
                         <div className='flex flex-col sm:flex-row items-center justify-center gap-6'>
-                            <Link
-                                href='/perler-bead-pattern-generator'
-                                className='group w-full sm:w-auto px-12 py-6 bg-[#EF4444] text-white rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all transform hover:scale-105 shadow-[0_10px_20px_-10px_rgba(239,68,68,0.5)] flex items-center justify-center gap-3'
-                            >
-                                {t('ctaStart')} <ArrowRight size={22} className='group-hover:translate-x-1 transition-transform' />
-                            </Link>
-
+                            <StartButton href='/perler-bead-pattern-generator'>
+                                {t('ctaStart')}
+                            </StartButton>
                         </div>
                     </div>
                 </div>
@@ -316,12 +313,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                     <h2 className='text-5xl md:text-8xl font-black tracking-tighter uppercase mb-16 leading-none'>
                         {t('finalCta.title')}
                     </h2>
-                    <Link
-                        href='/perler-bead-pattern-generator'
-                        className='inline-flex px-16 py-8 bg-white text-[#18181B] rounded-3xl font-black uppercase tracking-[0.3em] hover:bg-yellow-400 transition-all transform hover:scale-110 shadow-[0_20px_40px_-10px_rgba(255,255,255,0.3)]'
-                    >
+                    <StartButton href='/perler-bead-pattern-generator' variant="dark">
                         {t('finalCta.button')}
-                    </Link>
+                    </StartButton>
                     <p className='mt-12 text-[#A1A1AA] text-sm font-black uppercase tracking-[0.3em]'>{t('finalCta.footer')}</p>
                 </div>
 

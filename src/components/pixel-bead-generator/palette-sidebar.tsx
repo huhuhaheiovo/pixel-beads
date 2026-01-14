@@ -1,4 +1,6 @@
 import { BeadColor } from '@/lib/beadData'
+import { useTranslations } from 'next-intl'
+
 interface PaletteSidebarProps {
   activePalette: BeadColor[]
   matrix: string[][]
@@ -9,7 +11,7 @@ interface PaletteSidebarProps {
 }
 
 import { useState, useMemo } from 'react'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ChevronDown, ChevronRight, Info } from 'lucide-react'
 
 export function PaletteSidebar({
   activePalette,
@@ -19,6 +21,7 @@ export function PaletteSidebar({
   children,
   className
 }: PaletteSidebarProps) {
+  const t = useTranslations('Generator')
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({})
 
   const groupedPalette = useMemo(() => {
@@ -61,9 +64,15 @@ export function PaletteSidebar({
         </div>
       )}
 
-      <div className='p-6 border-b border-[#D8CBB9] flex flex-col gap-1 bg-white'>
-        <h2 className='text-[10px] font-black uppercase tracking-[0.2em] text-[#8F7E6F]'>Palette</h2>
-        <div className='text-[10px] font-bold text-[#3E2A1E]'>{activePalette.length} Colors Total</div>
+      <div className='p-6 border-b border-[#D8CBB9] flex flex-col gap-3 bg-white'>
+        <div className='flex flex-col gap-1'>
+          <h2 className='text-[10px] font-black uppercase tracking-[0.2em] text-[#8F7E6F]'>{t('palette')}</h2>
+          <div className='text-[10px] font-bold text-[#3E2A1E]'>{activePalette.length} {t('colorsTotal')}</div>
+        </div>
+        <div className='flex items-start gap-2 p-3 bg-[#F7F1E1]/50 rounded-lg border border-[#D8CBB9]/50'>
+          <Info size={12} className='text-[#8F7E6F] mt-0.5 shrink-0' />
+          <p className='text-[9px] text-[#5A4738] leading-relaxed font-medium'>{t('paletteUsage')}</p>
+        </div>
       </div>
 
       <div className='flex-1 overflow-y-auto bg-[#FBF9F6]'>
@@ -82,12 +91,12 @@ export function PaletteSidebar({
               >
                 <div className="flex items-center gap-2">
                   {isExpanded ? <ChevronDown size={14} className="text-[#8F7E6F]" /> : <ChevronRight size={14} className="text-[#8F7E6F]" />}
-                  <span className="text-xs font-bold text-[#3E2A1E]">Series {groupKey}</span>
+                  <span className="text-xs font-bold text-[#3E2A1E]">{t('series')} {groupKey}</span>
                   <span className="text-[10px] font-medium text-[#8F7E6F] bg-[#F7F1E1] px-1.5 py-0.5 rounded-full">{beads.length}</span>
                 </div>
                 {groupCount > 0 && (
                   <span className="text-[10px] font-black text-[#3E2A1E] bg-[#F7F1E1] px-2 py-0.5 rounded-full">
-                    {groupCount} used
+                    {groupCount} {t('used')}
                   </span>
                 )}
               </button>
