@@ -10,7 +10,7 @@ import { useHistory } from '@/hooks/use-history'
 import { getContrastTextColor } from '@/utils/color-utils'
 import { generateColorMap } from '@/lib/color-map'
 import { Toolbar } from './pixel-bead-generator/toolbar'
-import { SettingsPanel, type Difficulty } from './pixel-bead-generator/settings-panel'
+import { SettingsPanel, type Difficulty, type CellSizeUnit, getCellSizeDisplayValue, getCellSizeFromDisplayValue, getFixedSizePx } from './pixel-bead-generator/settings-panel'
 import { PaletteSidebar } from './pixel-bead-generator/palette-sidebar'
 import { BeadGrid } from './pixel-bead-generator/bead-grid'
 import { UploadArea } from './pixel-bead-generator/upload-area'
@@ -56,6 +56,7 @@ export function PixelBeadGenerator() {
   const [showGrid, setShowGrid] = useState(true)
   const [showBeadCodes, setShowBeadCodes] = useState(false)
   const [cellSize, setCellSize] = useState(17)
+  const [cellSizeUnit, setCellSizeUnit] = useState<CellSizeUnit>('px')
   const [exportShowCodes, setExportShowCodes] = useState(false)
   const [exportShowStats, setExportShowStats] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
@@ -133,6 +134,7 @@ export function PixelBeadGenerator() {
     MARD: 'MARD',
     'Hama-Midi': 'Hama',
     'Artkal-Midi': 'Artkal',
+    'Artkal-M-2.6mm': 'Artkal',
     'Perler-Midi': 'Perler',
     'Ikea-Pyssla': 'Ikea',
     'Nabbi': 'Nabbi'
@@ -319,6 +321,8 @@ export function PixelBeadGenerator() {
     totalBeads,
     beadStyle,
     gridSpacing,
+    cellSizeUnit,
+    cellSize,
     exportRef,
     translations: exportTranslations
   })
@@ -450,6 +454,19 @@ export function PixelBeadGenerator() {
     setSelectedDifficulty('custom')
   }, [])
 
+  const handleCellSizeUnitChange = useCallback((unit: CellSizeUnit) => {
+    if (unit === 'px') {
+      // 切换到 px，直接使用当前像素值
+      setCellSizeUnit(unit)
+    } else {
+      // 切换到 mm 单位，使用固定尺寸（1×5mm 或 1×2.6mm）
+      const fixedPx = getFixedSizePx(unit)
+      setCellSize(Math.round(fixedPx))
+      setCellSizeUnit(unit)
+      setSelectedDifficulty('custom')
+    }
+  }, [])
+
   const handleBeadStyleChange = useCallback((style: BeadStyle) => {
     setIsStyleChanging(true)
     startTransition(() => {
@@ -512,6 +529,8 @@ export function PixelBeadGenerator() {
             onGridWidthChange={handleGridWidthChange}
             cellSize={cellSize}
             onCellSizeChange={handleCellSizeChange}
+            cellSizeUnit={cellSizeUnit}
+            onCellSizeUnitChange={handleCellSizeUnitChange}
             selectedPalette={selectedPalette}
             onPaletteChange={setSelectedPalette}
             selectedMardCategory={selectedMardCategory}
@@ -676,6 +695,8 @@ export function PixelBeadGenerator() {
           onGridWidthChange={handleGridWidthChange}
           cellSize={cellSize}
           onCellSizeChange={handleCellSizeChange}
+          cellSizeUnit={cellSizeUnit}
+          onCellSizeUnitChange={handleCellSizeUnitChange}
           selectedPalette={selectedPalette}
           onPaletteChange={setSelectedPalette}
           selectedMardCategory={selectedMardCategory}

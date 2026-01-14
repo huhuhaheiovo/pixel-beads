@@ -7,6 +7,7 @@ import { getContrastTextColor } from '@/utils/color-utils'
 
 export type BeadStyle = 'square' | 'round' | 'hollow'
 export type GridSpacing = 'none' | 'small' | 'large'
+export type CellSizeUnit = 'px' | '5mm' | '2.6mm'
 
 export interface ExportColor {
     id: string
@@ -28,6 +29,8 @@ interface UsePatternExportOptions {
     totalBeads: number
     beadStyle: BeadStyle
     gridSpacing: GridSpacing
+    cellSizeUnit: CellSizeUnit
+    cellSize: number
     exportRef: React.RefObject<HTMLDivElement | null>
     translations: {
         patternTitle: string
@@ -43,6 +46,14 @@ interface UsePatternExportOptions {
     }
 }
 
+// 转换函数：用于导出（300 DPI）
+const EXPORT_DPI = 300
+const MM_TO_INCH = 25.4
+
+function mmToPxForExport(mm: number): number {
+    return (mm * EXPORT_DPI) / MM_TO_INCH
+}
+
 export function usePatternExport({
     matrix,
     gridWidth,
@@ -52,6 +63,8 @@ export function usePatternExport({
     totalBeads,
     beadStyle,
     gridSpacing,
+    cellSizeUnit,
+    cellSize,
     exportRef,
     translations
 }: UsePatternExportOptions) {
@@ -84,9 +97,21 @@ export function usePatternExport({
             const availableWidth = pageWidth - margin * 2
             const availableHeight = pageHeight - headerHeight - margin
 
-            const baseCellSize = 18
-            const pdfCellSize = baseCellSize * 0.264583
+            // 根据单位计算 PDF 中的单元格大小（mm）
+            let pdfCellSize: number
+            if (cellSizeUnit === '5mm') {
+                // 5mm 拼豆，使用 300 DPI 转换：5mm 在 300 DPI 下 = 5 * 300/25.4 ≈ 59.06mm
+                pdfCellSize = 5 * (EXPORT_DPI / MM_TO_INCH)
+            } else if (cellSizeUnit === '2.6mm') {
+                // 2.6mm 拼豆，使用 300 DPI 转换：2.6mm 在 300 DPI 下 = 2.6 * 300/25.4 ≈ 30.71mm
+                pdfCellSize = 2.6 * (EXPORT_DPI / MM_TO_INCH)
+            } else {
+                // px 单位，使用原有逻辑
+                const baseCellSize = cellSize || 18
+                pdfCellSize = baseCellSize * 0.264583
+            }
 
+            // 计算间距（mm）
             const gapSize = gridSpacing === 'none' ? 0 : gridSpacing === 'small' ? 0.264583 : 0.79375
             const cellSizeWithGap = pdfCellSize + gapSize
 
@@ -250,7 +275,7 @@ export function usePatternExport({
         } finally {
             setIsExportingPDF(false)
         }
-    }, [matrix, gridWidth, selectedPalette, colorById, beadStats, beadStyle, gridSpacing, translations])
+    }, [matrix, gridWidth, selectedPalette, colorById, beadStats, beadStyle, gridSpacing, cellSizeUnit, cellSize, translations])
 
     const exportToImage = useCallback(async (options?: { skipSaveProgress?: boolean }) => {
         if (!exportRef.current || !matrix.length) return

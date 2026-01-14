@@ -1,6 +1,6 @@
 import { Upload } from 'lucide-react'
 import { Toolbar } from './toolbar'
-import { SettingsPanel, type Difficulty } from './settings-panel'
+import { SettingsPanel, type Difficulty, type CellSizeUnit } from './settings-panel'
 import { useTranslations } from 'next-intl'
 
 interface GeneratorConfigurationProps {
@@ -21,6 +21,8 @@ interface GeneratorConfigurationProps {
     onGridWidthChange: (width: number) => void
     cellSize: number
     onCellSizeChange: (size: number) => void
+    cellSizeUnit: CellSizeUnit
+    onCellSizeUnitChange: (unit: CellSizeUnit) => void
     selectedPalette: string
     onPaletteChange: (palette: string) => void
     selectedMardCategory: '72' | '96' | '120' | '144' | '168' | 'all'
@@ -46,6 +48,8 @@ export function GeneratorConfiguration({
     onGridWidthChange,
     cellSize,
     onCellSizeChange,
+    cellSizeUnit,
+    onCellSizeUnitChange,
     selectedPalette,
     onPaletteChange,
     selectedMardCategory,
@@ -108,6 +112,8 @@ export function GeneratorConfiguration({
                     onGridWidthChange={onGridWidthChange}
                     cellSize={cellSize}
                     onCellSizeChange={onCellSizeChange}
+                    cellSizeUnit={cellSizeUnit}
+                    onCellSizeUnitChange={onCellSizeUnitChange}
                     selectedPalette={selectedPalette}
                     onPaletteChange={onPaletteChange}
                     selectedMardCategory={selectedMardCategory}
