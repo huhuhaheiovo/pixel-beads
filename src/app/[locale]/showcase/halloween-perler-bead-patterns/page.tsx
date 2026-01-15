@@ -5,6 +5,8 @@ import { Metadata } from 'next';
 import { Ghost, ArrowLeft, Skull, Moon, CloudFog } from 'lucide-react';
 import fs from 'fs';
 import path from 'path';
+import { OptimizedImage as Image } from '@/components/OptimizedImage';
+import { normalizeImagePath } from '@/lib/imageUtils';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params;
@@ -32,10 +34,13 @@ export default async function HalloweenShowcase() {
     const files = fs.readdirSync(halloweenDir);
     const images = files
         .filter(file => file.match(/\.(png|jpe?g|gif|webp)$/i))
-        .map(file => ({
-            name: file.replace(/-/g, ' ').replace(/\.[^/.]+$/, ''),
-            path: `/halloween/${file} `
-        }));
+        .map(file => {
+            const localPath = `/halloween/${file}`;
+            return {
+                name: file.replace(/-/g, ' ').replace(/\.[^/.]+$/, ''),
+                path: normalizeImagePath(localPath)
+            };
+        });
 
     return (
         <main className="min-h-screen bg-[#18181B] text-white">
@@ -73,24 +78,31 @@ export default async function HalloweenShowcase() {
             {/* Gallery Grid */}
             <section className="container mx-auto px-4 py-16">
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {images.map((image, i) => (
-                        <div key={i} className="group aspect-square bg-[#27272A] rounded-[2rem] overflow-hidden relative border-4 border-transparent hover:border-orange-500 transition-all shadow-lg hover:shadow-orange-500/20">
-                            <img
-                                src={image.path}
-                                alt={image.name}
-                                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-90 group-hover:opacity-100"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-8 text-center">
-                                <h4 className="text-orange-400 font-black uppercase tracking-tight text-lg mb-4 line-clamp-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 drop-shadow-md">{image.name}</h4>
-                                <Link
-                                    href="/perler-bead-pattern-generator"
-                                    className="px-6 py-3 bg-orange-500 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500 shadow-[4px_4px_0px_#7c2d12] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none hover:bg-orange-600"
-                                >
-                                    Create This
-                                </Link>
+                    {images.map((image, i) => {
+                        const isAboveFold = i < 4;
+                        return (
+                            <div key={i} className="group aspect-square bg-[#27272A] rounded-[2rem] overflow-hidden relative border-4 border-transparent hover:border-orange-500 transition-all shadow-lg hover:shadow-orange-500/20">
+                                <Image
+                                    src={image.path}
+                                    alt={image.name}
+                                    width={isAboveFold ? 400 : 200}
+                                    height={isAboveFold ? 400 : 200}
+                                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                                    loading={isAboveFold ? 'eager' : 'lazy'}
+                                    fetchPriority={isAboveFold ? 'high' : 'low'}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-8 text-center">
+                                    <h4 className="text-orange-400 font-black uppercase tracking-tight text-lg mb-4 line-clamp-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 drop-shadow-md">{image.name}</h4>
+                                    <Link
+                                        href="/perler-bead-pattern-generator"
+                                        className="px-6 py-3 bg-orange-500 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500 shadow-[4px_4px_0px_#7c2d12] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none hover:bg-orange-600"
+                                    >
+                                        Create This
+                                    </Link>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
 
                 {/* Empty State */}

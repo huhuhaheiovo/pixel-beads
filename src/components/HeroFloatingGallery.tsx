@@ -1,43 +1,52 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { OptimizedImage as Image } from '@/components/OptimizedImage'
+import { normalizeImagePath } from '@/lib/imageUtils'
+import { CHRISTMAS_IMAGES, HALLOWEEN_IMAGES, PALLETTES_IMAGES } from '@/lib/imagePaths'
 
 const FLOATING_IMAGES = [
     {
-        src: '/christmas/santa-claus-pixel-beads.webp',
+        src: normalizeImagePath(`/${CHRISTMAS_IMAGES.SANTA_CLAUS_ALT}`),
         alt: 'Santa Claus Pixel Art',
         className: 'top-[10%] left-[5%] rotate-[-12deg] w-24 md:w-32 hover:scale-110 active:scale-95',
-        animation: 'animate-float-slow'
+        animation: 'animate-float-slow',
+        isLcpCritical: true
     },
     {
-        src: '/halloween/halloween-ghost-pixel-beads.webp',
+        src: normalizeImagePath(`/${HALLOWEEN_IMAGES.GHOST}`),
         alt: 'Ghost Pixel Art',
         className: 'top-[20%] right-[8%] rotate-[8deg] w-20 md:w-28 hover:scale-110 active:scale-95',
-        animation: 'animate-float-medium'
+        animation: 'animate-float-medium',
+        isLcpCritical: true
     },
     {
-        src: '/pallettes/spongebob-squarepants.webp',
+        src: normalizeImagePath(`/${PALLETTES_IMAGES.SPONGEBOB_SQUAREPANTS}`),
         alt: 'Spongebob Pixel Art',
         className: 'bottom-[25%] left-[8%] rotate-[5deg] w-28 md:w-36 hover:scale-110 active:scale-95',
-        animation: 'animate-float-fast'
+        animation: 'animate-float-fast',
+        isLcpCritical: false
     },
     {
-        src: '/pallettes/patrick-star.webp',
+        src: normalizeImagePath(`/${PALLETTES_IMAGES.PATRICK_STAR}`),
         alt: 'Patrick Star Pixel Art',
         className: 'bottom-[30%] right-[5%] rotate-[-8deg] w-24 md:w-32 hover:scale-110 active:scale-95',
-        animation: 'animate-float-slow'
+        animation: 'animate-float-slow',
+        isLcpCritical: false
     },
     {
-        src: '/christmas/christmas-tree-pixel-beads.webp',
+        src: normalizeImagePath(`/${CHRISTMAS_IMAGES.TREE}`),
         alt: 'Christmas Tree Pixel Art',
         className: 'top-[45%] left-[15%] rotate-[-5deg] w-16 md:w-24 opacity-60 blur-[1px] -z-10 hover:opacity-100 hover:blur-0',
-        animation: 'animate-float-medium'
+        animation: 'animate-float-medium',
+        isLcpCritical: false
     },
     {
-        src: '/halloween/halloween-jack-o-lantern-pixel-beads.webp',
+        src: normalizeImagePath(`/${HALLOWEEN_IMAGES.JACK_O_LANTERN}`),
         alt: 'Pumpkin Pixel Art',
         className: 'top-[50%] right-[18%] rotate-[12deg] w-18 md:w-24 opacity-60 blur-[1px] -z-10 hover:opacity-100 hover:blur-0',
-        animation: 'animate-float-fast'
+        animation: 'animate-float-fast',
+        isLcpCritical: false
     }
 ]
 
@@ -73,13 +82,15 @@ export function HeroFloatingGallery() {
                             transform: `translate(${mousePosition.x * (index % 2 === 0 ? 1 : -1)}px, ${mousePosition.y * (index % 2 === 0 ? 1 : -1)}px) rotate(${img.className.match(/rotate-\[(.*?)\]/)?.[1] || '0deg'})`
                         }}
                     >
-                        <img
+                        <Image
                             src={img.src}
                             alt={img.alt}
+                            width={img.isLcpCritical ? 400 : 200}
+                            height={img.isLcpCritical ? 400 : 200}
                             className="w-full h-full object-contain drop-shadow-xl"
                             draggable={false}
-                            loading="eager"
-                            fetchPriority="high"
+                            loading={img.isLcpCritical ? 'eager' : 'lazy'}
+                            fetchPriority={img.isLcpCritical ? 'high' : 'low'}
                         />
                     </div>
                 ))}
@@ -102,11 +113,14 @@ export function HeroFloatingGallery() {
                             key={index}
                             className={`absolute ${mobilePositions[index]} ${index % 2 === 0 ? 'animate-float-slow' : 'animate-float-medium'}`}
                         >
-                            <img
+                            <Image
                                 src={img.src}
                                 alt={img.alt}
+                                width={160}
+                                height={160}
                                 className={`w-20 h-20 object-contain drop-shadow-lg opacity-90 ${index % 2 === 0 ? 'rotate-12' : '-rotate-12'}`}
-                                loading="eager"
+                                loading={img.isLcpCritical ? 'eager' : 'lazy'}
+                                fetchPriority={img.isLcpCritical ? 'high' : 'low'}
                             />
                         </div>
                     )

@@ -2,11 +2,11 @@ import type { Metadata } from 'next'
 import { Link } from '@/i18n/routing'
 import { ArrowRight, ImageIcon, LayoutGrid, Download, Zap, Hammer, Heart, Star, Sparkles } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
-import { cache } from 'react'
-import fs from 'fs'
-import path from 'path'
 import { HeroFloatingGallery } from '@/components/HeroFloatingGallery'
 import { StartButton } from '@/components/StartButton'
+import { OptimizedImage as Image } from '@/components/OptimizedImage'
+import { normalizeImagePath } from '@/lib/imageUtils'
+import { ALL_CHRISTMAS_IMAGES, ALL_HALLOWEEN_IMAGES, ALL_PALLETTES_IMAGES } from '@/lib/imagePaths'
 
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -75,29 +75,30 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     }
 
     // Sample images from all theme directories
-    // Cache file system operations to improve performance
-    const getSampledImages = cache(() => {
-        const themeDirs = ['pallettes', 'halloween', 'christmas']
+    // Use static constants instead of file system operations
+    const getSampledImages = () => {
         const sampledImages: { name: string, path: string }[] = []
-
-        themeDirs.forEach(dir => {
-            const fullPath = path.join(process.cwd(), 'public', dir)
-            if (fs.existsSync(fullPath)) {
-                const files = fs.readdirSync(fullPath)
-                    .filter(file => file.match(/\.(png|jpe?g|gif|webp)$/i))
-                    .slice(0, 2) // Take 2 from each dir
-
-                files.forEach(file => {
-                    sampledImages.push({
-                        name: file.replace(/-/g, ' ').replace(/\.[^/.]+$/, ''),
-                        path: `/${dir}/${file}`
-                    })
+        
+        // 从每个主题取前 2 张图片
+        const themes = [
+            { images: ALL_PALLETTES_IMAGES, prefix: 'pallettes' },
+            { images: ALL_HALLOWEEN_IMAGES, prefix: 'halloween' },
+            { images: ALL_CHRISTMAS_IMAGES, prefix: 'christmas' }
+        ]
+        
+        themes.forEach(({ images }) => {
+            images.slice(0, 2).forEach(imagePath => {
+                const fileName = imagePath.split('/').pop() || ''
+                const name = fileName.replace(/-/g, ' ').replace(/\.[^/.]+$/, '')
+                sampledImages.push({
+                    name,
+                    path: normalizeImagePath(`/${imagePath}`)
                 })
-            }
+            })
         })
-
+        
         return sampledImages
-    })
+    }
 
     const sampledImages = getSampledImages()
 
@@ -155,27 +156,34 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                     </div>
 
                     <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-20 animate-fade-in'>
-                        {sampledImages.map((image, i) => (
-                            <div key={i} className='group aspect-square bg-slate-50 rounded-[2rem] overflow-hidden relative border-4 border-transparent hover:border-yellow-400 transition-all shadow-sm hover:shadow-xl'>
-                                <img
-                                    src={image.path}
-                                    alt={image.name}
-                                    loading={i < 2 ? 'eager' : 'lazy'}
-                                    fetchPriority={i < 2 ? 'high' : 'low'}
-                                    decoding='async'
-                                    sizes='(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 16vw'
-                                    className='absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700'
-                                />
-                                <div className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-8 text-center'>
-                                    <Link
-                                        href='/perler-bead-pattern-generator'
-                                        className='px-6 py-3 bg-white text-[#18181B] rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transform translate-y-8 group-hover:translate-y-0 transition-transform shadow-lg'
-                                    >
-                                        Try Creative Design
-                                    </Link>
+                        {sampledImages.map((image, i) => {
+                            const isLcpCritical = i < 2
+                            const isAboveFold = i < 4
+
+                            return (
+                                <div key={i} className='group aspect-square bg-slate-50 rounded-[2rem] overflow-hidden relative border-4 border-transparent hover:border-yellow-400 transition-all shadow-sm hover:shadow-xl'>
+                                    <img
+                                        src={image.path}
+                                        alt={image.name}
+                                        width={isLcpCritical ? 800 : isAboveFold ? 400 : 200}
+                                        height={isLcpCritical ? 800 : isAboveFold ? 400 : 200}
+                                        loading={isLcpCritical ? 'eager' : isAboveFold ? 'eager' : 'lazy'}
+                                        fetchPriority={isLcpCritical ? 'high' : 'low'}
+                                        decoding='async'
+                                        sizes='(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 16vw'
+                                        className='absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700'
+                                    />
+                                    <div className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-8 text-center'>
+                                        <Link
+                                            href='/perler-bead-pattern-generator'
+                                            className='px-6 py-3 bg-white text-[#18181B] rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transform translate-y-8 group-hover:translate-y-0 transition-transform shadow-lg'
+                                        >
+                                            Try Creative Design
+                                        </Link>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
 
                     <div className='text-center'>
