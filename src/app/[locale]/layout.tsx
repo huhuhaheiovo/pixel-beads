@@ -1,7 +1,6 @@
 import type {Metadata} from 'next'
 import {Geist, Geist_Mono} from 'next/font/google'
 import {Header} from '@/components/Header'
-import {WeChatQRCode} from '@/components/WeChatQRCode'
 import {ThirdPartyScripts} from '@/components/ThirdPartyScripts'
 import '../globals.css'
 import {NextIntlClientProvider} from 'next-intl';
@@ -11,17 +10,22 @@ import {setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import React from "react";
 import Image from "next/image";
+import { WeChatQRCodeLazy } from '@/components/WeChatQRCodeLazy'
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
     subsets: ['latin'],
-    display: 'swap'
+    display: 'swap',
+    preload: true,
+    fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Arial', 'sans-serif']
 })
 
 const geistMono = Geist_Mono({
     variable: '--font-geist-mono',
     subsets: ['latin'],
-    display: 'swap'
+    display: 'swap',
+    preload: true,
+    fallback: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
 })
 
 export function generateStaticParams() {
@@ -107,7 +111,7 @@ export default async function LocaleLayout({
                                 />
                             </a>
                             {/* 微信赞赏 */}
-                            <WeChatQRCode/>
+                            <WeChatQRCodeLazy/>
                         </div>
                     </div>
                 </div>

@@ -12,6 +12,9 @@ interface BeadGridCanvasProps {
   showBeadCodes: boolean
   colorById: Map<string, BeadColor>
   onCellClick: (x: number, y: number) => void
+  onCellMouseDown?: (x: number, y: number) => void
+  onCellMouseMove?: (x: number, y: number) => void
+  onCellMouseUp?: () => void
   zoom?: number
   beadStyle: 'square' | 'round' | 'hollow'
   gridSpacing: 'none' | 'small' | 'large'
@@ -32,6 +35,9 @@ function BeadGridCanvasComponent({
   showBeadCodes,
   colorById,
   onCellClick,
+  onCellMouseDown,
+  onCellMouseMove,
+  onCellMouseUp,
   zoom = 1,
   beadStyle = 'square',
   gridSpacing = 'small'
@@ -403,8 +409,35 @@ function BeadGridCanvasComponent({
     }
   }, [matrix, gridWidth, cellSize, showGrid, showBeadCodes, zoom, beadStyle, gridSpacing, colorById, throttledRender])
 
+  // 获取鼠标/触摸位置对应的单元格坐标
+  const getCellFromEvent = useCallback((clientX: number, clientY: number) => {
+    const canvas = canvasRef.current
+    if (!canvas) return null
+
+    const rect = canvas.getBoundingClientRect()
+    const x = Math.floor((clientX - rect.left) / (effectiveSize + gapSize))
+    const y = Math.floor((clientY - rect.top) / (effectiveSize + gapSize))
+
+    if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight) {
+      return { x, y }
+    }
+    return null
+  }, [effectiveSize, gapSize, gridWidth, gridHeight])
+
+  const isDraggingRef = useRef(false)
+
   // Handle mouse events for interaction
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+    // 如果正在拖拽，使用拖拽处理函数
+    if (isDraggingRef.current && onCellMouseMove) {
+      const cell = getCellFromEvent(e.clientX, e.clientY)
+      if (cell) {
+        onCellMouseMove(cell.x, cell.y)
+      }
+      return
+    }
+
+    // 否则处理悬停效果
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -425,27 +458,75 @@ function BeadGridCanvasComponent({
         throttledRender()
       }
     }
-  }, [effectiveSize, gapSize, gridWidth, gridHeight, hoveredCell, throttledRender])
+  }, [effectiveSize, gapSize, gridWidth, gridHeight, hoveredCell, throttledRender, getCellFromEvent, onCellMouseMove])
 
   const handleMouseLeave = useCallback(() => {
     if (hoveredCell) {
       setHoveredCell(null)
       throttledRender()
     }
-  }, [hoveredCell, throttledRender])
+    // 如果正在拖拽，结束拖拽
+    if (onCellMouseUp) {
+      onCellMouseUp()
+    }
+  }, [hoveredCell, throttledRender, onCellMouseUp])
+
+  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+    e.preventDefault()
+    const cell = getCellFromEvent(e.clientX, e.clientY)
+    if (cell && onCellMouseDown) {
+      isDraggingRef.current = true
+      onCellMouseDown(cell.x, cell.y)
+    }
+  }, [getCellFromEvent, onCellMouseDown])
+
+  const handleMouseUp = useCallback(() => {
+    if (isDraggingRef.current && onCellMouseUp) {
+      onCellMouseUp()
+    }
+    isDraggingRef.current = false
+  }, [onCellMouseUp])
+
+  const handleTouchStart = useCallback((e: React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault()
+    const touch = e.touches[0]
+    const cell = getCellFromEvent(touch.clientX, touch.clientY)
+    if (cell && onCellMouseDown) {
+      isDraggingRef.current = true
+      onCellMouseDown(cell.x, cell.y)
+    }
+  }, [getCellFromEvent, onCellMouseDown])
+
+  const handleTouchMove = useCallback((e: React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault()
+    if (!isDraggingRef.current || !onCellMouseMove) return
+    const touch = e.touches[0]
+    const cell = getCellFromEvent(touch.clientX, touch.clientY)
+    if (cell) {
+      onCellMouseMove(cell.x, cell.y)
+    }
+  }, [getCellFromEvent, onCellMouseMove])
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault()
+    if (isDraggingRef.current && onCellMouseUp) {
+      onCellMouseUp()
+    }
+    isDraggingRef.current = false
+  }, [onCellMouseUp])
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const rect = canvas.getBoundingClientRect()
-    const x = Math.floor((e.clientX - rect.left) / (effectiveSize + gapSize))
-    const y = Math.floor((e.clientY - rect.top) / (effectiveSize + gapSize))
-
-    if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight) {
-      onCellClick(x, y)
+    // 如果正在拖拽，不处理点击事件
+    if (isDraggingRef.current) {
+      isDraggingRef.current = false
+      return
     }
-  }, [effectiveSize, gapSize, gridWidth, gridHeight, onCellClick])
+
+    const cell = getCellFromEvent(e.clientX, e.clientY)
+    if (cell) {
+      onCellClick(cell.x, cell.y)
+    }
+  }, [getCellFromEvent, onCellClick])
 
   // Handle keyboard navigation
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -541,14 +622,21 @@ function BeadGridCanvasComponent({
         ref={canvasRef}
         width={canvasWidth}
         height={canvasHeight}
+        onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
         onClick={handleClick}
         className="cursor-crosshair"
         style={{
           display: 'block',
           maxWidth: '100%',
-          height: 'auto'
+          height: 'auto',
+          userSelect: 'none',
+          touchAction: 'none'
         }}
         aria-label="Bead pattern canvas"
       />

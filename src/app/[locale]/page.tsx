@@ -2,11 +2,11 @@ import type { Metadata } from 'next'
 import { Link } from '@/i18n/routing'
 import { ArrowRight, ImageIcon, LayoutGrid, Download, Zap, Hammer, Heart, Star, Sparkles } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
-import { HeroFloatingGallery } from '@/components/HeroFloatingGallery'
 import { StartButton } from '@/components/StartButton'
 import { OptimizedImage as Image } from '@/components/OptimizedImage'
 import { normalizeImagePath } from '@/lib/imageUtils'
 import { ALL_CHRISTMAS_IMAGES, ALL_HALLOWEEN_IMAGES, ALL_PALLETTES_IMAGES } from '@/lib/imagePaths'
+import { HeroFloatingGalleryLazy } from '@/components/HeroFloatingGalleryLazy'
 
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -111,7 +111,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             {/* Hero Section */}
             <section className='relative pt-20 pb-16 lg:pt-32 lg:pb-32 overflow-hidden bg-white'>
                 {/* New Floating Gallery */}
-                <HeroFloatingGallery />
+                <HeroFloatingGalleryLazy />
 
                 <div className='container mx-auto px-4 relative z-10'>
                     <div className='max-w-4xl mx-auto text-center'>

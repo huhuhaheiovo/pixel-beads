@@ -247,6 +247,8 @@ export function PixelBeadGenerator() {
       .then((newMatrix) => {
         setMatrix(newMatrix)
         resetHistory(newMatrix)
+        // 只有在当前选中的颜色不在新调色板中时，才设置默认颜色
+        // 但不应该因为 selectedColorId 变化而重新处理图片
         if ((!selectedColorId || !activePalette.some(c => c.id === selectedColorId)) && activePalette.length > 0) {
           setSelectedColorId(activePalette[0].id)
         }
@@ -254,12 +256,22 @@ export function PixelBeadGenerator() {
       .catch((error) => {
         console.error('Failed to process image:', error)
       })
-  }, [image, debouncedGridWidth, activePalette, processImage, resetHistory, selectedColorId])
+  }, [image, debouncedGridWidth, activePalette, processImage, resetHistory])
+
+  // 单独处理 selectedColorId 变化：如果选中的颜色不在当前调色板中，选择默认颜色
+  useEffect(() => {
+    if (activePalette.length > 0 && selectedColorId && !activePalette.some(c => c.id === selectedColorId)) {
+      setSelectedColorId(activePalette[0].id)
+    }
+  }, [activePalette, selectedColorId])
 
   // Refs for stable callback access
   const matrixRef = useRef(matrix)
   const activeToolRef = useRef(activeTool)
   const selectedColorIdRef = useRef(selectedColorId)
+  const isDraggingRef = useRef(false)
+  const lastCellRef = useRef<{ x: number; y: number } | null>(null)
+  const shouldAddToHistoryRef = useRef(false)
 
   useEffect(() => {
     matrixRef.current = matrix
@@ -267,7 +279,65 @@ export function PixelBeadGenerator() {
     selectedColorIdRef.current = selectedColorId
   }, [matrix, activeTool, selectedColorId])
 
+  // 处理单元格交互（点击或拖拽）
+  const handleCellInteraction = useCallback((x: number, y: number) => {
+    const currentMatrix = matrixRef.current
+    const currentTool = activeToolRef.current
+    const currentSelectedColorId = selectedColorIdRef.current
+
+    if (!currentMatrix[y] || currentMatrix[y][x] === undefined) return
+
+    // 取色器只支持点击，不支持拖拽
+    if (currentTool === 'picker') {
+      setSelectedColorId(currentMatrix[y][x])
+      setActiveTool('brush')
+      return
+    }
+
+    const newMatrix = currentMatrix.map(row => [...row])
+    if (currentTool === 'brush' && currentSelectedColorId) {
+      newMatrix[y][x] = currentSelectedColorId
+    } else if (currentTool === 'eraser') {
+      newMatrix[y][x] = ''
+    }
+
+    setMatrix(newMatrix)
+    shouldAddToHistoryRef.current = true
+  }, [])
+
+  // 处理鼠标按下/触摸开始
+  const handleCellMouseDown = useCallback((x: number, y: number) => {
+    isDraggingRef.current = true
+    lastCellRef.current = { x, y }
+    shouldAddToHistoryRef.current = false
+    handleCellInteraction(x, y)
+  }, [handleCellInteraction])
+
+  // 处理鼠标移动/触摸移动
+  const handleCellMouseMove = useCallback((x: number, y: number) => {
+    if (!isDraggingRef.current) return
+    // 如果移动到相同单元格，跳过处理
+    if (lastCellRef.current?.x === x && lastCellRef.current?.y === y) return
+
+    lastCellRef.current = { x, y }
+    handleCellInteraction(x, y)
+  }, [handleCellInteraction])
+
+  // 处理鼠标抬起/触摸结束
+  const handleCellMouseUp = useCallback(() => {
+    if (isDraggingRef.current && shouldAddToHistoryRef.current) {
+      addToHistory(matrixRef.current)
+    }
+    isDraggingRef.current = false
+    lastCellRef.current = null
+    shouldAddToHistoryRef.current = false
+  }, [addToHistory])
+
+  // 保持向后兼容：handleCellClick 用于单次点击
   const handleCellClick = useCallback((x: number, y: number) => {
+    // 如果正在拖拽，不处理点击事件
+    if (isDraggingRef.current) return
+    
     const currentMatrix = matrixRef.current
     const currentTool = activeToolRef.current
     const currentSelectedColorId = selectedColorIdRef.current
@@ -757,6 +827,9 @@ export function PixelBeadGenerator() {
                     showBeadCodes={showBeadCodes}
                     colorById={colorById}
                     onCellClick={handleCellClick}
+                    onCellMouseDown={handleCellMouseDown}
+                    onCellMouseMove={handleCellMouseMove}
+                    onCellMouseUp={handleCellMouseUp}
                     zoom={zoom}
                     beadStyle={beadStyle}
                     gridSpacing={gridSpacing}

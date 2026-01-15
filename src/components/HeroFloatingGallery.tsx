@@ -53,20 +53,50 @@ const FLOATING_IMAGES = [
 export function HeroFloatingGallery() {
     const [mounted, setMounted] = useState(false)
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+    const [isInteractive, setIsInteractive] = useState(false)
 
     useEffect(() => {
         setMounted(true)
+    }, [])
 
-        const handleMouseMove = (e: MouseEvent) => {
-            setMousePosition({
-                x: (e.clientX / window.innerWidth - 0.5) * 20,
-                y: (e.clientY / window.innerHeight - 0.5) * 20
-            })
+    useEffect(() => {
+        if (!mounted || typeof window === 'undefined') return
+
+        // 延迟注册事件监听器，减少主线程阻塞
+        const registerListeners = () => {
+            const handleMouseMove = (e: MouseEvent) => {
+                setMousePosition({
+                    x: (e.clientX / window.innerWidth - 0.5) * 20,
+                    y: (e.clientY / window.innerHeight - 0.5) * 20
+                })
+            }
+
+            // 使用 passive 选项提升性能
+            window.addEventListener('mousemove', handleMouseMove, { passive: true })
+            setIsInteractive(true)
+
+            return () => {
+                window.removeEventListener('mousemove', handleMouseMove)
+            }
         }
 
-        window.addEventListener('mousemove', handleMouseMove)
-        return () => window.removeEventListener('mousemove', handleMouseMove)
-    }, [])
+        // 使用 requestIdleCallback 延迟注册，避免阻塞主线程
+        if ('requestIdleCallback' in window) {
+            const idleCallback = (window as any).requestIdleCallback(
+                registerListeners,
+                { timeout: 2000 }
+            )
+            return () => {
+                if (typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+                    (window as any).cancelIdleCallback(idleCallback)
+                }
+            }
+        } else {
+            // 降级方案：延迟注册
+            const timeout = setTimeout(registerListeners, 100)
+            return () => clearTimeout(timeout)
+        }
+    }, [mounted])
 
     if (!mounted) return null
 
@@ -79,10 +109,12 @@ export function HeroFloatingGallery() {
                         key={index}
                         className={`absolute transition-transform duration-1000 ease-out pointer-events-auto cursor-pointer ${img.className} ${img.animation}`}
                         style={{
-                            transform: `translate(${mousePosition.x * (index % 2 === 0 ? 1 : -1)}px, ${mousePosition.y * (index % 2 === 0 ? 1 : -1)}px) rotate(${img.className.match(/rotate-\[(.*?)\]/)?.[1] || '0deg'})`
+                            transform: isInteractive
+                                ? `translate(${mousePosition.x * (index % 2 === 0 ? 1 : -1)}px, ${mousePosition.y * (index % 2 === 0 ? 1 : -1)}px) rotate(${img.className.match(/rotate-\[(.*?)\]/)?.[1] || '0deg'})`
+                                : `rotate(${img.className.match(/rotate-\[(.*?)\]/)?.[1] || '0deg'})`
                         }}
                     >
-                        <Image
+                        <img
                             src={img.src}
                             alt={img.alt}
                             width={img.isLcpCritical ? 400 : 200}
@@ -113,7 +145,7 @@ export function HeroFloatingGallery() {
                             key={index}
                             className={`absolute ${mobilePositions[index]} ${index % 2 === 0 ? 'animate-float-slow' : 'animate-float-medium'}`}
                         >
-                            <Image
+                            <img
                                 src={img.src}
                                 alt={img.alt}
                                 width={160}

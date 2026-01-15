@@ -10,6 +10,9 @@ interface BeadGridProps {
   showBeadCodes: boolean
   colorById: Map<string, BeadColor>
   onCellClick: (x: number, y: number) => void
+  onCellMouseDown?: (x: number, y: number) => void
+  onCellMouseMove?: (x: number, y: number) => void
+  onCellMouseUp?: () => void
   zoom?: number
   beadStyle: 'square' | 'round' | 'hollow'
   gridSpacing: 'none' | 'small' | 'large'
@@ -24,7 +27,10 @@ const BeadCell = memo(({
   isHollow,
   isRound,
   showBeadCodes,
-  onCellClick
+  onCellClick,
+  onCellMouseDown,
+  onCellMouseMove,
+  onCellMouseUp
 }: {
   x: number
   y: number
@@ -35,6 +41,9 @@ const BeadCell = memo(({
   isRound: boolean
   showBeadCodes: boolean
   onCellClick: (x: number, y: number) => void
+  onCellMouseDown?: (x: number, y: number) => void
+  onCellMouseMove?: (x: number, y: number) => void
+  onCellMouseUp?: () => void
 }) => {
   const codeText = color?.code ?? ''
   const MIN_SIZE_FOR_TEXT = 8
@@ -75,7 +84,36 @@ const BeadCell = memo(({
         fontWeight: 800,
         lineHeight: 1,
         textShadow: color?.hex ? '0 1px 1px rgba(0,0,0,0.35)' : 'none',
-        userSelect: 'none'
+        userSelect: 'none',
+        touchAction: 'none'
+      }}
+      onMouseDown={(e) => {
+        e.preventDefault()
+        if (onCellMouseDown) {
+          onCellMouseDown(x, y)
+        }
+      }}
+      onMouseEnter={(e) => {
+        if (e.buttons === 1 && onCellMouseMove) {
+          onCellMouseMove(x, y)
+        }
+      }}
+      onTouchStart={(e) => {
+        e.preventDefault()
+        if (onCellMouseDown) {
+          onCellMouseDown(x, y)
+        }
+      }}
+      onTouchMove={(e) => {
+        e.preventDefault()
+        if (onCellMouseMove) {
+          const touch = e.touches[0]
+          const target = e.currentTarget
+          const rect = target.getBoundingClientRect()
+          const cellX = Math.floor((touch.clientX - rect.left) / effectiveSize)
+          const cellY = Math.floor((touch.clientY - rect.top) / effectiveSize)
+          onCellMouseMove(cellX, cellY)
+        }
       }}
       onClick={() => onCellClick(x, y)}
       onKeyDown={(e) => {
@@ -100,6 +138,9 @@ function BeadGridComponent({
   showBeadCodes,
   colorById,
   onCellClick,
+  onCellMouseDown,
+  onCellMouseMove,
+  onCellMouseUp,
   zoom = 1,
   beadStyle = 'square',
   gridSpacing = 'small'
@@ -120,7 +161,25 @@ function BeadGridComponent({
         gridAutoRows: `${effectiveSize}px`,
         gap: gapSize,
         backgroundColor: showGrid && gridSpacing !== 'none' ? '#D8CBB9' : 'transparent',
-        padding: showGrid && gridSpacing !== 'none' ? '1px' : '0px'
+        padding: showGrid && gridSpacing !== 'none' ? '1px' : '0px',
+        userSelect: 'none',
+        touchAction: 'none'
+      }}
+      onMouseUp={() => {
+        if (onCellMouseUp) {
+          onCellMouseUp()
+        }
+      }}
+      onMouseLeave={() => {
+        if (onCellMouseUp) {
+          onCellMouseUp()
+        }
+      }}
+      onTouchEnd={(e) => {
+        e.preventDefault()
+        if (onCellMouseUp) {
+          onCellMouseUp()
+        }
       }}
     >
       {matrix.map((row, y) =>
@@ -136,6 +195,9 @@ function BeadGridComponent({
             isRound={isRound}
             showBeadCodes={showBeadCodes}
             onCellClick={onCellClick}
+            onCellMouseDown={onCellMouseDown}
+            onCellMouseMove={onCellMouseMove}
+            onCellMouseUp={onCellMouseUp}
           />
         ))
       )}

@@ -89,8 +89,11 @@
         "getStarted": "上传图片",
         "tools": "工具",
         "brush": "画笔",
+        "brushTooltip": "点击或拖拽添加颜色",
         "eraser": "橡皮擦",
+        "eraserTooltip": "点击或拖拽擦除颜色",
         "eyedropper": "吸色器",
+        "eyedropperTooltip": "点击单元格获取颜色",
         "toggleGrid": "显示/隐藏网格",
         "toggleBeadCodes": "显示/隐藏色号",
         "undo": "撤销",
@@ -153,7 +156,7 @@
         "colorsTotal": "种颜色",
         "series": "系列",
         "used": "已使用",
-        "paletteUsage": "选中色板中的颜色，点击图纸中的拼豆即可替换颜色"
+        "paletteUsage": "选中下面不同系列色板中的颜色，点击图纸中的拼豆即可替换颜色"
     },
     "Showcase": {
         "title": "拼豆作品合集",

@@ -40,7 +40,7 @@ export function Toolbar({
         <button
           onClick={() => onToolChange('brush')}
           className={`group relative flex flex-col items-center justify-center pt-3 pb-2 rounded-xl transition-all duration-300 ${activeTool === 'brush' ? 'bg-[#32B8A6] text-white shadow-[0_10px_20px_rgba(50,184,166,0.2)] scale-105 z-10' : 'bg-[#FBF9F6] border border-[#D8CBB9] text-[#5A4738] hover:bg-white hover:border-[#3E2A1E] hover:text-[#3E2A1E]'}`}
-          title={t('brush')}
+          title={`${t('brush')}: ${t('brushTooltip')}`}
         >
           <Paintbrush size={18} className='mb-1 transition-transform group-hover:rotate-12' />
           <span className='text-[7px] font-black uppercase tracking-widest'>{t('brush')}</span>
@@ -49,7 +49,7 @@ export function Toolbar({
         <button
           onClick={() => onToolChange('eraser')}
           className={`group relative flex flex-col items-center justify-center pt-3 pb-2 rounded-xl transition-all duration-300 ${activeTool === 'eraser' ? 'bg-[#32B8A6] text-white shadow-[0_10px_20px_rgba(50,184,166,0.2)] scale-105 z-10' : 'bg-[#FBF9F6] border border-[#D8CBB9] text-[#5A4738] hover:bg-white hover:border-[#3E2A1E] hover:text-[#3E2A1E]'}`}
-          title={t('eraser')}
+          title={`${t('eraser')}: ${t('eraserTooltip')}`}
         >
           <Eraser size={18} className='mb-1 transition-transform group-hover:-rotate-12' />
           <span className='text-[7px] font-black uppercase tracking-widest'>{t('eraser')}</span>
@@ -58,7 +58,7 @@ export function Toolbar({
         <button
           onClick={() => onToolChange('picker')}
           className={`group relative flex flex-col items-center justify-center pt-3 pb-2 rounded-xl transition-all duration-300 ${activeTool === 'picker' ? 'bg-[#32B8A6] text-white shadow-[0_10px_20px_rgba(50,184,166,0.2)] scale-105 z-10' : 'bg-[#FBF9F6] border border-[#D8CBB9] text-[#5A4738] hover:bg-white hover:border-[#3E2A1E] hover:text-[#3E2A1E]'}`}
-          title={t('eyedropper')}
+          title={`${t('eyedropper')}: ${t('eyedropperTooltip')}`}
         >
           <Pipette size={18} className='mb-1 transition-transform group-hover:scale-110' />
           <span className='text-[7px] font-black uppercase tracking-widest'>{t('eyedropper')}</span>
