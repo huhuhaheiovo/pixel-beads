@@ -91,48 +91,70 @@ export function Header() {
                                 </NavigationMenu>
 
                                 <NavigationMenuItem>
-                                    <NavigationMenuTrigger className='text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1] hover:text-[#32B8A6] data-[state=open]:text-[#32B8A6] bg-transparent hover:bg-white/5 focus:bg-white/5 data-[state=open]:bg-white/5'>
-                                        {t('tools')}
-                                    </NavigationMenuTrigger>
-                                    <NavigationMenuContent>
-                                        <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-[#3E2A1E] border border-[#543A2A]'>
-                                            <ListItem href='/perler-bead-pattern-generator' title={t('fusePatternTool')}>
-                                                {t('fusePatternToolDesc')}
-                                            </ListItem>
-                                            <ListItem href='/pixel-art-maker' title={t('pixelArtMaker')}>
-                                                {t('pixelArtMakerDesc')}
-                                            </ListItem>
-                                            <ListItem href='/pindou-pattern-generator' title={t('pingDouConvert') || t('imageToPixel')}>
-                                                {t('imageToPixelDesc')}
-                                            </ListItem>
-                                            <ListItem href='/image-to-pixel' title={t('imageToPixel')}>
-                                                {t('imageToPixelDesc')}
-                                            </ListItem>
-                                            <ListItem href='/minecraft-pixel-art' title={t('minecraftGuide')}>
-                                                {t('minecraftGuideDesc')}
-                                            </ListItem>
-                                            <ListItem href='/wplace' title={t('rplaceTool')}>
-                                                {t('rplaceToolDesc')}
-                                            </ListItem>
-                                        </ul>
-                                    </NavigationMenuContent>
+                                    <NavigationMenuLink asChild>
+                                        <Link
+                                            href='/blog'
+                                            className={`group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-[10px] font-bold uppercase tracking-widest transition-colors disabled:pointer-events-none disabled:opacity-50 ${pathname.startsWith('/blog') ? 'text-[#32B8A6] bg-white/5' : 'text-[#F7F1E1] hover:text-[#32B8A6] hover:bg-white/5 bg-transparent'}`}
+                                        >
+                                            {t('blog')}
+                                        </Link>
+                                    </NavigationMenuLink>
                                 </NavigationMenuItem>
 
                                 <NavigationMenuItem>
-                                    <NavigationMenuTrigger className='text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1] hover:text-[#32B8A6] data-[state=open]:text-[#32B8A6] bg-transparent hover:bg-white/5 focus:bg-white/5 data-[state=open]:bg-white/5'>
-                                        {t('guides')}
-                                    </NavigationMenuTrigger>
-                                    <NavigationMenuContent>
-                                        <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 bg-[#3E2A1E] border border-[#543A2A]'>
-                                            <ListItem href='/fuse-beads' title={t('fuseBeadsGuide')}>
-                                                {t('fuseBeadsGuideDesc')}
-                                            </ListItem>
-                                            <ListItem href='/hama-beads' title={t('hamaBeads')}>
-                                                {t('hamaBeadsDesc')}
-                                            </ListItem>
-                                        </ul>
-                                    </NavigationMenuContent>
+                                    <NavigationMenuLink asChild>
+                                        <Link
+                                            href='/about'
+                                            className={`group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-[10px] font-bold uppercase tracking-widest transition-colors disabled:pointer-events-none disabled:opacity-50 ${pathname.startsWith('/about') ? 'text-[#32B8A6] bg-white/5' : 'text-[#F7F1E1] hover:text-[#32B8A6] hover:bg-white/5 bg-transparent'}`}
+                                        >
+                                            {t('aboutUs')}
+                                        </Link>
+                                    </NavigationMenuLink>
                                 </NavigationMenuItem>
+
+                                {/*<NavigationMenuItem>*/}
+                                {/*    <NavigationMenuTrigger className='text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1] hover:text-[#32B8A6] data-[state=open]:text-[#32B8A6] bg-transparent hover:bg-white/5 focus:bg-white/5 data-[state=open]:bg-white/5'>*/}
+                                {/*        {t('tools')}*/}
+                                {/*    </NavigationMenuTrigger>*/}
+                                {/*    <NavigationMenuContent>*/}
+                                {/*        <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-[#3E2A1E] border border-[#543A2A]'>*/}
+                                {/*            <ListItem href='/perler-bead-pattern-generator' title={t('fusePatternTool')}>*/}
+                                {/*                {t('fusePatternToolDesc')}*/}
+                                {/*            </ListItem>*/}
+                                {/*            <ListItem href='/pixel-art-maker' title={t('pixelArtMaker')}>*/}
+                                {/*                {t('pixelArtMakerDesc')}*/}
+                                {/*            </ListItem>*/}
+                                {/*            <ListItem href='/pindou-pattern-generator' title={t('pingDouConvert') || t('imageToPixel')}>*/}
+                                {/*                {t('imageToPixelDesc')}*/}
+                                {/*            </ListItem>*/}
+                                {/*            <ListItem href='/image-to-pixel' title={t('imageToPixel')}>*/}
+                                {/*                {t('imageToPixelDesc')}*/}
+                                {/*            </ListItem>*/}
+                                {/*            <ListItem href='/minecraft-pixel-art' title={t('minecraftGuide')}>*/}
+                                {/*                {t('minecraftGuideDesc')}*/}
+                                {/*            </ListItem>*/}
+                                {/*            <ListItem href='/wplace' title={t('rplaceTool')}>*/}
+                                {/*                {t('rplaceToolDesc')}*/}
+                                {/*            </ListItem>*/}
+                                {/*        </ul>*/}
+                                {/*    </NavigationMenuContent>*/}
+                                {/*</NavigationMenuItem>*/}
+
+                                {/*<NavigationMenuItem>*/}
+                                {/*    <NavigationMenuTrigger className='text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1] hover:text-[#32B8A6] data-[state=open]:text-[#32B8A6] bg-transparent hover:bg-white/5 focus:bg-white/5 data-[state=open]:bg-white/5'>*/}
+                                {/*        {t('guides')}*/}
+                                {/*    </NavigationMenuTrigger>*/}
+                                {/*    <NavigationMenuContent>*/}
+                                {/*        <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 bg-[#3E2A1E] border border-[#543A2A]'>*/}
+                                {/*            <ListItem href='/fuse-beads' title={t('fuseBeadsGuide')}>*/}
+                                {/*                {t('fuseBeadsGuideDesc')}*/}
+                                {/*            </ListItem>*/}
+                                {/*            <ListItem href='/hama-beads' title={t('hamaBeads')}>*/}
+                                {/*                {t('hamaBeadsDesc')}*/}
+                                {/*            </ListItem>*/}
+                                {/*        </ul>*/}
+                                {/*    </NavigationMenuContent>*/}
+                                {/*</NavigationMenuItem>*/}
 
 
                             </NavigationMenuList>

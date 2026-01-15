@@ -87,6 +87,10 @@ export default async function LocaleLayout({
                                   className="text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1]/70 hover:text-[#32B8A6] transition-colors">{t('generator')}</Link>
                             <Link href="/blog"
                                   className="text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1]/70 hover:text-[#32B8A6] transition-colors">{t('blog')}</Link>
+                            <Link href="/help"
+                                  className="text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1]/70 hover:text-[#32B8A6] transition-colors">{t('help')}</Link>
+                            <Link href="/contact"
+                                  className="text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1]/70 hover:text-[#32B8A6] transition-colors">{t('contact')}</Link>
                             <Link href="/privacy-policy"
                                   className="text-[10px] font-bold uppercase tracking-widest text-[#F7F1E1]/70 hover:text-[#32B8A6] transition-colors">{t('privacyPolicy')}</Link>
                             <Link href="/terms-of-service"

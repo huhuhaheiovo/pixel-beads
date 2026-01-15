@@ -20,7 +20,11 @@
         "fuseBeadsGuideDesc": "Ultimate guide to Perler, Artkal, and ironing tips.",
         "hamaBeads": "Hama Beads",
         "hamaBeadsDesc": "Everything about the original Danish melting beads.",
-        "patterns": "Patterns"
+        "patterns": "Patterns",
+        "blog": "Blog",
+        "aboutUs": "About Us",
+        "help": "Help",
+        "contact": "Contact"
     },
     "HomePage": {
         "badge": "Free 100% Online Perler Bead DIY Tool",
@@ -69,71 +73,506 @@
             "button": "Open Generator Free",
             "footer": "No account required • Instant Export • 100% Free"
         },
-        "showcaseTitle": "Easy Featured Perler Bead Art",
+        "showcaseTitle": "Featured Perler Bead Patterns",
         "showcaseSubtitle": "Explore some of the most popular designs created by our community. Start your next project with just a click.",
         "tutorial": {
-            "title": "Complete Perler Bead Guide",
+            "title": "Complete Perler Bead Pattern Guide: All Steps and Tutorials",
             "selection": {
                 "title": "1. Selection: The Foundation",
-                "problem": "Solves uneven melting and color layers caused by material incompatibility.",
-                "principles": "5mm beads on 2.6mm plates break proportions. Mixing PE (soft) and EVA (hard) causes uneven heating.",
-                "mistakes": "Mixing different brands (different shrinkage), ignoring transparency effects.",
+                "problem": "Solves core pain points: material incompatibility, size mismatch, and low color accuracy.",
+                "brands": {
+                    "title": "I. Common Perler Bead Brands",
+                    "items": [
+                        {
+                            "name": "Perler",
+                            "desc": "World-famous, stable standards, common in 5mm beads."
+                        },
+                        {
+                            "name": "Hama / Hama Midi",
+                            "desc": "European brand, stable quality, Midi is for 5mm, common in schools."
+                        },
+                        {
+                            "name": "Artkal",
+                            "desc": "Widest range of sizes/colors, both 5mm and M-2.6mm (Mini). Top choice for pros."
+                        },
+                        {
+                            "name": "MARD",
+                            "desc": "Cost-effective, huge color range (168 colors), ideal for long-term projects."
+                        },
+                        {
+                            "name": "Nabbi / Ikea",
+                            "desc": "Stable quality, mainly 5mm, perfect for families and children."
+                        }
+                    ]
+                },
+                "sizes": {
+                    "title": "II. Sizes: 5mm vs 2.6mm",
+                    "items": [
+                        {
+                            "name": "5mm Beads",
+                            "desc": "Large, easy to handle, high tolerance",
+                            "target": "Kids, Beginners, Teaching"
+                        },
+                        {
+                            "name": "2.6mm Beads",
+                            "desc": "High pixel density, rich detail, realistic style",
+                            "target": "16+, Advanced Players, Display Art"
+                        }
+                    ]
+                },
+                "colors": {
+                    "title": "III. Colors: 72 vs 168 Colors",
+                    "items": [
+                        {
+                            "name": "72 Color Set",
+                            "desc": "Covers basic colors, ideal for practice and cartoon characters."
+                        },
+                        {
+                            "name": "168 Full Palette",
+                            "desc": "Natural transitions, ideal for portraits and complex pixel art effects."
+                        }
+                    ]
+                },
+                "advice": {
+                    "title": "IV. Quick Selection Guide",
+                    "items": [
+                        {
+                            "target": "Children / Beginners",
+                            "rec": "5mm Beads + 72 Colors"
+                        },
+                        {
+                            "target": "16+ / Advanced",
+                            "rec": "2.6mm Beads + 168 Colors"
+                        },
+                        {
+                            "target": "Professional / Realistic",
+                            "rec": "2.6mm Beads"
+                        }
+                    ]
+                },
                 "faq": [
                     {
-                        "q": "Can I mix Perler and Hama beads?",
-                        "a": "Not recommended. Brands have different melt points and shrinkage rates."
+                        "q": "Can I mix different brands of perler beads?",
+                        "a": "Not recommended. Brands differ in color codes, material texture, and shrinkage rates during ironing. Mixing them can lead to inconsistent colors or warping. For best results, use the same brand for a single project."
+                    },
+                    {
+                        "q": "Can 5mm and 2.6mm beads be used on the same pegboard?",
+                        "a": "No. They are completely different sizes and require pegboards with different hole spacings. Mixing sizes will result in loose beads and failed ironing."
+                    },
+                    {
+                        "q": "Should beginners start with 5mm or 2.6mm beads?",
+                        "a": "5mm is recommended. The larger size is easier to handle and builds confidence. 2.6mm beads require more precision and patience, better suited for users aged 16+ or with some experience."
+                    },
+                    {
+                        "q": "Is there a big difference between 72 and 168 colors? Do I need 168 right away?",
+                        "a": "The difference lies in detail. 72 colors are sufficient for most basic patterns and practice. 168 colors provide smoother gradients and skin tones. Beginners can start with 72 and upgrade to 168 as they master the craft."
                     }
                 ]
             },
             "coloring": {
                 "title": "2. Coloring: Breathing Life",
-                "problem": "Solves the 'guessing colors' and 'wasting beads' problems.",
-                "principles": "PixelBeads algorithms map photos to real brand color codes using RGB to Lab conversion.",
-                "mistakes": "Using too many similar colors (loss of detail), ignoring ambient light impact.",
+                "sections": [
+                    {
+                        "title": "I. Automatic Color Matching with Pixel-Beads Pattern Generator",
+                        "content": "After uploading an image and generating a bead pattern, the system automatically matches the closest bead colors based on the selected bead size and color count.",
+                        "applicable": "Automatic coloring works best for:",
+                        "items": [
+                            "Images with clear color contrast",
+                            "Cartoon and pixel art patterns",
+                            "Simple structures or images with clear subjects"
+                        ],
+                        "note": "Automatic coloring can quickly complete most color assignments and is the first step in creating bead patterns."
+                    },
+                    {
+                        "title": "II. Handling Unwanted Colors or Poor Color Matching",
+                        "content": "For portrait photos, complex backgrounds, or gradient areas, automatic coloring may result in:",
+                        "problems": [
+                            "Scattered unwanted colors",
+                            "Inconsistent local colors",
+                            "Unnatural individual pixel colors"
+                        ],
+                        "solution": "In such cases, it's recommended to use manual tools to repair and optimize the pattern."
+                    },
+                    {
+                        "title": "III. Left Toolbar: Common Color Repair Tools",
+                        "tools": [
+                            {
+                                "name": "Brush Tool",
+                                "desc": "Used to recolor specified pixels",
+                                "tip": "Supports left-click drag for continuous drawing"
+                            },
+                            {
+                                "name": "Eraser Tool",
+                                "desc": "Used to remove unwanted colors",
+                                "tip": "Supports left-click drag for batch erasing"
+                            },
+                            {
+                                "name": "Color Picker",
+                                "desc": "Used to sample existing colors from the canvas to maintain overall color harmony"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "IV. Right Color Palette and Color Selection",
+                        "content": "The right palette displays currently available bead colors:",
+                        "points": [
+                            "Select appropriate colors for repairs",
+                            "Avoid using non-existent or hard-to-obtain colors",
+                            "Minimize color count to maintain visual unity"
+                        ],
+                        "note": "When coloring, it's recommended to prioritize using colors already in the pattern rather than frequently adding new colors."
+                    },
+                    {
+                        "title": "V. Practical Coloring Tips",
+                        "tips": [
+                            "Prioritize consistency in large color areas",
+                            "Reduce scattered, isolated color points",
+                            "Simplify details when necessary for easier actual bead making"
+                        ]
+                    }
+                ],
                 "faq": [
                     {
-                        "q": "How to save money on beads?",
-                        "a": "Toggle 'Reduce Colors' in the generator to use the minimum colors for maximum detail."
+                        "q": "Why not upload overly large images?",
+                        "a": "Oversized images don't make bead artwork better; instead, they increase difficulty. When image size is too large (e.g., thousands of pixels): it produces too many bead particles, overly complex pattern structure significantly increases difficulty, automatic coloring is more prone to unwanted colors, and the time and cost to complete increases significantly. Bead art emphasizes clear pixel sense, not high-resolution images."
+                    },
+                    {
+                        "q": "What is the recommended image size for upload?",
+                        "a": "It's recommended to keep image width or height between 100–300 pixels (px). Within this range, pattern clarity, bead count, and difficulty are easier to balance, and generated patterns are more suitable for actual making."
+                    },
+                    {
+                        "q": "Are there requirements for image aspect ratio?",
+                        "a": "Image aspect ratio is unlimited, but it's recommended to be close to the final product ratio. Appropriately crop the subject before uploading to avoid too much irrelevant background, which helps generate better bead patterns."
+                    },
+                    {
+                        "q": "What image size is suitable for 5mm beads?",
+                        "a": "5mm beads are recommended to use images around 100–200px. At this size range, patterns are clear, particle count is moderate, very suitable for children, beginners, or easy projects."
+                    },
+                    {
+                        "q": "What image size is suitable for 2.6mm beads?",
+                        "a": "2.6mm beads can use 200–300px images. Since particles are smaller, 2.6mm beads can show more detail, suitable for portraits, complex patterns, or advanced projects."
                     }
                 ]
             },
             "printing": {
                 "title": "3. Printing: Blueprint to Reality",
-                "problem": "Solves eye strain from mobile screens and grid mistakes.",
-                "principles": "1:1 HD PDF export with color labels. Even the colorblind can place beads accurately.",
-                "mistakes": "Incorrect print scale (doesn't fit plates), paper too thick for light tracing.",
+                "sections": [
+                    {
+                        "title": "Confirm Pattern Scale",
+                        "points": [
+                            "Confirm print scale based on bead size (5mm / 2.6mm)",
+                            "Ensure final product size meets expectations"
+                        ]
+                    },
+                    {
+                        "title": "Choose Printing Method",
+                        "points": [
+                            "Recommended: 300 DPI high-definition printing",
+                            "Use standard A4 or larger paper, split printing if necessary"
+                        ]
+                    },
+                    {
+                        "title": "Using Blueprint for Bead Placement",
+                        "points": [
+                            "Place blueprint under the pegboard (transparent board) or beside for reference",
+                            "Place large color blocks first, then detail areas",
+                            "If colors don't match perfectly, use canvas tools to repair"
+                        ]
+                    },
+                    {
+                        "title": "Step-by-Step Checking",
+                        "points": [
+                            "After completing each area, confirm colors match the pattern",
+                            "Avoid placing all beads at once to prevent errors"
+                        ]
+                    },
+                    {
+                        "title": "Save Digital Pattern Backup",
+                        "points": [
+                            "Convenient for future remakes or modifications",
+                            "Prevent paper blueprint damage from affecting bead placement"
+                        ]
+                    }
+                ],
                 "faq": [
                     {
-                        "q": "What if the print is larger than the plate?",
-                        "a": "Set print scale to 'Actual Size' or 100%, avoid 'Fit to Page'."
+                        "q": "Why print a bead blueprint?",
+                        "a": "Blueprints serve as reference to ensure accurate colors, pixels, and patterns, especially for complex works."
+                    },
+                    {
+                        "q": "What to check before printing a blueprint?",
+                        "a": "Check if pattern scale matches final product; use 300 DPI high-definition printing for clear pixels; choose appropriate printing method based on paper size."
+                    },
+                    {
+                        "q": "What if print scale is incorrect?",
+                        "a": "Check print settings, ensure 'Actual Size' or scale proportionally; print a test sample first to confirm scale."
+                    },
+                    {
+                        "q": "What if colors don't match beads exactly?",
+                        "a": "Use blueprint as color reference, combine with canvas tools (brush, eraser, color picker) to repair; prioritize using existing bead colors, avoid adding colors that can't be purchased."
+                    },
+                    {
+                        "q": "Common printing mistakes and suggestions",
+                        "a": "Pattern scale error → Adjust print settings; Paper too small → Split printing; Bead placement order confusion → Large areas first, then details; Blueprint damage → Keep digital backup."
                     }
                 ]
             },
             "ironing": {
                 "title": "4. Ironing: The Art of Setting",
-                "problem": "Solves burnt beads, uneven melting, and warping.",
-                "principles": "Even heat conduction. Use ironing paper (glossy) or parchment (matte) for texture.",
-                "mistakes": "Staying too long in one spot, failing to use weights leading to warping.",
+                "sections": [
+                    {
+                        "title": "Bead Ironing Characteristics",
+                        "content": "Material: Low-Density Polyethylene (LDPE), melting point 105–115°C",
+                        "points": [
+                            "Too low temperature → Only softens surface, prone to breakage",
+                            "Too high temperature → Complete melting, pattern collapse",
+                            "Just right temperature → Surface melts and bonds, maintains shape",
+                            "Note: Different colors absorb heat at different rates, black/dark colors fast, white/transparent slow"
+                        ]
+                    },
+                    {
+                        "title": "Essence of Ironing",
+                        "points": [
+                            "Use heat to soften bead surfaces",
+                            "Bond beads through slight pressure",
+                            "Many variables: temperature, time, pressure, movement speed, cooling method"
+                        ]
+                    },
+                    {
+                        "title": "Tool Selection",
+                        "points": [
+                            "Household steam iron: Turn off steam, medium temperature, continuous circular movement",
+                            "Professional tools: Cricut EasyPress Mini or small heat press, flatter, precise temperature control",
+                            "Medium layer: Parchment paper (matte) or ironing film (glossy, transparent to observe progress)",
+                            "Teflon sheets can be used for texture effects or heat transfer"
+                        ]
+                    },
+                    {
+                        "title": "Medium Layer Usage Recommendations",
+                        "points": [
+                            "Parchment paper: Suitable for daily practice, matte effect",
+                            "Ironing film: For important works, glossy and transparent, need to watch temperature",
+                            "Wax paper cannot be used, will melt and contaminate work and iron"
+                        ]
+                    },
+                    {
+                        "title": "Basic and Advanced Methods",
+                        "points": [
+                            "Basic: Direct ironing on pegboard, suitable for small works, be careful not to damage pegboard",
+                            "Advanced: Tape Method (The Tape Method)",
+                            "Transfer beads from pegboard with tape to avoid pegboard heating",
+                            "Flip and iron, punch holes for air release, control temperature and time",
+                            "Can achieve flat both sides or back-melt style"
+                        ]
+                    },
+                    {
+                        "title": "Cooling and Completion",
+                        "points": [
+                            "After ironing, place on flat surface, press with weight for 10–20 minutes",
+                            "Remove medium layer after cooling",
+                            "Optionally iron front side again, or maintain back-melt style"
+                        ]
+                    }
+                ],
                 "faq": [
                     {
-                        "q": "Why are the bead holes so big?",
-                        "a": "Too much pressure or high heat. Use medium-low heat and circular motions."
+                        "q": "Why is ironing so difficult?",
+                        "a": "Bead material is Low-Density Polyethylene (LDPE), melting point 105–115°C. Too low temperature won't bond well, too high will completely melt. Dark and light colors absorb heat at different rates, causing uneven local melting. Ironing requires controlling temperature, time, pressure, and movement speed."
+                    },
+                    {
+                        "q": "Can household irons be used for ironing?",
+                        "a": "Yes, but with limitations: Steam holes cause uneven heating, leaving marks; recommend turning off steam, medium temperature, continuous circular movement; don't stay in one position for more than 3 seconds. Advanced option: Cricut EasyPress or small heat press, flat heating, precise temperature control, especially suitable for details or large works."
+                    },
+                    {
+                        "q": "Which ironing medium layer should I choose?",
+                        "a": "Parchment Paper: Matte effect, cheap and easy to use, suitable for daily practice. Ironing Film: Transparent, high gloss, suitable for important works, can observe ironing progress. Special note: Don't use wax paper, it will melt and contaminate work and iron."
+                    },
+                    {
+                        "q": "What to do if work warps or breaks easily?",
+                        "a": "Press with weight on flat surface for 10–20 minutes during cooling; avoid excessive single-side ironing; insufficient ironing → beads only surface-bonded, can locally re-iron."
+                    },
+                    {
+                        "q": "What is the Tape Method (Tape Method) for?",
+                        "a": "Avoid pegboard heat deformation; allows higher temperature and longer ironing time; Steps: Apply tape → Flip → Punch holes for air release → Iron → Cool and press flat → Remove tape; Note: Punch holes to prevent air expansion causing blowouts."
+                    },
+                    {
+                        "q": "Common ironing problems and solutions",
+                        "a": "Blowouts: Tape not punched or temperature too high → Punch holes, lower temperature, extend ironing time. Tape residue: Temperature too high or ironed too long → Wipe with alcohol or cleaner. Warping: Not pressed flat during cooling, excessive single-side heating → Reheat locally, press flat with weight. Uneven melting: Uneven iron movement, wrinkled paper, uneven surface → Strengthen circular iron movement, locally re-iron. Breakage: Insufficient ironing, beads only surface-bonded → Cover with parchment paper and re-iron. Matte/glossy mix: Parchment or film not flat, removed too early → Re-iron locally with new parchment, remove after complete cooling."
+                    },
+                    {
+                        "q": "What ironing styles are available?",
+                        "a": "Partial Melt: Retain circular holes, strong 3D effect, easy for beginners. Flat Melt / Pixel Melt: Beads closed, smooth surface, visually stunning, high difficulty. Mixed Style (Back Melt): Back flat-melted, front retains 3D, balances strength and texture."
+                    },
+                    {
+                        "q": "Golden rules for beginner ironing",
+                        "a": "Low and Slow is safer than high and fast; Large works: iron in sections, edges first; Use transparent ironing film to observe progress; Keep pressed flat during cooling."
                     }
                 ]
             },
             "framing": {
-                "title": "5. Framing: The Final Touch",
-                "problem": "Solves dust, brittleness, and display issues.",
-                "principles": "Physical protection and visual enhancement. Backing prevents large works from sagging.",
-                "mistakes": "Using glue that yellows, choosing frames too shallow for 3D beads.",
+                "title": "5. Framing: The Final Ritual",
+                "sections": [
+                    {
+                        "title": "I. Protection Principles",
+                        "points": [
+                            "Moisture & Oxygen Proof: Prevent long-term exposure from making beads brittle or faded.",
+                            "Physical Support: Prevent large works from bending or warping due to their own weight."
+                        ]
+                    },
+                    {
+                        "title": "II. Choosing a Frame",
+                        "points": [
+                            "3D Hollow Frame: Must choose a hollow frame with depth (e.g., IKEA HOVSTA) to avoid crushing.",
+                            "Background Paper: Darker backgrounds highlight colors, while similar tones add texture."
+                        ]
+                    },
+                    {
+                        "title": "III. Mounting Methods",
+                        "points": [
+                            "Traceless Adhesive: Multi-point fixing on the back to avoid damaging the bead surface.",
+                            "Floating Effect: Add foam tape between the work and backboard for a 'floating pixel' look."
+                        ]
+                    }
+                ],
                 "faq": [
                     {
-                        "q": "Do large works need special frames?",
-                        "a": "Deep 'shadow box' frames and strong adhesive backing are recommended."
+                        "q": "Do I need a custom-made frame?",
+                        "a": "No. Standard '5cm depth display boxes' are widely available and cost-effective."
+                    },
+                    {
+                        "q": "Can I stick it directly on the wall?",
+                        "a": "Yes, blue tack or foam tape works well, but it might accumulate dust over time."
                     }
                 ]
             }
         }
+    },
+    "perlerColorPage": {
+        "title": "Ultimate Perler Bead Color Chart (2024)",
+        "description": "Complete reference for all official Perler bead color codes, HEX values, and names. The essential guide for pixel art designers and hobbyists.",
+        "subtitle": "Official Color Index & HEX Reference",
+        "stats": {
+            "total": "Colors Logged",
+            "standard": "Standard Solids",
+            "pearl": "Pearl Effects",
+            "neon": "Vibrant Neons"
+        },
+        "table": {
+            "color": "Color Preview",
+            "name": "Official Name",
+            "code": "Unique Code",
+            "hex": "HEX Value"
+        },
+        "backToHome": "Back to Workshop",
+        "colorNames": {}
+    },
+    "hamaColorPage": {
+        "title": "Ultimate Hama Bead Color Chart (2024)",
+        "description": "Complete reference for all official Hama Midi bead color codes, HEX values, and names. The essential guide for pixel art designers and hobbyists.",
+        "subtitle": "Official Color Index & HEX Reference",
+        "stats": {
+            "total": "Colors Logged",
+            "standard": "Standard Solids",
+            "pearl": "Pearl Effects",
+            "neon": "Vibrant Neons"
+        },
+        "backToHome": "Back to Workshop",
+        "colorNames": {},
+        "seoContent": {
+            "intro": "Hama beads (also known as Hama Midi) are a renowned Danish brand of fuse beads, known for stable quality and commonly used in educational settings. The key to a successful project is choosing the right colors. Our official Hama Bead color chart provides a comprehensive list of every shade with HEX values.",
+            "whyTitle": "Why Color Mapping Matters",
+            "whyContent": "Using the correct color codes ensures that your pixel art translates perfectly from digital design to physical craft. Each color is mapped with its specific HEX code, allowing you to use them in our Pixel Bead Generator for precise pattern creation.",
+            "masteringTitle": "Mastering Hues",
+            "masteringContent": "Whether you are building complex sprites or simple patterns, having a full range of colors is essential. We recommend starting with a standard 24 or 48 color set and expanding your collection with individual bags of colors as needed for your projects."
+        }
+    },
+    "artkalColorPage": {
+        "title": "Ultimate Artkal Bead Color Chart (2024)",
+        "description": "Complete reference for all official Artkal-S bead color codes, HEX values, and names. The essential guide for pixel art designers and hobbyists.",
+        "subtitle": "Official Color Index & HEX Reference",
+        "stats": {
+            "total": "Colors Logged",
+            "standard": "Standard Solids",
+            "pearl": "Pearl Effects",
+            "neon": "Vibrant Neons"
+        },
+        "backToHome": "Back to Workshop",
+        "colorNames": {},
+        "seoContent": {
+            "intro": "Artkal beads offer the widest range of sizes and colors, with both 5mm standard and M-2.6mm mini sizes, making them the top choice for advanced creators. The key to a successful project is choosing the right colors. Our official Artkal Bead color chart provides a comprehensive list of every shade with HEX values.",
+            "whyTitle": "Why Color Mapping Matters",
+            "whyContent": "Using the correct color codes ensures that your pixel art translates perfectly from digital design to physical craft. Each color is mapped with its specific HEX code, allowing you to use them in our Pixel Bead Generator for precise pattern creation.",
+            "masteringTitle": "Mastering Hues",
+            "masteringContent": "Whether you are building complex sprites or simple patterns, having a full range of colors is essential. Artkal offers the most extensive color selection. We recommend starting with a standard 24 or 48 color set and expanding your collection with individual bags of colors as needed for your projects."
+        }
+    },
+    "mardColorPage": {
+        "title": "Ultimate MARD Bead Color Chart (2024)",
+        "description": "Complete reference for all official MARD bead color codes, HEX values, and names. With 168 colors, the essential guide for pixel art designers and hobbyists.",
+        "subtitle": "Official Color Index & HEX Reference",
+        "stats": {
+            "total": "Colors Logged",
+            "standard": "Standard Solids",
+            "pearl": "Pearl Effects",
+            "neon": "Vibrant Neons"
+        },
+        "backToHome": "Back to Workshop",
+        "colorNames": {},
+        "seoContent": {
+            "intro": "MARD beads are known for their excellent value and extensive color range (168 colors), making them ideal for long-term creative projects. The key to a successful project is choosing the right colors. Our official MARD Bead color chart provides a comprehensive list of every shade with HEX values.",
+            "whyTitle": "Why Color Mapping Matters",
+            "whyContent": "Using the correct color codes ensures that your pixel art translates perfectly from digital design to physical craft. Each color is mapped with its specific HEX code, allowing you to use them in our Pixel Bead Generator for precise pattern creation.",
+            "masteringTitle": "Mastering Hues",
+            "masteringContent": "Whether you are building complex sprites or simple patterns, having a full range of colors is essential. MARD offers an extensive selection of 168 colors. We recommend starting with a standard 24 or 48 color set and expanding your collection with individual bags of colors as needed for your projects."
+        }
+    },
+    "nabbiColorPage": {
+        "title": "Ultimate Nabbi Bead Color Chart (2024)",
+        "description": "Complete reference for all official Nabbi bead color codes, HEX values, and names. The essential guide for pixel art designers and hobbyists.",
+        "subtitle": "Official Color Index & HEX Reference",
+        "stats": {
+            "total": "Colors Logged",
+            "standard": "Standard Solids",
+            "pearl": "Pearl Effects",
+            "neon": "Vibrant Neons"
+        },
+        "backToHome": "Back to Workshop",
+        "colorNames": {},
+        "seoContent": {
+            "intro": "Nabbi beads are known for stable quality, primarily in 5mm size, making them perfect for families and children getting started. The key to a successful project is choosing the right colors. Our official Nabbi Bead color chart provides a comprehensive list of every shade with HEX values.",
+            "whyTitle": "Why Color Mapping Matters",
+            "whyContent": "Using the correct color codes ensures that your pixel art translates perfectly from digital design to physical craft. Each color is mapped with its specific HEX code, allowing you to use them in our Pixel Bead Generator for precise pattern creation.",
+            "masteringTitle": "Mastering Hues",
+            "masteringContent": "Whether you are building complex sprites or simple patterns, having a full range of colors is essential. We recommend starting with a standard 24 or 48 color set and expanding your collection with individual bags of colors as needed for your projects."
+        }
+    },
+    "ikeaPysslaColorPage": {
+        "title": "Ultimate Ikea Pyssla Bead Color Chart (2024)",
+        "description": "Complete reference for all official Ikea Pyssla bead color codes, HEX values, and names. The essential guide for pixel art designers and hobbyists.",
+        "subtitle": "Official Color Index & HEX Reference",
+        "stats": {
+            "total": "Colors Logged",
+            "standard": "Standard Solids",
+            "pearl": "Pearl Effects",
+            "neon": "Vibrant Neons"
+        },
+        "backToHome": "Back to Workshop",
+        "colorNames": {},
+        "seoContent": {
+            "intro": "Ikea Pyssla beads are known for stable quality, primarily in 5mm size, making them perfect for families and children getting started. The key to a successful project is choosing the right colors. Our official Ikea Pyssla Bead color chart provides a comprehensive list of every shade with HEX values.",
+            "whyTitle": "Why Color Mapping Matters",
+            "whyContent": "Using the correct color codes ensures that your pixel art translates perfectly from digital design to physical craft. Each color is mapped with its specific HEX code, allowing you to use them in our Pixel Bead Generator for precise pattern creation.",
+            "masteringTitle": "Mastering Hues",
+            "masteringContent": "Whether you are building complex sprites or simple patterns, having a full range of colors is essential. We recommend starting with a standard 24 or 48 color set and expanding your collection with individual bags of colors as needed for your projects."
+        }
+    },
+    "Blog": {
+        "title": "The Pixel Gazette",
+        "subtitle": "Explore the world of pixel beads art, get inspiration, tutorials, and latest updates.",
+        "readMore": "Read Full Story",
+        "noPosts": "Workbench is quiet... no posts found.",
+        "author": "Author",
+        "date": "Date"
     },
     "Generator": {
         "exportPdf": "Export PDF",
@@ -308,6 +747,8 @@
         "coolDesigns": "Cool Designs",
         "generator": "Generator",
         "blog": "Blog",
+        "help": "Help",
+        "contact": "Contact",
         "privacyPolicy": "Privacy Policy",
         "termsOfService": "Terms of Service"
     },
@@ -505,7 +946,7 @@
         "intro": "We'd love to hear from you! Whether you have questions, feedback, suggestions, or need support, we're here to help. Reach out to us through any of the methods below.",
         "emailTitle": "Email Us",
         "emailDescription": "Send us an email and we'll get back to you as soon as possible.",
-        "defaultEmail": "contact@pixel-beads.com",
+        "defaultEmail": "qingyuge@pixel-beads.com",
         "responseTimeTitle": "Response Time",
         "responseTimeContent": "We typically respond to emails within 24-48 hours during business days. For urgent matters, please mark your email as urgent and we'll prioritize it.",
         "socialMediaTitle": "Follow Us",

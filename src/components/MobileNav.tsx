@@ -26,8 +26,9 @@ export function MobileNav() {
         { href: '/', label: t('home') },
         { href: '/perler-bead-pattern-generator', label: t('generator'), icon: Hammer },
         { href: '/perler-bead-pattern', label: t('patterns') },
-        { href: '/showcase', label: t('showcase') }
-
+        { href: '/showcase', label: t('showcase') },
+        { href: '/blog', label: t('blog') },
+        { href: '/about', label: t('aboutUs') }
     ]
 
     const toolItems = [
