@@ -83,7 +83,7 @@ export default async function ChristmasShowcase() {
                         const isAboveFold = i < 4;
                         return (
                             <div key={i} className="group aspect-square bg-white rounded-[2rem] overflow-hidden relative border-4 border-transparent hover:border-red-100 transition-all shadow-sm hover:shadow-xl">
-                                <Image
+                                <img
                                     src={image.path}
                                     alt={image.name}
                                     width={isAboveFold ? 400 : 200}

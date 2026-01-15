@@ -82,7 +82,7 @@ export default async function HalloweenShowcase() {
                         const isAboveFold = i < 4;
                         return (
                             <div key={i} className="group aspect-square bg-[#27272A] rounded-[2rem] overflow-hidden relative border-4 border-transparent hover:border-orange-500 transition-all shadow-lg hover:shadow-orange-500/20">
-                                <Image
+                                <img
                                     src={image.path}
                                     alt={image.name}
                                     width={isAboveFold ? 400 : 200}

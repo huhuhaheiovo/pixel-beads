@@ -66,7 +66,7 @@ export default async function LocaleLayout({
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                         <div className="flex items-center gap-2">
-                            <Image
+                            <img
                                 src='/web-app-manifest-192x192.png'
                                 alt='拼豆艺术'
                                 width={32}

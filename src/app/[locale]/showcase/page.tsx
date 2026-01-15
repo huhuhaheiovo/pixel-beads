@@ -133,7 +133,7 @@ export default async function ShowcasePage() {
                         const isAboveFold = i < 4;
                         return (
                             <div key={i} className="group aspect-square bg-[#F4F4F5] rounded-[2rem] overflow-hidden relative border-4 border-transparent hover:border-blue-400 transition-all shadow-lg hover:shadow-blue-400/20">
-                                <Image
+                                <img
                                     src={image.path}
                                     alt={image.name}
                                     width={isAboveFold ? 400 : 200}

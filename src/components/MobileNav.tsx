@@ -55,7 +55,7 @@ export function MobileNav() {
             <SheetContent side="right" className="w-[300px] sm:w-[400px] p-0 bg-[#3E2A1E] border-none text-[#F7F1E1]">
                 <SheetHeader className="p-6 border-b border-[#543A2A]">
                     <SheetTitle className="text-left flex items-center gap-2 text-[#F7F1E1]">
-                        <Image
+                        <img
                             src='/web-app-manifest-192x192.png'
                             alt='拼豆艺术'
                             width={32}

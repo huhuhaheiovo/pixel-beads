@@ -27,7 +27,7 @@ export function Header() {
         <header className='sticky top-0 z-50 w-full bg-[#3E2A1E]/95 backdrop-blur-md border-b border-[#543A2A] shadow-lg'>
             <div className='container mx-auto px-4 h-16 flex items-center justify-between'>
                 <Link href='/' className='flex items-center gap-2'>
-                    <Image
+                    <img
                         src='/web-app-manifest-192x192.png'
                         alt='拼豆艺术'
                         width={32}

@@ -100,11 +100,11 @@ export function usePatternExport({
             // 根据单位计算 PDF 中的单元格大小（mm）
             let pdfCellSize: number
             if (cellSizeUnit === '5mm') {
-                // 5mm 拼豆，使用 300 DPI 转换：5mm 在 300 DPI 下 = 5 * 300/25.4 ≈ 59.06mm
-                pdfCellSize = 5 * (EXPORT_DPI / MM_TO_INCH)
+                // 5mm 拼豆，PDF中直接使用5mm
+                pdfCellSize = 5
             } else if (cellSizeUnit === '2.6mm') {
-                // 2.6mm 拼豆，使用 300 DPI 转换：2.6mm 在 300 DPI 下 = 2.6 * 300/25.4 ≈ 30.71mm
-                pdfCellSize = 2.6 * (EXPORT_DPI / MM_TO_INCH)
+                // 2.6mm 拼豆，PDF中直接使用2.6mm
+                pdfCellSize = 2.6
             } else {
                 // px 单位，使用原有逻辑
                 const baseCellSize = cellSize || 18
