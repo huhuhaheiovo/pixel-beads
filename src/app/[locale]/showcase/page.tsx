@@ -3,10 +3,9 @@ import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { ArrowRight, Ghost, Trees, Heart, Sparkles, Star } from 'lucide-react';
-import fs from 'fs';
-import path from 'path';
 import { OptimizedImage as Image } from '@/components/OptimizedImage';
 import { normalizeImagePath } from '@/lib/imageUtils';
+import { ALL_PALLETTES_IMAGES } from '@/lib/imagePaths';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params;
@@ -52,18 +51,19 @@ export default async function ShowcasePage() {
         }
     ];
 
-    // Read images from public/pallettes
-    const pallettesDir = path.join(process.cwd(), 'public', 'pallettes');
-    const files = fs.readdirSync(pallettesDir);
-    const images = files
-        .filter(file => file.match(/\.(png|jpe?g|gif|webp)$/i))
-        .map(file => {
-            const localPath = `/pallettes/${file}`;
-            return {
-                name: file.replace(/-/g, ' ').replace(/\.[^/.]+$/, ''),
-                path: normalizeImagePath(localPath)
-            };
-        });
+    // Use images from imagePaths.ts
+    const images = ALL_PALLETTES_IMAGES.map(imagePath => {
+        const fileName = imagePath.split('/').pop() || '';
+        const name = fileName
+            .replace(/-/g, ' ')
+            .replace(/\.(webp|png|jpg|jpeg|gif)$/i, '')
+            .replace(/pixel beads/gi, '')
+            .trim();
+        return {
+            name: name || 'Pattern',
+            path: normalizeImagePath(`/${imagePath}`)
+        };
+    });
 
     return (
         <main className="min-h-screen bg-white">

@@ -3,10 +3,9 @@ import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { Trees, ArrowLeft, Snowflake, Gift, Star, Bell } from 'lucide-react';
-import fs from 'fs';
-import path from 'path';
 import { OptimizedImage as Image } from '@/components/OptimizedImage';
 import { normalizeImagePath } from '@/lib/imageUtils';
+import { ALL_CHRISTMAS_IMAGES } from '@/lib/imagePaths';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params;
@@ -29,18 +28,20 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function ChristmasShowcase() {
     const t = await getTranslations('Showcase');
 
-    // Read images from public/christmas
-    const christmasDir = path.join(process.cwd(), 'public', 'christmas');
-    const files = fs.readdirSync(christmasDir);
-    const images = files
-        .filter(file => file.match(/\.(png|jpe?g|gif|webp)$/i))
-        .map(file => {
-            const localPath = `/christmas/${file}`;
-            return {
-                name: file.replace(/-/g, ' ').replace(/\.[^/.]+$/, ''),
-                path: normalizeImagePath(localPath)
-            };
-        });
+    // Use images from imagePaths.ts
+    const images = ALL_CHRISTMAS_IMAGES.map(imagePath => {
+        const fileName = imagePath.split('/').pop() || '';
+        const name = fileName
+            .replace(/-/g, ' ')
+            .replace(/\.(webp|png|jpg|jpeg|gif)$/i, '')
+            .replace(/pixel beads/gi, '')
+            .replace(/christmas/gi, '')
+            .trim();
+        return {
+            name: name || 'Christmas Pattern',
+            path: normalizeImagePath(`/${imagePath}`)
+        };
+    });
 
     return (
         <main className="min-h-screen bg-slate-50">

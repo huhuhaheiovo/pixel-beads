@@ -31,6 +31,7 @@
         "metaDescription": "Explore endless perler bead ideas or create your own with our free pattern generator. Convert photos to custom designs, match colors, and export PDF guides.",
         "description": "Discover endless perler bead ideas and transform your photos into custom patterns in seconds! Our free DIY Pattern Creator helps you design, edit, and export custom bead charts.",
         "ctaStart": "Start Creating Ideas",
+        "ctaTutorial": "Full Perler Bead Tutorial",
         "ctaLearn": "How It Works",
         "stats": {
             "brands": "Bead Brands",
@@ -69,7 +70,70 @@
             "footer": "No account required • Instant Export • 100% Free"
         },
         "showcaseTitle": "Easy Featured Perler Bead Art",
-        "showcaseSubtitle": "Explore some of the most popular designs created by our community. Start your next project with just a click."
+        "showcaseSubtitle": "Explore some of the most popular designs created by our community. Start your next project with just a click.",
+        "tutorial": {
+            "title": "Complete Perler Bead Guide",
+            "selection": {
+                "title": "1. Selection: The Foundation",
+                "problem": "Solves uneven melting and color layers caused by material incompatibility.",
+                "principles": "5mm beads on 2.6mm plates break proportions. Mixing PE (soft) and EVA (hard) causes uneven heating.",
+                "mistakes": "Mixing different brands (different shrinkage), ignoring transparency effects.",
+                "faq": [
+                    {
+                        "q": "Can I mix Perler and Hama beads?",
+                        "a": "Not recommended. Brands have different melt points and shrinkage rates."
+                    }
+                ]
+            },
+            "coloring": {
+                "title": "2. Coloring: Breathing Life",
+                "problem": "Solves the 'guessing colors' and 'wasting beads' problems.",
+                "principles": "PixelBeads algorithms map photos to real brand color codes using RGB to Lab conversion.",
+                "mistakes": "Using too many similar colors (loss of detail), ignoring ambient light impact.",
+                "faq": [
+                    {
+                        "q": "How to save money on beads?",
+                        "a": "Toggle 'Reduce Colors' in the generator to use the minimum colors for maximum detail."
+                    }
+                ]
+            },
+            "printing": {
+                "title": "3. Printing: Blueprint to Reality",
+                "problem": "Solves eye strain from mobile screens and grid mistakes.",
+                "principles": "1:1 HD PDF export with color labels. Even the colorblind can place beads accurately.",
+                "mistakes": "Incorrect print scale (doesn't fit plates), paper too thick for light tracing.",
+                "faq": [
+                    {
+                        "q": "What if the print is larger than the plate?",
+                        "a": "Set print scale to 'Actual Size' or 100%, avoid 'Fit to Page'."
+                    }
+                ]
+            },
+            "ironing": {
+                "title": "4. Ironing: The Art of Setting",
+                "problem": "Solves burnt beads, uneven melting, and warping.",
+                "principles": "Even heat conduction. Use ironing paper (glossy) or parchment (matte) for texture.",
+                "mistakes": "Staying too long in one spot, failing to use weights leading to warping.",
+                "faq": [
+                    {
+                        "q": "Why are the bead holes so big?",
+                        "a": "Too much pressure or high heat. Use medium-low heat and circular motions."
+                    }
+                ]
+            },
+            "framing": {
+                "title": "5. Framing: The Final Touch",
+                "problem": "Solves dust, brittleness, and display issues.",
+                "principles": "Physical protection and visual enhancement. Backing prevents large works from sagging.",
+                "mistakes": "Using glue that yellows, choosing frames too shallow for 3D beads.",
+                "faq": [
+                    {
+                        "q": "Do large works need special frames?",
+                        "a": "Deep 'shadow box' frames and strong adhesive backing are recommended."
+                    }
+                ]
+            }
+        }
     },
     "Generator": {
         "exportPdf": "Export PDF",
@@ -417,5 +481,101 @@
         "structuredDataFeature2": "Multiple Layer Support",
         "structuredDataFeature3": "Animation Frames (coming soon)",
         "structuredDataFeature4": "Palette Management"
+    },
+    "AboutUs": {
+        "title": "About Us",
+        "metaTitle": "About Us | PixelBeads - Our Story & Mission",
+        "metaDescription": "Learn about PixelBeads, our mission to make perler bead pattern creation accessible to everyone, and the story behind our free online tool.",
+        "intro": "Welcome to PixelBeads! We're passionate about making perler bead art creation accessible, fun, and free for everyone. Our mission is to empower crafters, artists, and families to transform their ideas into beautiful bead patterns with ease.",
+        "storyTitle": "Our Story",
+        "storyContent": "PixelBeads was born from a simple observation: creating perler bead patterns from photos was either expensive, complicated, or required specialized software. As crafters ourselves, we experienced the frustration of manually counting beads, matching colors, and trying to convert images into usable patterns. We set out to create a tool that would solve these problems - completely free, easy to use, and accessible to anyone with an internet connection. What started as a personal project has grown into a platform used by thousands of crafters worldwide.",
+        "teamTitle": "Our Team",
+        "teamContent": "We are a small, dedicated team of developers and craft enthusiasts who believe in the power of creativity and accessibility. Our team combines technical expertise with a genuine passion for perler bead art. We're constantly working to improve the tool, add new features, and ensure that PixelBeads remains free and accessible to everyone. While we may be a small team, our commitment to quality and user experience drives everything we do.",
+        "missionTitle": "Our Mission",
+        "missionContent": "Our mission is simple: to make perler bead pattern creation accessible, free, and enjoyable for everyone. We believe that creativity should not be limited by cost, technical barriers, or complexity. Whether you're a seasoned crafter or just starting your first project, we want PixelBeads to be the tool that helps bring your ideas to life. We're committed to maintaining a free, privacy-focused platform that respects your data and your creativity.",
+        "visionTitle": "Our Vision",
+        "visionContent": "We envision a world where anyone can easily create beautiful perler bead art from any image, without barriers. We see PixelBeads becoming the go-to platform for perler bead enthusiasts worldwide - a place where creativity flourishes, patterns are shared, and the community grows. Our vision extends beyond just a tool; we want to foster a community of crafters who inspire and support each other in their creative journeys.",
+        "whyTitle": "Why We Created This Tool",
+        "whyContent": "We created PixelBeads because we experienced firsthand the challenges of creating perler bead patterns. Existing solutions were either too expensive, too complicated, or didn't provide the features we needed. We wanted a tool that would automatically match colors to real bead brands, calculate exact bead counts, generate printable PDFs, and do it all for free. We also recognized the importance of privacy - your images should be processed locally when possible, and your data should never be sold. These principles guided us in building PixelBeads, and they continue to drive our development today."
+    },
+    "Contact": {
+        "title": "Contact Us",
+        "metaTitle": "Contact Us | PixelBeads - Get in Touch",
+        "metaDescription": "Get in touch with the PixelBeads team. We're here to help with questions, feedback, or support. Contact us via email or through our contact form.",
+        "intro": "We'd love to hear from you! Whether you have questions, feedback, suggestions, or need support, we're here to help. Reach out to us through any of the methods below.",
+        "emailTitle": "Email Us",
+        "emailDescription": "Send us an email and we'll get back to you as soon as possible.",
+        "defaultEmail": "contact@pixel-beads.com",
+        "responseTimeTitle": "Response Time",
+        "responseTimeContent": "We typically respond to emails within 24-48 hours during business days. For urgent matters, please mark your email as urgent and we'll prioritize it.",
+        "socialMediaTitle": "Follow Us",
+        "socialMediaDescription": "Stay connected with us on social media for updates, tips, and community highlights.",
+        "socialMedia": {
+            "twitter": {
+                "label": "Twitter",
+                "url": "https://twitter.com/pixelbeads"
+            },
+            "facebook": {
+                "label": "Facebook",
+                "url": "https://facebook.com/pixelbeads"
+            }
+        },
+        "formTitle": "Send Us a Message",
+        "formDescription": "Prefer to send a message directly? Click the button below to open your email client with a pre-filled message.",
+        "formNote": "This will open your default email client. If you prefer, you can also copy our email address above and send us a message directly.",
+        "formSubject": "Question about PixelBeads",
+        "formButton": "Open Email Client",
+        "helpTitle": "Need Help?",
+        "helpContent": "Before contacting us, you might find the answer to your question in our FAQ section. Check out our help page for common questions and troubleshooting guides.",
+        "helpLink": "Visit Help Center"
+    },
+    "FAQ": {
+        "title": "Frequently Asked Questions",
+        "metaTitle": "FAQ & Help Center | PixelBeads - Common Questions",
+        "metaDescription": "Find answers to common questions about PixelBeads, including how to use the generator, export patterns, troubleshoot issues, and more.",
+        "intro": "Welcome to our FAQ section! Here you'll find answers to the most common questions about using PixelBeads. If you can't find what you're looking for, feel free to contact us.",
+        "categoryGeneral": "General Questions",
+        "categoryUsage": "Using the Generator",
+        "categoryTroubleshooting": "Troubleshooting",
+        "categoryExport": "Export & Download",
+        "tutorialTitle": "Getting Started",
+        "tutorialDescription": "New to PixelBeads? Check out these tutorials to learn how to create your first pattern.",
+        "tutorialLink1": "Pattern Generator Guide",
+        "tutorialLink2": "Image to Pixel Tutorial",
+        "q1": "What is PixelBeads?",
+        "a1": "PixelBeads is a free online tool that converts images into perler bead patterns. You can upload any photo, choose your preferred bead brand (Perler, Hama, Artkal, Mard), and generate printable patterns with exact bead counts and color codes.",
+        "q2": "Is PixelBeads really free?",
+        "a2": "Yes! PixelBeads is completely free to use. There are no hidden fees, subscriptions, or premium features. We believe that creativity should be accessible to everyone.",
+        "q3": "Do I need to create an account?",
+        "a3": "No account is required! You can use PixelBeads immediately without signing up. All processing happens in your browser, so your images stay private.",
+        "q4": "How do I upload an image?",
+        "a4": "Simply click the upload area or drag and drop your image file into the generator. Supported formats include JPG, PNG, GIF, and WebP. For best results, use high-contrast images with clear subject separation.",
+        "q5": "Which bead brands are supported?",
+        "a5": "We support all major bead brands including Perler, Hama, Artkal, and Mard. Each brand has its complete color palette with accurate color matching to your images.",
+        "q6": "How do I adjust the grid size?",
+        "a6": "Use the width slider in the settings panel to adjust your pattern size. You can also choose between different difficulty levels (Easy, Medium, Hard) which automatically set appropriate grid sizes. For custom sizes, select 'Custom' and adjust manually.",
+        "q7": "Can I edit the pattern after generating it?",
+        "a7": "Yes! You can use the brush tool to add colors, the eraser to remove them, and the eyedropper to pick colors from the pattern. All changes are saved automatically as you work.",
+        "q8": "My image isn't uploading. What should I do?",
+        "a8": "First, check that your image file is in a supported format (JPG, PNG, GIF, or WebP). Make sure the file size isn't too large (we recommend under 10MB). Try refreshing the page or clearing your browser cache if issues persist.",
+        "q9": "The colors don't look right. How can I fix this?",
+        "a9": "Try switching to a different bead brand palette - some brands have better color matches for certain images. You can also manually adjust colors using the brush tool after generation. For best results, start with high-quality, well-lit images.",
+        "q10": "The pattern is taking too long to generate.",
+        "a10": "Large images or high grid sizes can take longer to process. Try reducing the grid width or using a smaller image. If the page seems frozen, try refreshing - processing happens in your browser, so it depends on your device's performance.",
+        "q11": "Can I use patterns for commercial purposes?",
+        "a11": "Patterns you create from your own images are yours to use as you wish, including commercial use. However, if you're using copyrighted images, you'll need appropriate permissions. Always respect intellectual property rights.",
+        "q12": "How do I export my pattern?",
+        "a12": "Click the 'Export PDF' or 'Export Image' button. For PDFs, you can choose to save to the library or download directly. PDFs include the colored grid, bead codes, and shopping lists. Images are exported as high-resolution PNG files.",
+        "q13": "What's the difference between PDF and Image export?",
+        "a13": "PDF export creates a printable document perfect for offline use, with bead codes, statistics, and instructions. Image export creates a high-resolution PNG file ideal for digital sharing, social media, or viewing on devices. Both maintain the same quality and colors.",
+        "troubleshootingTitle": "Troubleshooting Guide",
+        "troubleshootingDescription": "If you're experiencing issues, try these common solutions:",
+        "troubleshootingTip1": "Clear your browser cache and cookies, then refresh the page",
+        "troubleshootingTip2": "Try using a different browser (Chrome, Firefox, or Safari)",
+        "troubleshootingTip3": "Make sure JavaScript is enabled in your browser settings",
+        "troubleshootingTip4": "For image upload issues, try compressing your image or using a different format",
+        "stillNeedHelp": "Still Need Help?",
+        "contactDescription": "Can't find the answer you're looking for? We're here to help! Contact us and we'll get back to you as soon as possible.",
+        "contactLink": "Contact Us"
     }
 }

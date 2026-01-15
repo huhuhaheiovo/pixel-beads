@@ -3,10 +3,9 @@ import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { Ghost, ArrowLeft, Skull, Moon, CloudFog } from 'lucide-react';
-import fs from 'fs';
-import path from 'path';
 import { OptimizedImage as Image } from '@/components/OptimizedImage';
 import { normalizeImagePath } from '@/lib/imageUtils';
+import { ALL_HALLOWEEN_IMAGES } from '@/lib/imagePaths';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params;
@@ -29,18 +28,20 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function HalloweenShowcase() {
     const t = await getTranslations('Showcase');
 
-    // Read images from public/halloween
-    const halloweenDir = path.join(process.cwd(), 'public', 'halloween');
-    const files = fs.readdirSync(halloweenDir);
-    const images = files
-        .filter(file => file.match(/\.(png|jpe?g|gif|webp)$/i))
-        .map(file => {
-            const localPath = `/halloween/${file}`;
-            return {
-                name: file.replace(/-/g, ' ').replace(/\.[^/.]+$/, ''),
-                path: normalizeImagePath(localPath)
-            };
-        });
+    // Use images from imagePaths.ts
+    const images = ALL_HALLOWEEN_IMAGES.map(imagePath => {
+        const fileName = imagePath.split('/').pop() || '';
+        const name = fileName
+            .replace(/-/g, ' ')
+            .replace(/\.(webp|png|jpg|jpeg|gif)$/i, '')
+            .replace(/pixel beads/gi, '')
+            .replace(/halloween/gi, '')
+            .trim();
+        return {
+            name: name || 'Halloween Pattern',
+            path: normalizeImagePath(`/${imagePath}`)
+        };
+    });
 
     return (
         <main className="min-h-screen bg-[#18181B] text-white">

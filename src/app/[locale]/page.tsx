@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Link } from '@/i18n/routing'
-import { ArrowRight, ImageIcon, LayoutGrid, Download, Zap, Hammer, Heart, Star, Sparkles } from 'lucide-react'
+import { ArrowRight, ImageIcon, LayoutGrid, Download, Zap, Hammer, Heart, Star, Sparkles, HelpCircle, AlertCircle, Info, Printer, Box, Layers, Target, Frame } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { StartButton } from '@/components/StartButton'
 import { OptimizedImage as Image } from '@/components/OptimizedImage'
@@ -78,14 +78,14 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     // Use static constants instead of file system operations
     const getSampledImages = () => {
         const sampledImages: { name: string, path: string }[] = []
-        
+
         // 从每个主题取前 2 张图片
         const themes = [
             { images: ALL_PALLETTES_IMAGES, prefix: 'pallettes' },
             { images: ALL_HALLOWEEN_IMAGES, prefix: 'halloween' },
             { images: ALL_CHRISTMAS_IMAGES, prefix: 'christmas' }
         ]
-        
+
         themes.forEach(({ images }) => {
             images.slice(0, 2).forEach(imagePath => {
                 const fileName = imagePath.split('/').pop() || ''
@@ -96,7 +96,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 })
             })
         })
-        
+
         return sampledImages
     }
 
@@ -140,6 +140,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                             <StartButton href='/perler-bead-pattern-generator'>
                                 {t('ctaStart')}
                             </StartButton>
+                            <Link
+                                href='#tutorial'
+                                className='inline-flex items-center gap-3 px-8 py-4 bg-white border-4 border-[#18181B] text-[#18181B] rounded-2xl font-black uppercase tracking-widest hover:bg-[#18181B] hover:text-white transition-all shadow-[4px_4px_0px_#EF4444] hover:shadow-none hover:translate-x-1 hover:translate-y-1'
+                            >
+                                <Hammer size={20} />
+                                {t('ctaTutorial')}
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -216,99 +223,287 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 </div>
             </section>
 
-            {/* Features Grid */}
-            <section className='py-32 bg-white relative overflow-hidden'>
-                <div className='container mx-auto px-4 relative z-10'>
-                    <div className='text-center mb-20 animate-fade-in'>
-                        <h2 className='text-4xl md:text-6xl font-black tracking-tighter uppercase mb-4 text-[#18181B]'>{t('features.title')}</h2>
-                        <div className='w-24 h-2 bg-blue-500 mx-auto rounded-full' />
-                    </div>
-
-                    <div className='grid md:grid-cols-3 gap-10'>
-                        {[
-                            {
-                                icon: <ImageIcon className='text-white' />,
-                                bg: 'bg-blue-500',
-                                title: t('features.upload.title'),
-                                desc: t('features.upload.desc')
-                            },
-                            {
-                                icon: <LayoutGrid className='text-white' />,
-                                bg: 'bg-red-500',
-                                title: t('features.grid.title'),
-                                desc: t('features.grid.desc')
-                            },
-                            {
-                                icon: <Zap className='text-white' />,
-                                bg: 'bg-yellow-500',
-                                title: t('features.palette.title'),
-                                desc: t('features.palette.desc')
-                            }
-                        ].map((feature, i) => (
-                            <div key={i} className='group p-10 bg-[#FAFAFA] border-4 border-[#F4F4F5] rounded-[3rem] hover:border-[#18181B] transition-all hover:-translate-y-2 shadow-sm hover:shadow-xl'>
-                                <div className={`w-16 h-16 ${feature.bg} rounded-2xl flex items-center justify-center mb-8 shadow-lg group-hover:rotate-6 transition-transform`}>
-                                    {feature.icon}
-                                </div>
-                                <h3 className='text-2xl font-black mb-6 uppercase tracking-tighter text-[#18181B]'>{feature.title}</h3>
-                                <p className='text-[#71717A] leading-relaxed text-lg font-medium'>{feature.desc}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Side Decoration */}
-                <div className='absolute top-0 right-0 w-64 h-64 bg-green-50 rounded-full blur-[80px] -z-10 opacity-50 translate-x-1/2' />
-            </section>
-
-            {/* How it Works */}
-            <section id='how-it-works' className='py-32 bg-[#FAFAFA] border-t-8 border-yellow-400/10'>
+            {/* Tutorial Workflow - Pixel Style */}
+            <section id='tutorial' className='py-32 bg-[#F7F1E1] border-t-8 border-[#3E2A1E]/10'>
                 <div className='container mx-auto px-4'>
-                    <div className='max-w-6xl mx-auto flex flex-col md:flex-row gap-20 items-center'>
-                        <div className='flex-1 order-2 md:order-1'>
-                            <div className='space-y-16'>
-                                {[
-                                    { step: '01', title: t('howItWorks.step1Title'), desc: t('howItWorks.step1Desc'), color: 'text-red-500' },
-                                    { step: '02', title: t('howItWorks.step2Title'), desc: t('howItWorks.step2Desc'), color: 'text-blue-500' },
-                                    { step: '03', title: t('howItWorks.step3Title'), desc: t('howItWorks.step3Desc'), color: 'text-yellow-500' },
-                                    { step: '04', title: t('howItWorks.step4Title'), desc: t('howItWorks.step4Desc'), color: 'text-green-500' }
-                                ].map((item, i) => (
-                                    <div key={i} className='flex gap-8 group'>
-                                        <div className={`text-6xl font-black tracking-tighter opacity-20 group-hover:opacity-100 transition-opacity ${item.color}`}>
-                                            {item.step}
-                                        </div>
-                                        <div>
-                                            <h4 className='text-2xl font-black uppercase tracking-tight mb-3 text-[#18181B]'>{item.title}</h4>
-                                            <p className='text-[#71717A] text-lg leading-relaxed font-medium'>{item.desc}</p>
+                    <div className='text-center mb-24'>
+                        <div className='inline-block p-4 border-4 border-[#18181B] bg-white shadow-[8px_8px_0px_#18181B] mb-8'>
+                            <h2 className='text-3xl md:text-5xl font-black tracking-widest uppercase text-[#18181B]'>{t('tutorial.title')}</h2>
+                        </div>
+                        <p className='text-xl text-[#71717A] max-w-2xl mx-auto font-medium'>{t('description')}</p>
+                    </div>
+
+                    <div className='space-y-32'>
+                        {/* 1. Selection */}
+                        <div className='relative'>
+                            <div className='absolute -left-4 top-0 w-1 bg-[#18181B] h-full hidden lg:block opacity-10' />
+                            <div className='grid lg:grid-cols-2 gap-16 items-start'>
+                                <div className='space-y-8'>
+                                    <div className='inline-flex items-center gap-4 px-6 py-3 border-4 border-[#18181B] bg-[#EF4444] text-white shadow-[6px_6px_0px_#18181B]'>
+                                        <Target size={24} />
+                                        <span className='font-black uppercase tracking-widest'>{t('tutorial.selection.title')}</span>
+                                    </div>
+                                    <div className='space-y-6'>
+                                        <div className='p-8 bg-white border-4 border-[#18181B] shadow-[8px_8px_0px_#18181B] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all'>
+                                            <div className='flex items-start gap-4 mb-4'>
+                                                <div className='w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center shrink-0'>
+                                                    <Sparkles size={20} className='text-green-600' />
+                                                </div>
+                                                <div>
+                                                    <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>核心价值</h4>
+                                                    <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.selection.problem')}</p>
+                                                </div>
+                                            </div>
+                                            <div className='flex items-start gap-4 mb-4'>
+                                                <div className='w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0'>
+                                                    <Info size={20} className='text-blue-600' />
+                                                </div>
+                                                <div>
+                                                    <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>参数原理</h4>
+                                                    <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.selection.principles')}</p>
+                                                </div>
+                                            </div>
+                                            <div className='flex items-start gap-4'>
+                                                <div className='w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center shrink-0'>
+                                                    <AlertCircle size={20} className='text-red-600' />
+                                                </div>
+                                                <div>
+                                                    <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>常见错误</h4>
+                                                    <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.selection.mistakes')}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                ))}
+                                </div>
+                                <div className='lg:sticky lg:top-24 space-y-6'>
+                                    <div className='p-8 bg-white border-4 border-[#18181B] rounded-none'>
+                                        <h4 className='flex items-center gap-2 font-black uppercase text-lg tracking-widest text-[#18181B] mb-6'>
+                                            <HelpCircle className='text-[#EF4444]' /> FAQ
+                                        </h4>
+                                        <div className='space-y-6'>
+                                            <div className='pb-6 border-b-2 border-dashed border-[#D8CBB9]'>
+                                                <p className='font-bold text-[#18181B] mb-2'>Q: Perler 和 Hama 豆子能混用吗？</p>
+                                                <p className='text-[#71717A] text-sm leading-relaxed'>A: 建议不混用。不同品牌的收缩率和熔点略有差异，混用可能导致作品不平整。</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div className='flex-1 order-1 md:order-2'>
-                            <div className='relative group'>
-                                <div className='absolute inset-0 bg-yellow-400 rounded-[4rem] rotate-3 -z-10 opacity-20 group-hover:rotate-6 transition-transform' />
-                                <Link
-                                    href='/perler-bead-pattern-generator'
-                                    className='block bg-white p-6 rounded-[4rem] shadow-2xl border-4 border-[#18181B] transition-all hover:scale-[1.02]'
-                                >
-                                    <div className='aspect-square bg-yellow-50 rounded-[3rem] flex items-center justify-center p-12 overflow-hidden relative border-4 border-dashed border-yellow-200'>
-                                        <div className='grid grid-cols-12 gap-1.5 w-full opacity-60'>
-                                            {Array.from({ length: 144 }).map((_, i) => (
-                                                <div
-                                                    key={i} className='aspect-square rounded-full shadow-inner' style={{
-                                                        backgroundColor: ['#EF4444', '#3B82F6', '#F59E0B', '#10B981', '#18181B'][Math.floor(Math.random() * 5)],
-                                                        opacity: 0.5 + Math.random() * 0.5
-                                                    }}
-                                                />
-                                            ))}
-                                        </div>
-                                        <div className='absolute inset-0 bg-yellow-400/0 group-hover:bg-yellow-400/10 transition-colors flex flex-col items-center justify-center gap-6'>
-                                            <Download size={80} className='text-[#18181B] animate-bounce shrink-0' />
-                                            <span className='font-black uppercase tracking-[0.2em] text-[#18181B]'>Free DIY Pattern Download</span>
+
+                        {/* 2. Coloring */}
+                        <div className='relative'>
+                            <div className='grid lg:grid-cols-2 gap-16 items-start'>
+                                <div className='order-2 lg:order-1 lg:sticky lg:top-24 space-y-6'>
+                                    <div className='p-8 bg-white border-4 border-[#18181B]'>
+                                        <h4 className='flex items-center gap-2 font-black uppercase text-lg tracking-widest text-[#18181B] mb-6'>
+                                            <HelpCircle className='text-[#3B82F6]' /> FAQ
+                                        </h4>
+                                        <div className='space-y-6'>
+                                            <div className='pb-6 border-b-2 border-dashed border-[#D8CBB9]'>
+                                                <p className='font-bold text-[#18181B] mb-2'>Q: 如何选出最省钱的配色方案？</p>
+                                                <p className='text-[#71717A] text-sm leading-relaxed'>A: 在生成器中勾选‘减少颜色数量’，系统会用最少的色号还原最多的细节。</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </Link>
-                                <Star className='absolute -top-10 -left-10 text-yellow-500 fill-yellow-500 animate-spin' style={{ animationDuration: '8s' }} size={60} />
+                                </div>
+                                <div className='order-1 lg:order-2 space-y-8'>
+                                    <div className='inline-flex items-center gap-4 px-6 py-3 border-4 border-[#18181B] bg-[#3B82F6] text-white shadow-[6px_6px_0px_#18181B]'>
+                                        <Layers size={24} />
+                                        <span className='font-black uppercase tracking-widest'>{t('tutorial.coloring.title')}</span>
+                                    </div>
+                                    <div className='p-8 bg-white border-4 border-[#18181B] shadow-[8px_8px_0px_#18181B] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all'>
+                                        <div className='flex items-start gap-4 mb-4'>
+                                            <div className='w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center shrink-0'>
+                                                <Sparkles size={20} className='text-green-600' />
+                                            </div>
+                                            <div>
+                                                <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>核心价值</h4>
+                                                <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.coloring.problem')}</p>
+                                            </div>
+                                        </div>
+                                        <div className='flex items-start gap-4 mb-4'>
+                                            <div className='w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0'>
+                                                <Info size={20} className='text-blue-600' />
+                                            </div>
+                                            <div>
+                                                <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>参数原理</h4>
+                                                <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.coloring.principles')}</p>
+                                            </div>
+                                        </div>
+                                        <div className='flex items-start gap-4'>
+                                            <div className='w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center shrink-0'>
+                                                <AlertCircle size={20} className='text-red-600' />
+                                            </div>
+                                            <div>
+                                                <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>常见错误</h4>
+                                                <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.coloring.mistakes')}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 3. Printing */}
+                        <div className='relative'>
+                            <div className='grid lg:grid-cols-2 gap-16 items-start'>
+                                <div className='space-y-8'>
+                                    <div className='inline-flex items-center gap-4 px-6 py-3 border-4 border-[#18181B] bg-[#F59E0B] text-white shadow-[6px_6px_0px_#18181B]'>
+                                        <Printer size={24} />
+                                        <span className='font-black uppercase tracking-widest'>{t('tutorial.printing.title')}</span>
+                                    </div>
+                                    <div className='p-8 bg-white border-4 border-[#18181B] shadow-[8px_8px_0px_#18181B] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all'>
+                                        <div className='flex items-start gap-4 mb-4'>
+                                            <div className='w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center shrink-0'>
+                                                <Sparkles size={20} className='text-green-600' />
+                                            </div>
+                                            <div>
+                                                <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>核心价值</h4>
+                                                <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.printing.problem')}</p>
+                                            </div>
+                                        </div>
+                                        <div className='flex items-start gap-4 mb-4'>
+                                            <div className='w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0'>
+                                                <Info size={20} className='text-blue-600' />
+                                            </div>
+                                            <div>
+                                                <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>参数原理</h4>
+                                                <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.printing.principles')}</p>
+                                            </div>
+                                        </div>
+                                        <div className='flex items-start gap-4'>
+                                            <div className='w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center shrink-0'>
+                                                <AlertCircle size={20} className='text-red-600' />
+                                            </div>
+                                            <div>
+                                                <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>常见错误</h4>
+                                                <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.printing.mistakes')}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='lg:sticky lg:top-24 space-y-6'>
+                                    <div className='p-8 bg-white border-4 border-[#18181B]'>
+                                        <h4 className='flex items-center gap-2 font-black uppercase text-lg tracking-widest text-[#18181B] mb-6'>
+                                            <HelpCircle className='text-[#F59E0B]' /> FAQ
+                                        </h4>
+                                        <div className='space-y-6'>
+                                            <div className='pb-6 border-b-2 border-dashed border-[#D8CBB9]'>
+                                                <p className='font-bold text-[#18181B] mb-2'>Q: 打印出来的图纸比模板大怎么办？</p>
+                                                <p className='text-[#71717A] text-sm leading-relaxed'>A: 请在打印设置中选择‘实际大小’或 100% 比例，不要选择‘适合页面’。</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 4. Ironing */}
+                        <div className='relative'>
+                            <div className='grid lg:grid-cols-2 gap-16 items-start'>
+                                <div className='order-2 lg:order-1 lg:sticky lg:top-24 space-y-6'>
+                                    <div className='p-8 bg-white border-4 border-[#18181B]'>
+                                        <h4 className='flex items-center gap-2 font-black uppercase text-lg tracking-widest text-[#18181B] mb-6'>
+                                            <HelpCircle className='text-[#10B981]' /> FAQ
+                                        </h4>
+                                        <div className='space-y-6'>
+                                            <div className='pb-6 border-b-2 border-dashed border-[#D8CBB9]'>
+                                                <p className='font-bold text-[#18181B] mb-2'>Q: 为什么烫出来的豆子洞很大？</p>
+                                                <p className='text-[#71717A] text-sm leading-relaxed'>A: 可能是熨斗压力过大或温度过高，建议采用中小火，画圆手势均匀加热。</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='order-1 lg:order-2 space-y-8'>
+                                    <div className='inline-flex items-center gap-4 px-6 py-3 border-4 border-[#18181B] bg-[#10B981] text-white shadow-[6px_6px_0px_#18181B]'>
+                                        <Zap size={24} />
+                                        <span className='font-black uppercase tracking-widest'>{t('tutorial.ironing.title')}</span>
+                                    </div>
+                                    <div className='p-8 bg-white border-4 border-[#18181B] shadow-[8px_8px_0px_#18181B] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all'>
+                                        <div className='flex items-start gap-4 mb-4'>
+                                            <div className='w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center shrink-0'>
+                                                <Sparkles size={20} className='text-green-600' />
+                                            </div>
+                                            <div>
+                                                <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>核心价值</h4>
+                                                <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.ironing.problem')}</p>
+                                            </div>
+                                        </div>
+                                        <div className='flex items-start gap-4 mb-4'>
+                                            <div className='w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0'>
+                                                <Info size={20} className='text-blue-600' />
+                                            </div>
+                                            <div>
+                                                <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>参数原理</h4>
+                                                <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.ironing.principles')}</p>
+                                            </div>
+                                        </div>
+                                        <div className='flex items-start gap-4'>
+                                            <div className='w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center shrink-0'>
+                                                <AlertCircle size={20} className='text-red-600' />
+                                            </div>
+                                            <div>
+                                                <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>常见错误</h4>
+                                                <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.ironing.mistakes')}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 5. Framing */}
+                        <div className='relative'>
+                            <div className='grid lg:grid-cols-2 gap-16 items-start'>
+                                <div className='space-y-8'>
+                                    <div className='inline-flex items-center gap-4 px-6 py-3 border-4 border-[#18181B] bg-purple-500 text-white shadow-[6px_6px_0px_#18181B]'>
+                                        <Frame size={24} />
+                                        <span className='font-black uppercase tracking-widest'>{t('tutorial.framing.title')}</span>
+                                    </div>
+                                    <div className='p-8 bg-white border-4 border-[#18181B] shadow-[8px_8px_0px_#18181B] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all'>
+                                        <div className='flex items-start gap-4 mb-4'>
+                                            <div className='w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center shrink-0'>
+                                                <Sparkles size={20} className='text-green-600' />
+                                            </div>
+                                            <div>
+                                                <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>核心价值</h4>
+                                                <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.framing.problem')}</p>
+                                            </div>
+                                        </div>
+                                        <div className='flex items-start gap-4 mb-4'>
+                                            <div className='w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0'>
+                                                <Info size={20} className='text-blue-600' />
+                                            </div>
+                                            <div>
+                                                <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>参数原理</h4>
+                                                <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.framing.principles')}</p>
+                                            </div>
+                                        </div>
+                                        <div className='flex items-start gap-4'>
+                                            <div className='w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center shrink-0'>
+                                                <AlertCircle size={20} className='text-red-600' />
+                                            </div>
+                                            <div>
+                                                <h4 className='font-black uppercase text-sm tracking-widest text-[#18181B] mb-2'>常见错误</h4>
+                                                <p className='text-[#5A4738] leading-relaxed'>{t('tutorial.framing.mistakes')}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='lg:sticky lg:top-24 space-y-6'>
+                                    <div className='p-8 bg-white border-4 border-[#18181B]'>
+                                        <h4 className='flex items-center gap-2 font-black uppercase text-lg tracking-widest text-[#18181B] mb-6'>
+                                            <HelpCircle className='text-purple-500' /> FAQ
+                                        </h4>
+                                        <div className='space-y-6'>
+                                            <div className='pb-6 border-b-2 border-dashed border-[#D8CBB9]'>
+                                                <p className='font-bold text-[#18181B] mb-2'>Q: 大幅作品需要特殊的框吗？</p>
+                                                <p className='text-[#71717A] text-sm leading-relaxed'>A: 建议选择立体中空框，并使用发泡胶或纳诺胶固定背板。</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
