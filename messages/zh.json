@@ -140,6 +140,7 @@
             "skipAndDownload": "跳过，直接下载",
             "saveAndDownload": "保存并下载",
             "processing": "处理中...",
+            "exporting": "导出中...",
             "patternNamePlaceholder": "例如：可爱猫咪拼豆",
             "authorNamePlaceholder": "例如：小豆匠",
             "messagePlaceholder": "例如：冰箱贴",

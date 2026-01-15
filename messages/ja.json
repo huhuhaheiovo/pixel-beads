@@ -139,6 +139,8 @@
             "message": "作者メッセージ",
             "skipAndDownload": "スキップしてダウンロード",
             "saveAndDownload": "保存してダウンロード",
+            "processing": "処理中...",
+            "exporting": "エクスポート中...",
             "patternNamePlaceholder": "例：かわいい猫のパターン",
             "authorNamePlaceholder": "例：ビーズマスター",
             "messagePlaceholder": "例：クリスマスプレゼント",

@@ -140,6 +140,7 @@
             "skipAndDownload": "Skip and Download",
             "saveAndDownload": "Save and Download",
             "processing": "Processing...",
+            "exporting": "Exporting...",
             "patternNamePlaceholder": "e.g., Cute Cat Pattern",
             "authorNamePlaceholder": "e.g., BeadMaster",
             "messagePlaceholder": "e.g., Christmas present",
