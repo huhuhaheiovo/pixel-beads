@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
+
 import {
   Dialog,
   DialogContent,
@@ -14,6 +15,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
+
 
 interface ExportDialogProps {
   open: boolean
@@ -44,7 +46,8 @@ export function ExportDialog({
   const [message, setMessage] = useState('')
   const [showNameError, setShowNameError] = useState(false)
   const [clickedAction, setClickedAction] = useState<'skip' | 'save' | null>(null)
-
+// 添加一个独立的 loading 状态
+  const [loadingImg, setLoadingImg] = useState(false)
   // Reset clickedAction when loading becomes false
   useEffect(() => {
     if (!loading) {
@@ -69,10 +72,30 @@ export function ExportDialog({
     })
   }
 
-  const handleSkip = () => {
+  const handleSkip = async () => {
+    // if (loadingImg) return
+    // setClickedAction('skip')
+    // setLoadingImg(true)
+    // // 让 UI 有时间更新显示 loading
+    // await new Promise(resolve => setTimeout(resolve, 100))
+    // try {
+    //   onSkip() // 同步执行
+    // } catch (error) {
+    //   console.error('Skip failed:', error)
+    // } finally {
+    //   // 确保至少显示 300ms 的 loading 状态
+    //   setTimeout(() => setLoadingImg(false), 300)
+    // }
     if (loading) return
-    setClickedAction('skip')
-    onSkip()
+    setShowNameError(false)
+    setClickedAction('save')
+    onSaveAndExport({
+      name: "",
+      author: author.trim() || undefined,
+      public: isPublic,
+      message: message.trim() || undefined
+    })
+
   }
 
   return (
@@ -160,7 +183,7 @@ export function ExportDialog({
             disabled={loading}
             className="w-full sm:w-auto order-2 sm:order-1 border-[#D8CBB9] text-[#5A4738] hover:bg-[#F0EEE8] hover:text-[#3E2A1E]"
           >
-            {loading && clickedAction === 'skip' ? (
+            {loading && clickedAction === 'save' ? (
               <>
                 <div className="w-4 h-4 border-2 border-[#5A4738] border-t-transparent animate-spin mr-2" />
                 {t('processing') || 'Processing...'}
