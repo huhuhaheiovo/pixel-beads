@@ -17,7 +17,7 @@ import { UploadArea } from './pixel-bead-generator/upload-area'
 import { GeneratorConfiguration } from './pixel-bead-generator/generator-configuration'
 import { MobileNav } from './pixel-bead-generator/mobile-nav'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { Progress } from './ui/progress'
 import { savePatternAction } from '@/app/actions/patterns'
 import { toast } from 'sonner'
@@ -45,6 +45,7 @@ import { useDebounce } from '@/hooks/use-debounce'
 
 export function PixelBeadGenerator() {
   const t = useTranslations('Generator')
+  const locale = useLocale()
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('medium')
   const [gridWidth, setGridWidth] = useState(50)
   const debouncedGridWidth = useDebounce(gridWidth, 300) // Debounce grid width updates
@@ -638,35 +639,32 @@ export function PixelBeadGenerator() {
               </div>
             </div>
 
-            {/* Export Actions */}
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => {
-                  setActiveMobileTab(null)
-                  exportToPDF()
-                }}
-                disabled={!image || matrix.length === 0}
-                className='flex flex-col items-center justify-center gap-2 py-4 bg-[#32B8A6] text-white text-[10px] font-bold uppercase tracking-widest hover:bg-[#2AA38F] hover:shadow-lg active:scale-[0.98] transition-all rounded-xl disabled:opacity-50 disabled:cursor-not-allowed'
-              >
-                <Download size={16} />
-                <span>Download PDF</span>
-              </button>
-              <button
-                onClick={() => {
-                  setActiveMobileTab(null)
-                  exportToImage()
-                }}
-                disabled={!image || matrix.length === 0 || isExportingImage}
-                className='flex flex-col items-center justify-center gap-2 py-4 bg-white border-2 border-[#3E2A1E] text-[#3E2A1E] text-[10px] font-bold uppercase tracking-widest hover:bg-[#F0EEE8] hover:shadow-md active:scale-[0.98] transition-all rounded-xl disabled:opacity-50 disabled:cursor-not-allowed'
-              >
-                {isExportingImage ? (
-                  <div className='w-4 h-4 border-2 border-[#18181B] border-t-transparent animate-spin' />
-                ) : (
-                  <ImageIcon size={16} />
-                )}
-                <span>Download IMG</span>
-              </button>
-            </div>
+            {/* Export Actions - Mobile: PDF only (more stable on mobile) */}
+            <button
+              onClick={() => {
+                setActiveMobileTab(null)
+                exportToPDF()
+              }}
+              disabled={!image || matrix.length === 0 || isExportingPDF}
+              className='w-full flex flex-col items-center justify-center gap-2 py-5 bg-[#32B8A6] text-white text-[11px] font-bold uppercase tracking-widest hover:bg-[#2AA38F] hover:shadow-lg active:scale-[0.98] transition-all rounded-xl disabled:opacity-50 disabled:cursor-not-allowed'
+            >
+              {isExportingPDF ? (
+                <>
+                  <div className='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin' />
+                  <span>{t('exporting')}</span>
+                </>
+              ) : (
+                <>
+                  <Download size={20} />
+                  <span>Download PDF</span>
+                </>
+              )}
+            </button>
+            <p className="text-[10px] text-[#71717A] text-center px-4 leading-relaxed">
+              {locale === 'zh' && '移动端推荐使用 PDF 导出以获得最佳体验'}
+              {locale === 'en' && 'PDF export recommended for mobile devices'}
+              {locale === 'ja' && 'モバイルではPDFエクスポートを推奨'}
+            </p>
           </div>
         </SheetContent>
       </Sheet>

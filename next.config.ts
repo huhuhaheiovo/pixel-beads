@@ -14,6 +14,8 @@ const withMDX = createMDX({
 const nextConfig = {
     pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
     compress: true,
+    // 允许开发环境中的跨域请求
+    allowedDevOrigins: ['192.168.31.221'],
     images: {
         remotePatterns: [
             {

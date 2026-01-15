@@ -278,7 +278,16 @@ export function usePatternExport({
     }, [matrix, gridWidth, selectedPalette, colorById, beadStats, beadStyle, gridSpacing, cellSizeUnit, cellSize, translations])
 
     const exportToImage = useCallback(async (options?: { skipSaveProgress?: boolean }) => {
-        if (!exportRef.current || !matrix.length) return
+        // 详细的前置检查和日志
+        if (!exportRef.current) {
+            console.error('Export failed: exportRef.current is null')
+            return
+        }
+        
+        if (!matrix.length) {
+            console.error('Export failed: matrix is empty')
+            return
+        }
 
         setIsExportingImage(true)
         if (!options?.skipSaveProgress) {
@@ -308,13 +317,36 @@ export function usePatternExport({
 
             await new Promise<void>(resolve => {
                 setTimeout(() => {
-                    const link = document.createElement('a')
-                    link.download = `pixel-bead-pattern-${Date.now()}.png`
-                    link.href = dataUrl
-                    link.click()
-                    setIsExportingImage(false)
-                    setExportProgress(0)
-                    resolve()
+                    try {
+                        const link = document.createElement('a')
+                        link.download = `pixel-bead-pattern-${Date.now()}.png`
+                        link.href = dataUrl
+                        link.style.display = 'none'
+                        
+                        document.body.appendChild(link)
+                        link.click()
+                        
+                        setTimeout(() => {
+                            if (document.body.contains(link)) {
+                                document.body.removeChild(link)
+                            }
+                        }, 100)
+                        
+                        setIsExportingImage(false)
+                        setExportProgress(0)
+                        resolve()
+                    } catch (downloadError) {
+                        console.error('Failed to trigger download:', downloadError)
+                        
+                        try {
+                            window.open(dataUrl, '_blank')
+                        } catch (openError) {
+                            console.error('Failed to open image in new window:', openError)
+                        }
+                        setIsExportingImage(false)
+                        setExportProgress(0)
+                        resolve()
+                    }
                 }, 300)
             })
         } catch (error) {

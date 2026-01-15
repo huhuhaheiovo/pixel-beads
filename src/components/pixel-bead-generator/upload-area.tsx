@@ -1,6 +1,6 @@
 import { Upload, Loader2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 interface UploadAreaProps {
   onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -10,12 +10,28 @@ interface UploadAreaProps {
 export function UploadArea({ onUpload, isProcessing = false }: UploadAreaProps) {
   const t = useTranslations('Generator')
   const [isUploading, setIsUploading] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
       setIsUploading(true)
     }
     onUpload(e)
+  }
+
+  // 移动端兼容：直接触发 input.click() 作为 htmlFor 的备选
+  const handleLabelClick = (e: React.MouseEvent<HTMLLabelElement>) => {
+    // 阻止 htmlFor 的默认行为，避免在 PC 端重复触发
+    e.preventDefault()
+    
+    if (isLoading) {
+      return
+    }
+    
+    const input = inputRef.current || (document.getElementById('upload') as HTMLInputElement)
+    if (input && !input.disabled) {
+      input.click()
+    }
   }
 
   // Reset uploading state when processing completes
@@ -45,6 +61,7 @@ export function UploadArea({ onUpload, isProcessing = false }: UploadAreaProps) 
       <div className='relative'>
         <label
           htmlFor='upload'
+          onClick={handleLabelClick}
           className={`relative overflow-hidden inline-flex items-center gap-3 px-10 py-5 bg-[#32B8A6] text-white text-[12px] font-black uppercase tracking-[0.2em] cursor-pointer shadow-[0_20px_40px_rgba(50,184,166,0.3)] hover:shadow-[0_25px_50px_rgba(50,184,166,0.4)] transform transition-all duration-500 rounded-2xl ${
             isLoading 
               ? 'opacity-75 cursor-wait scale-95' 
@@ -70,7 +87,8 @@ export function UploadArea({ onUpload, isProcessing = false }: UploadAreaProps) 
       <input
         type='file'
         id='upload'
-        hidden
+        ref={inputRef}
+        className='absolute w-px h-px opacity-0 pointer-events-none'
         onChange={handleFileChange}
         accept='image/*'
         disabled={isLoading}
