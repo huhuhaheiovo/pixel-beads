@@ -31,8 +31,8 @@
         "titlePrefix": "Create Unique",
         "titleAccent": "Perler Bead Ideas",
         "titleSuffix": "& Free Pattern Generator",
-        "metaTitle": "Perler Bead Ideas & Free Pattern Generator - PixelBeads",
-        "metaDescription": "Explore endless perler bead ideas or create your own with our free pattern generator. Convert photos to custom designs, match colors, and export PDF guides.",
+        "metaTitle": "Free Perler Bead Pattern Generator Online (2026)",
+        "metaDescription": "Free perler bead pattern generator with tutorials for beginners to turn images into clean, printable bead patterns online. No signup required.",
         "description": "Discover endless perler bead ideas and transform your photos into custom patterns in seconds! Our free DIY Pattern Creator helps you design, edit, and export custom bead charts.",
         "ctaStart": "Start Creating Ideas",
         "ctaTutorial": "Full Perler Bead Tutorial",
@@ -75,10 +75,12 @@
         },
         "showcaseTitle": "Featured Perler Bead Patterns",
         "showcaseSubtitle": "Explore some of the most popular designs created by our community. Start your next project with just a click.",
+        "viewPattern": "View Pattern",
+        "exploreAllPatterns": "Explore All Patterns",
         "tutorial": {
             "title": "Complete Perler Bead Pattern Guide: All Steps and Tutorials",
             "selection": {
-                "title": "1. Selection: The Foundation",
+                "title": "1. Perler Bead Selection",
                 "problem": "Solves core pain points: material incompatibility, size mismatch, and low color accuracy.",
                 "brands": {
                     "title": "I. Common Perler Bead Brands",
@@ -150,6 +152,7 @@
                         }
                     ]
                 },
+                "faqTitle": "Selection FAQ",
                 "faq": [
                     {
                         "q": "Can I mix different brands of perler beads?",
@@ -170,7 +173,7 @@
                 ]
             },
             "coloring": {
-                "title": "2. Coloring: Breathing Life",
+                "title": "2. Perler Bead Coloring",
                 "sections": [
                     {
                         "title": "I. Automatic Color Matching with Pixel-Beads Pattern Generator",
@@ -231,6 +234,7 @@
                         ]
                     }
                 ],
+                "faqTitle": "Coloring FAQ",
                 "faq": [
                     {
                         "q": "Why not upload overly large images?",
@@ -255,7 +259,7 @@
                 ]
             },
             "printing": {
-                "title": "3. Printing: Blueprint to Reality",
+                "title": "3. Perler Bead Printing",
                 "sections": [
                     {
                         "title": "Confirm Pattern Scale",
@@ -294,6 +298,7 @@
                         ]
                     }
                 ],
+                "faqTitle": "Printing FAQ",
                 "faq": [
                     {
                         "q": "Why print a bead blueprint?",
@@ -318,7 +323,7 @@
                 ]
             },
             "ironing": {
-                "title": "4. Ironing: The Art of Setting",
+                "title": "4. Perler Bead Ironing",
                 "sections": [
                     {
                         "title": "Bead Ironing Characteristics",
@@ -374,6 +379,7 @@
                         ]
                     }
                 ],
+                "faqTitle": "Ironing FAQ",
                 "faq": [
                     {
                         "q": "Why is ironing so difficult?",
@@ -410,7 +416,7 @@
                 ]
             },
             "framing": {
-                "title": "5. Framing: The Final Ritual",
+                "title": "5. Perler Bead Framing",
                 "sections": [
                     {
                         "title": "I. Protection Principles",
@@ -434,6 +440,7 @@
                         ]
                     }
                 ],
+                "faqTitle": "Framing FAQ",
                 "faq": [
                     {
                         "q": "Do I need a custom-made frame?",

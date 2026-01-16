@@ -31,8 +31,8 @@
         "titlePrefix": "免费",
         "titleAccent": "拼豆图案",
         "titleSuffix": "生成器与作品集",
-        "metaTitle": "拼豆创意 & 免费图纸生成器 - PixelBeads",
-        "metaDescription": "探索无限拼豆创意，或使用我们的免费图纸生成器创作您自己的设计。将照片转换为定制图纸，匹配颜色，并导出 PDF 指南。",
+        "metaTitle": "拼豆图案 & 免费图纸生成器 - PixelBeads",
+        "metaDescription": "拼豆图案免费图纸生成器，使用我们的免费图纸生成器创作您自己的设计。将照片转换为定制图纸，匹配颜色，并导出 PDF 指南。",
         "description": "只需几秒钟，即可将您的照片转换为精美的像素拼豆图纸。支持自定义网格、精准色彩匹配，以及高清 PDF/图片导出。",
         "ctaStart": "开始创作",
         "ctaTutorial": "拼豆完整制作教程",
@@ -75,10 +75,12 @@
         },
         "showcaseTitle": "精选拼豆图案",
         "showcaseSubtitle": "探索社区创作的最受欢迎的设计。只需点击一下，即可开始您的下一个项目。",
+        "viewPattern": "查看图案",
+        "exploreAllPatterns": "探索所有图案",
         "tutorial": {
             "title": "拼豆图案全部制作步骤和教程",
             "selection": {
-                "title": "1. 选豆：基石之选",
+                "title": "1. 拼豆选豆",
                 "problem": "解决材质不兼容、规格对不上、色彩还原度低等全流程痛点。",
                 "brands": {
                     "title": "一、常见拼豆品牌介绍",
@@ -150,6 +152,7 @@
                         }
                     ]
                 },
+                "faqTitle": "选豆 FAQ",
                 "faq": [
                     {
                         "q": "不同品牌的拼豆可以混用吗？",
@@ -170,7 +173,7 @@
                 ]
             },
             "coloring": {
-                "title": "2. 配色：灵魂注入",
+                "title": "2. 拼豆配色",
                 "sections": [
                     {
                         "title": "一、使用 Pixel-Beads 拼豆图纸生成器进行自动配色",
@@ -231,6 +234,7 @@
                         ]
                     }
                 ],
+                "faqTitle": "配色 FAQ",
                 "faq": [
                     {
                         "q": "为什么不建议上传过大的图片？",
@@ -255,7 +259,7 @@
                 ]
             },
             "printing": {
-                "title": "3. 打印：蓝图落地",
+                "title": "3. 拼豆打印",
                 "sections": [
                     {
                         "title": "确认图纸比例",
@@ -294,6 +298,7 @@
                         ]
                     }
                 ],
+                "faqTitle": "打印 FAQ",
                 "faq": [
                     {
                         "q": "为什么要打印拼豆蓝图？",
@@ -318,7 +323,7 @@
                 ]
             },
             "ironing": {
-                "title": "4. 熨烫：定型艺术",
+                "title": "4. 拼豆熨烫",
                 "sections": [
                     {
                         "title": "拼豆的熨烫特点",
@@ -374,6 +379,7 @@
                         ]
                     }
                 ],
+                "faqTitle": "熨烫 FAQ",
                 "faq": [
                     {
                         "q": "为什么熨烫这么难？",
@@ -410,7 +416,7 @@
                 ]
             },
             "framing": {
-                "title": "5. 裱框：最后仪式",
+                "title": "5. 拼豆裱框",
                 "sections": [
                     {
                         "title": "一、保护原理",
@@ -434,6 +440,7 @@
                         ]
                     }
                 ],
+                "faqTitle": "装裱 FAQ",
                 "faq": [
                     {
                         "q": "一定要买定制画框吗？",
