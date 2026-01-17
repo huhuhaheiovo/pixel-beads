@@ -8,11 +8,25 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'Header' });
 
+    const baseUrl = 'https://www.pixel-beads.com'
+    const canonicalPath = locale === 'en'
+        ? '/blog'
+        : `/${locale}/blog`
+
     return {
         title: `${t('blog')} - PixelBeads`,
         description: locale === 'zh'
             ? '探索拼豆艺术的世界，获取灵感、教程和最新动态。'
             : 'Explore the world of pixel beads art, get inspiration, tutorials, and latest updates.',
+        alternates: {
+            canonical: `${baseUrl}${canonicalPath}`,
+            languages: {
+                en: '/blog',
+                zh: '/zh/blog',
+                ja: '/ja/blog',
+                'x-default': `${baseUrl}/blog`
+            }
+        }
     };
 }
 

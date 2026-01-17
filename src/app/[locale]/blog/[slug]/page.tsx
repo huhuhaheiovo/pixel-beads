@@ -15,6 +15,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         };
     }
 
+    const baseUrl = 'https://www.pixel-beads.com'
+    const canonicalPath = locale === 'en'
+        ? `/blog/${slug}`
+        : `/${locale}/blog/${slug}`
+
     return {
         title: `${post.title} - PixelBeads Blog`,
         description: post.excerpt,
@@ -24,7 +29,17 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
             type: 'article',
             publishedTime: post.date,
             authors: [post.author],
+            url: `${baseUrl}${canonicalPath}`
         },
+        alternates: {
+            canonical: `${baseUrl}${canonicalPath}`,
+            languages: {
+                en: `/blog/${slug}`,
+                zh: `/zh/blog/${slug}`,
+                ja: `/ja/blog/${slug}`,
+                'x-default': `${baseUrl}/blog/${slug}`
+            }
+        }
     };
 }
 
